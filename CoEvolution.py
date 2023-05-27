@@ -9,7 +9,7 @@ import time
 import threading
 
 
-# ----------- Consts Name  ----------
+# ----------- Consts ----------
 
 
 
@@ -20,14 +20,14 @@ class CoEvolution:
     testing: TestHub
     solution: SortingNetwork
 
-    def __init__(self):
+    def __init__(self) -> None:
         
         return
 
-    def solve_sorting_network_problem(self):
+    def solve_sorting_network_problem(self) -> None:
 
         return
     
-    def print_solution_as_network(self):
+    def print_solution_as_network(self) -> None:
         
         return
