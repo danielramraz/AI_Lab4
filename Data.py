@@ -1,4 +1,5 @@
-inputs_text_sorting_list_size = "enter the size of the gen:\nFor String enter 13\nFor N-Queens enter 8\nFor BinPacking enter 0\nFor Cartesian enter 2\n"
+inputs_text_sorting_list_size = "enter the size of the vectors: \n"
+
 
 class Data:
     sorting_list_size: int
@@ -19,6 +20,14 @@ class Data:
         return
 
     def init_with_settings(self, setting_vector):
+        # self.num_genes = setting_vector[1]
+        self.size_vector = setting_vector
+        return
+
+    def _init_consts(self):
+        self.pop_size = 100
+        self.max_generations = 10
+        self.cross_operator = 0
         self.sorting_list_size = setting_vector[0]
         return
 
