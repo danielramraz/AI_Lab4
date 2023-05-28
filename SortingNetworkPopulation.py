@@ -1,13 +1,13 @@
 # ----------- File For Genetic Algorithm -----------
 from Data import Data
+import SortingNetwork
 import ParentOperator
-import CrossoverOperator
 # ----------- Python Package -----------
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-
+from collections import Counter
 import math
 # ----------- Consts Parameters -----------
 MUTATION_INDIVIDUALS = 20
@@ -34,7 +34,7 @@ class SortingNetworkPopulation:
         self.test_result = []
 
         for index in range(self.data.pop_size):
-            individual = Individual(self.data)
+            individual = SortingNetwork(self.data)
             self.population.append(individual)
         self.set_fitnesses()
         return
@@ -45,7 +45,7 @@ class SortingNetworkPopulation:
             self.fitnesses.append(individual.score)
         return
 
-    def genetic_algorithm(self, migration=None, thread_index=None):
+    def genetic_algorithm(self):
         # ----------- Printing graphs for the report -----------
         # x1 = []
         # y1 = []
@@ -54,7 +54,6 @@ class SortingNetworkPopulation:
         #        ylim=(0, 10),
         #        xlabel='Generation number',
         #        ylabel='Genetic diversification distance')
-
         for generation_index in range(self.data.max_generations):
 
             # ----------- Elitism -----------
@@ -156,45 +155,8 @@ class SortingNetworkPopulation:
         return
 
 
-class Individual:
-    score: float
-    score_test: float
-    gen_len: int
-    age: int
-
-    def __init__(self, data: Data):
-        self.gen, self.numbers_in_gen = self.create_gen(data)
-        self.score = self.calc_score(data)
-
-    def create_gen(self, data):
-        gen = []
-        numbers_in_gen = []
-        numbers = [i for i in range(data.size_vector)]
-        phase = []
-        for i in range(data.size_vector):
-            if numbers:
-                compertor = random.sample(numbers, k=2)[0]
-                numbers_in_gen.append(compertor[0])
-                numbers_in_gen.append(compertor[1])
-                numbers.remove(compertor[0])
-                numbers.remove(compertor[1])
-                phase.append(compertor)
-            else:
-                gen.append(phase)
-                numbers = [i for i in range(data.size_vector)]
-                phase = []
-
-
-        return
-
-    def calc_score(self, data):
-        score = 0
-        sum_cols = np.sum(self.gen, axis=0)
-        bad_value = [-5 for i, item in enumerate(sum_cols) if item > 5]
-        good_value = [10 for i, item in enumerate(sum_cols) if item < 4]
-        score = sum(bad_value) + sum(good_value)
-        return score
-
+def get_sorting_networks():
+    return 0
 
 def crossover_operator(parent1: Individual, parent2: Individual, num_genes: int):
 
