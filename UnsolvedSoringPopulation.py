@@ -29,38 +29,20 @@ class UnsolvedSoringPopulation:
     
     def create_population(self, data) -> None:
         for i in range(data.population_size):
-            parasite = Parasite.Parasite(data.sorting_list_size)
+            parasite = Parasite.Parasite(list_size = data.sorting_list_size)
             self.population.append(parasite)
             self.fitnesses.append(parasite.score)
         return
         
 
     def genetic_algorithem(self) -> None:
-        # score: float = 0
-        # pop_size: int = 100
-        # dimensions: int = ackley.dimensions
-        # max_generations: int = 100
 
-        # population: list = []
-        # fitnesses: list = []
-
-        # create population
-        # for index in range(pop_size):
-        #     first_node_coordinates = [random.uniform(ackley.bounds[0], ackley.bounds[1]) for i in range(dimensions)]
-        #     individual = Individual.Individual(first_node_coordinates)
-        #     individual.score = ackley.function(individual)
-        #     population.append(individual)
-
-        #create fitnesses
-        # for parasite in population:
-        #     fitnesses.append(parasite.score)
-
-        scores = []
+        # scores = []
 
         #starting GA
         for generation_index in range(self.max_generations):
             for index, parasite in enumerate(self.population):
-                self.fitnesses[index] = self.fitness(parasite)
+                self.fitnesses[index] = parasite.score
 
             average_fitness = np.average(self.fitnesses)
             # gen_time = time.time()
@@ -72,40 +54,56 @@ class UnsolvedSoringPopulation:
             elites = sorted(self.population, 
                             key=lambda parasite: parasite.score, 
                             reverse = True)[:elite_size] 
-            scores.append(np.average(self.fitnesses))
+            # scores.append(np.average(self.fitnesses))
             # Generate new individuals by applying crossover and mutation operators
             offspring = []
             while len(offspring) < self.population_size - elite_size:            
                 parent1 = random.choice(elites)
                 parent2 = random.choice(elites)
-
-                child_gen = []
-
-                rand_a = random.randint(0, self.sorting_list_size)
-                child_gen = [parent1.unsorted_list[i] if i < rand_a else parent2.unsorted_list[i] for i in range(self.sorting_list_size)]
-                child = Parasite.Parasite(self.sorting_list_size)
-
-                child.unsorted_list = child_gen
-                child.score = ackley.function(individual)           
+                child_gen = self.cx(parent1, parent2)
+                child = Parasite.Parasite(unsorted_list = child_gen)
                 offspring.append(child)
                 
             # mutation
             mutation_indexes = random.sample(range(len(offspring)), k= MUTATION_INDIVIDUALS)
             for i, index in enumerate(mutation_indexes):         
-                # print(f"befor coord {offspring[index].coordinates}")  
-                for i, dim in enumerate(offspring[index].coordinates): 
-                    offspring[index].coordinates[i] *= random.random()
-                # print(f"after coord {offspring[index].coordinates}")  
-            population = elites + offspring
+                offspring[index].mutation()
+            
+            self.population = elites + offspring
 
-        # Find the individual with the highest fitness
-        best_individual = population[0]
-        
-        for individual in population:
-            individual.score = ackley.function(individual) 
-            if best_individual.score < individual.score:
-                best_individual = individual
+        # Find the parasite with the highest fitness        
+        best_parasite = sorted(self.population, 
+                               key=lambda parasite: parasite.score, 
+                               reverse = False)[-1]                 
 
-        best_fitness = best_individual.score
+        best_fitness = best_parasite.score
         # print_scores_grah(scores)   
-        return best_individual.coordinates , best_fitness
+        return best_parasite.unsorted_list , best_fitness
+
+    def cx(self, parent1: Parasite, parent2: Parasite) -> list:
+        p1 = parent1.unsorted_list
+        p2 = parent2.unsorted_list
+
+        cycles = [-1] * len(p1)
+        cycle_no = 1
+        cycle_start = (i for i, v in enumerate(cycles) if v < 0)
+
+        for pos in cycle_start:
+
+            while cycles[pos] < 0:
+                cycles[pos] = cycle_no
+                if p2[pos] in p1:
+                    pos = p1.index(p2[pos])
+                else:
+                    pos = 0
+            cycle_no += 1
+
+        child_gen = [p1[i] if n % 2 else p2[i] for i, n in enumerate(cycles)]
+        # [print(f"sol-> {ind.index}->") for ind in child_gen]
+
+        return child_gen
+
+    def print_population(self) -> None:
+        for i, parasite in enumerate(self.population):
+            print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
+        return

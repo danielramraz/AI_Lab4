@@ -19,11 +19,10 @@ class Data:
         return
 
     def init_with_settings(self, setting_vector):
-        # self.sorting_list_size = setting_vector[1]
-        self.sorting_list_size = setting_vector
+        self.sorting_list_size = setting_vector[0]
         return
 
     def _init_consts(self):
         self.population_size = 100
-        self.max_generations = 10      
+        self.max_generations = 100
         return
