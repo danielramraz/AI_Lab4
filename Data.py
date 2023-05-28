@@ -1,6 +1,9 @@
-inputs_text_num_genes = "enter the size of the gen:\nFor String enter 13\nFor N-Queens enter 8\nFor BinPacking enter 0\nFor Cartesian enter 2\n"
+import itertools
+
+inputs_text_size_vector = "enter the size of the vectors: \n"
 
 class Data:
+    all_combinations: list
 
     def __init__(self, setting_vector = None):
         if setting_vector:
@@ -17,10 +20,12 @@ class Data:
 
     def init_with_settings(self, setting_vector):
         # self.num_genes = setting_vector[1]
-        self.num_genes = setting_vector
+        self.size_vector = setting_vector
         return
 
     def _init_consts(self):
         self.pop_size = 100
-        self.max_generations = 100      
+        self.max_generations = 10
+        self.cross_operator = 0
+
         return
