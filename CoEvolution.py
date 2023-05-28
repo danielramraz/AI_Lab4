@@ -15,7 +15,7 @@ setting_vector = [6]
 
 class CoEvolution:
     data: Data
-    sorting_network: SortingNetworkPopulation
+    sorting_networks: SortingNetworkPopulation
     challengers: UnsolvedSoringPopulation
     testing: TestHub
     solution: SortingNetwork
@@ -27,10 +27,12 @@ class CoEvolution:
         return
 
     def solve_sorting_network_problem(self) -> None:
-
-        self.challengers.genetic_algorithem()
-        self.challengers.print_population()
-
+        for generation in range(self.data.max_generations):
+            self.testing.parasites = self.challengers.get_parasites()
+            self.testing.sorting_networks = self.sorting_networks.get_sorting_networks()
+            self.testing.run_tests()
+            self.sorting_networks.tests_results = self.testing.get_sorting_network_tests_results()
+            self.challengers.tests_results = self.testing.get_parasites_tests_results()
         return
     
     def print_solution_as_network(self) -> None:
