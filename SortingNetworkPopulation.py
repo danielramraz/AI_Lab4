@@ -1,17 +1,16 @@
 # ----------- File For Genetic Algorithm -----------
-from Data import Data
-import SortingNetwork
-import ParentOperator
+import Comparator
+import Data
+import SmartInit
+from SortingNetwork import SortingNetwork
 # ----------- Python Package -----------
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-from collections import Counter
 import math
 # ----------- Consts Parameters -----------
-MUTATION_INDIVIDUALS = 20
-ELITE_PERCENTAGE = 0.20
+ELITE_PERCENTAGE = 0.10
 # ----------- Consts Name  -----------
 NONE = 0
 SINGLE = 1
@@ -22,18 +21,19 @@ UNIFORM = 3
 class SortingNetworkPopulation:
     data: Data
     population: list
-    best_fitness: float
     fitnesses: list
+    best_individual: SortingNetwork
+    best_fitness: float
 
-    def __init__(self, setting_vector=None):
-        self.data = Data(setting_vector)
+    def __init__(self, data: Data):
+        self.data = data
         self.population = []
         self.fitnesses = []
         self.best_individual = None
         self.best_fitness = 0
         self.test_result = []
 
-        for index in range(self.data.pop_size):
+        for index in range(self.data.population_size):
             individual = SortingNetwork(self.data)
             self.population.append(individual)
         self.set_fitnesses()
@@ -54,129 +54,141 @@ class SortingNetworkPopulation:
         #        ylim=(0, 10),
         #        xlabel='Generation number',
         #        ylabel='Genetic diversification distance')
-        for generation_index in range(self.data.max_generations):
+        # ----------- Elitism -----------
+        # Select the best individuals for reproduction
+        elites = self.get_sorting_networks()
+        self.population = elites
+        self.fix_population_by_testing()
 
-            # ----------- Elitism -----------
-            # Select the best individuals for reproduction
-            elite_size = int(self.data.pop_size * ELITE_PERCENTAGE)
-            elite_indices = sorted(range(self.data.pop_size), key=lambda i: self.fitnesses[i], reverse=True)[
-                            :elite_size]
-            elites = [self.population[i] for i in elite_indices]
+        # ----------- Print Fitness Information -----------
+        gen_time = time.time()
+        average, variance, sd = average_fitness(self.fitnesses)
+        # x1.append(generation_index)
+        # y1.append(average)
 
+        # ----------- Generate New Individuals -----------
+        offspring = []
+        while len(offspring) < self.data.population_size - len(elites):
+            parent1 = random.choice(elites)
+            parent2 = random.choice(elites)
+            child = crossover_operator(parent1, parent2, self.data)
+            offspring.append(child)
 
-            # ----------- Print Fitness Information -----------
-            gen_time = time.time()
-            print(f"======== {generation_index} ========")
-            average, variance, sd = self.average_fitness(self.fitnesses)
-            # self.show_histogram(self.fitnesses)
-            # x1.append(generation_index)
-            # y1.append(average)
+        # ----------- Update Population -----------
+        self.population += offspring
+        self.set_fitnesses()
 
-            # ----------- Generate New Individuals -----------
-            offspring = []
-            while len(offspring) < self.data.pop_size - elite_size:
-                parent1 = random.choice(elites)
-                parent2 = random.choice(elites)
+        # ----------- Genetic Diversification -----------
+        distance = 0
+        for ind in self.population:
+            distance += ind.genetic_diversification_distance(self.population)
+        distance = distance / len(self.population)
+        special = self.genetic_diversification_special()
+        print(f"The genetic diversification distance is: {distance}")
+        print(f"The genetic diversification special is: {special}")
 
-                child = crossover_operator(data.cross_operator, parent1, parent2, data.size_vector)
-                offspring.append(child)
-
-                if len(offspring) % 5 == 0:
-                    child = mutation(child)
-                    mutation_individuals -= 1
-
-            # ----------- Update Population -----------
-            self.population = elites
-            for niche in self.niches:
-                for ind in niche.individuals:
-                    self.population.append(ind)
-
-            # ----------- Update Population -----------
-            # Update the age of each individual, if reached max_age - remove from population
-            for individual in self.population:
-                individual.age += 1
-                individual.update_score(self.data)
-                if individual.age == self.data.max_age:
-                    self.population.remove(individual)
-
-            # Update the size of the  population
-            self.data.pop_size = len(self.population)
-
-            # Update fitness list for population
-            self.set_fitnesses()
-
-            # ----------- Genetic Diversification -----------
-            distance_all = 0
-            for index, niche in enumerate(self.niches):
-                distance = 0
-                for ind in niche.individuals:
-                    distance += ind.genetic_diversification_distance(niche.individuals)
-                distance = distance / len(self.population)
-                distance_all += distance
-                special = niche.individuals[0].genetic_diversification_special(niche.individuals)
-                print(f"The genetic diversification distance for niche {index + 1} is: {distance}")
-                print(f"The genetic diversification special for niche {index + 1} is: {special}")
-            # y1.append(distance_all/ len(self.niches))
-
-            # ----------- Print Time Information -----------
-            print(f"The absolute time for this gen is {time.time() - gen_time} sec")
-            print(f"The ticks time for this gen is {int(time.perf_counter())}")
+        # ----------- Print Time Information -----------
+        # print(f"The absolute time for this gen is {time.time() - gen_time} sec")
+        # print(f"The ticks time for this gen is {int(time.perf_counter())}")
 
         # ----------- Best Solution -----------
         # Find the individual with the highest fitness
         self.best_individual = self.population[0]
         for individual in self.population:
-            individual.update_score(self.data)
-            if self.best_individual.score < individual.score:
+            if self.best_individual.score_test < individual.score_test:
                 self.best_individual = individual
 
-        self.best_fitness = self.best_individual.score
+        self.best_fitness = self.best_individual.score_test
         # ax.plot(np.array(x1), np.array(y1))
         # plt.show()
         return
 
-    def average_fitness(self, fitness: list):
-        if not fitness:
-            return 0
-        try:
-            average = sum(fitness) / len(fitness)
-            variance = sum([((x - average) ** 2) for x in fitness]) / (len(fitness) - 1)
-        except:
-            average = 0
-            variance = 0
-        sd = variance ** 0.5
+    def get_sorting_networks(self):
+        # Select the best individuals for testing
+        elite_size = int(self.data.population_size * ELITE_PERCENTAGE)
+        elite_indices = sorted(range(self.data.population_size), key=lambda i: self.fitnesses[i], reverse=False)[:elite_size]
+        elites = [self.population[i] for i in elite_indices]
 
-        return average, variance, sd
+        return elites
 
-    def show_histogram(self, array):
-        np_array = np.array(array)
-        plt.hist(np_array)
-        plt.show()
+    def fix_population_by_testing(self):
+        bad_comparators = [(comparator, i, j, k)
+                           for i, ind in enumerate(self.population)
+                           for j, phase in enumerate(ind.gen)
+                           for k, comparator in enumerate(phase)
+                           if comparator.score == 0]
+
+        remove_from_population = []
+        while bad_comparators:
+            item = bad_comparators[0]
+            if random.random() < 0.2:
+                remove_from_population.append(item)
+            else:
+                item_2 = self.find_other_comparator(bad_comparators, item)
+                if item_2:
+                    self.population[item[1]].gen[item[2]][item[3]] = item_2[0]
+                    self.population[item_2[1]].gen[item_2[2]][item_2[3]] = item[0]
+                    bad_comparators.remove(item_2)
+                else:
+                    remove_from_population.append(item)
+            bad_comparators.remove(item)
+
+        sorted_combined = sorted(remove_from_population, key=lambda x: x[3], reverse=True)
+        for item in sorted_combined:
+            self.population[item[1]].comparisons.remove(item[0].value)
+            self.population[item[1]].gen[item[2]].remove(item[0])
+
         return
 
+    def genetic_diversification_special(self):
+        return 0
 
-def get_sorting_networks():
-    return 0
-
-def crossover_operator(parent1: Individual, parent2: Individual, num_genes: int):
-
-    if operator == NONE:
-        child_gen = [parent1.gen[i] if random.random() < 0.5 else parent2.gen[i] for i in range(num_genes)]
-
-    if operator == SINGLE:
-        rand_a = random.randint(0, num_genes)
-        child_gen = [parent1.gen[i] if i < rand_a else parent2.gen[i] for i in range(num_genes)]
-
-    elif operator == TWO:
-        rand_a = random.randint(0, num_genes - 1)
-        rand_b = random.randint(rand_a, num_genes)
-        child_gen = [parent1.gen[i] if i < rand_a or i > rand_b else parent2.gen[i] for i in range(num_genes)]
-
-    elif operator == UNIFORM:
-        child_gen = [parent1.gen[i] if random.choice([0, 1]) else parent2.gen[i] for i in range(num_genes)]
+    def find_other_comparator(self, comparators, item):
+        for comp in comparators:
+            if item[0].value != comp[0].value and\
+                    comp[0].value not in self.population[item[1]].comparisons and\
+                    item[0].value not in self.population[comp[1]].comparisons:
+                return comp
+        return None
 
 
-    return child_gen
+def average_fitness(fitness: list):
+    if not fitness:
+        return 0
+    try:
+        average = sum(fitness) / len(fitness)
+        variance = sum([((x - average) ** 2) for x in fitness]) / (len(fitness) - 1)
+    except:
+        average = 0
+        variance = 0
+    sd = variance ** 0.5
+
+    return average, variance, sd
+
+
+def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: Data):
+
+    phases_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
+    comparisons_num = int((len(parent1.comparisons) + len(parent2.comparisons)) / 2)
+    if data.sorting_list_size == 16:
+        child_gen = SmartInit.smart_vector_16().copy()
+        comparisons_num -= SmartInit.num_comparators_init_vector_16
+    elif data.sorting_list_size == 8:
+        child_gen = SmartInit.smart_vector_8().copy()
+        comparisons_num -= SmartInit.num_comparators_init_vector_8
+
+    current_phases_num = len(child_gen)
+    for i in range(current_phases_num, phases_num):
+        if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:
+            child_gen.append(parent1.gen[i].copy())
+            comparisons_num -= len(parent1.gen[i])
+        elif i < len(parent2.gen) and parent2.gen[i]:
+            child_gen.append(parent2.gen[i].copy())
+            comparisons_num -= len(parent2.gen[i])
+
+    child = SortingNetwork(data, child_gen)
+    return child
+
 
 
 
