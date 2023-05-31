@@ -1,31 +1,37 @@
 # ----------- Project Files -----------
 # ----------- Python Package -----------
 import numpy as np
+
+from SortingNetwork import SortingNetwork
 # ----------- Consts ----------
 
+def run_tests(sorting_networks, parasites) -> tuple:
 
-
-def run_tests(self, parasites, sorting_networks) -> tuple:
-    test_score: np.array
     for i, sorting_network in enumerate(sorting_networks):
-        for k, parasite in enumerate(parasites):
-            test_score += self.test_sol_with_list(sorting_network, parasite)
+        parasites_copy = parasites
+
+        for k, parasite in enumerate(parasites_copy):
+            test_sol_with_list(sorting_network, parasite)
+        
+        test_score = []
+        test_score = [test_score.append(comp.score) for i, comp in enumerate(sorting_network)]
         print(f"the total score for this sorting network is {test_score}")
     
-    return
+    
+    return sorting_networks, parasites
 
-def test_sol_with_list(sorting_network, parasite) -> np.array:
+def test_sol_with_list(sorting_network, parasite) -> SortingNetwork:
     score = []
     unsorted_array = parasite
 
     for i, phase in enumerate(sorting_network):
-        for k, swap_cmd in enumerate(phase):
-            unsorted_array, sub_Score = swap(swap_cmd[0], swap_cmd[1], unsorted_array)
+        for k, comperator in enumerate(phase):
+            unsorted_array, sub_Score = swap(comperator[0], comperator[1], unsorted_array)
             score.append(sub_Score)
     
     score = np.array(score)
     print(f"the score is {score}")
-    return score
+    return sorting_network
     
 def swap(x, y, array) -> tuple:
     if array[x] >= array[y]:
@@ -35,7 +41,3 @@ def swap(x, y, array) -> tuple:
         array[x] = array[y]
         array[y] = temp
         return array , 1
-
-
-
-
