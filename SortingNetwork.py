@@ -1,4 +1,4 @@
-# ----------- File For Genetic Algorithm -----------
+# ----------- Project Files -----------
 import Data
 import SmartInit
 from Comparator import Comparator

@@ -34,3 +34,4 @@ class Parasite:
         random.shuffle(self.unsorted_list)
         self.score = self.fitness(self.unsorted_list)
         return
+    

@@ -17,27 +17,31 @@ def run_tests(sorting_networks, parasites) -> tuple:
         test_score = [test_score.append(comp.score) for i, comp in enumerate(sorting_network)]
         print(f"the total score for this sorting network is {test_score}")
     
-    
     return sorting_networks, parasites
 
-def test_sol_with_list(sorting_network, parasite) -> SortingNetwork:
-    score = []
+def test_sol_with_list(sorting_network, parasite) -> None:
+    # score = []
     unsorted_array = parasite
 
     for i, phase in enumerate(sorting_network):
         for k, comperator in enumerate(phase):
-            unsorted_array, sub_Score = swap(comperator[0], comperator[1], unsorted_array)
-            score.append(sub_Score)
+            swap(comperator, unsorted_array)
     
-    score = np.array(score)
-    print(f"the score is {score}")
-    return sorting_network
+    # score = np.array(score)
+    # print(f"the score is {score}")
+    return
     
-def swap(x, y, array) -> tuple:
+def swap(comperator, array) -> None:
+    x = comperator.value[0]
+    y = comperator.value[1]
+
     if array[x] >= array[y]:
-        return array , 0
+        comperator.score += 0
+        return
+    
     if array[x] < array[y]:
         temp = array[x]
         array[x] = array[y]
         array[y] = temp
-        return array , 1
+        comperator.score += 1
+        return

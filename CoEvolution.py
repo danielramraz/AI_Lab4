@@ -1,14 +1,13 @@
 # ----------- Project Files -----------
-import numpy as np
 from Data import Data
 from SortingNetworkPopulation import SortingNetworkPopulation
-import TestHub
 from UnsolvedSoringPopulation import UnsolvedSoringPopulation
 import SortingNetwork
 import TestsHub
 # ----------- Python Package -----------
 import time
 import threading
+import numpy as np
 # ----------- Consts ----------
 setting_vector = [16]
 
@@ -29,6 +28,8 @@ class CoEvolution:
     def solve_sorting_network_problem(self) -> None:
         for generation in range(self.data.max_generations):
             self.sorting_networks.genetic_algorithm()
+            self.challengers.genetic_algorithem()
+
             parasites = self.challengers.get_parasites()
             sorting_networks = self.sorting_networks.get_sorting_networks()
             
