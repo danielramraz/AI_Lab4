@@ -11,6 +11,7 @@ def main():
     co_evolution.solve_sorting_network_problem()
     co_evolution.print_solution_as_network()
 
+
 if __name__ == "__main__":
     main()
 
