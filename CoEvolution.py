@@ -3,7 +3,7 @@ from Data import Data
 from SortingNetworkPopulation import SortingNetworkPopulation
 import TestHub
 from UnsolvedSoringPopulation import UnsolvedSoringPopulation
-import SortingNetwork
+from SortingNetworkHandler import SortingNetwork
 # ----------- Python Package -----------
 import time
 import threading

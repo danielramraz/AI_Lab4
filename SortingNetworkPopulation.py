@@ -2,7 +2,8 @@
 import Comparator
 import Data
 import SmartInit
-from SortingNetwork import SortingNetwork
+from SortingNetworkHandler import SortingNetwork
+import SortingNetworkHandler
 # ----------- Python Package -----------
 import time
 import numpy as np
@@ -112,10 +113,36 @@ class SortingNetworkPopulation:
         return elites
 
     def fix_population_by_testing(self):
-        bad_comparators = [(comparator, i, j, k)
+        # ------ בניית גן לפי bins -------
+        # bad_comparators = [(comparator, i, j, k)
+        #                    for i, ind in enumerate(self.population)
+        #                    for j, phase in enumerate(ind.gen)
+        #                    for k, comparator in enumerate(phase)
+        #                    if comparator.score == 0]
+        #
+        # remove_from_population = []
+        # while bad_comparators:
+        #     item = bad_comparators[0]
+        #     if random.random() < 0.2:
+        #         remove_from_population.append(item)
+        #     else:
+        #         item_2 = self.find_other_comparator(bad_comparators, item)
+        #         if item_2:
+        #             self.population[item[1]].gen[item[2]][item[3]] = item_2[0]
+        #             self.population[item_2[1]].gen[item_2[2]][item_2[3]] = item[0]
+        #             bad_comparators.remove(item_2)
+        #         else:
+        #             remove_from_population.append(item)
+        #     bad_comparators.remove(item)
+        #
+        # sorted_combined = sorted(remove_from_population, key=lambda x: x[3], reverse=True)
+        # for item in sorted_combined:
+        #     self.population[item[1]].comparisons.remove(item[0].value)
+        #     self.population[item[1]].gen[item[2]].remove(item[0])
+
+        bad_comparators = [(comparator, i, j)
                            for i, ind in enumerate(self.population)
-                           for j, phase in enumerate(ind.gen)
-                           for k, comparator in enumerate(phase)
+                           for j, comparator in enumerate(ind.gen)
                            if comparator.score == 0]
 
         remove_from_population = []
@@ -126,30 +153,37 @@ class SortingNetworkPopulation:
             else:
                 item_2 = self.find_other_comparator(bad_comparators, item)
                 if item_2:
-                    self.population[item[1]].gen[item[2]][item[3]] = item_2[0]
-                    self.population[item_2[1]].gen[item_2[2]][item_2[3]] = item[0]
+                    self.population[item[1]].gen[item[2]] = item_2[0].copy()
+                    self.population[item_2[1]].gen[item_2[2]] = item[0].copy()
                     bad_comparators.remove(item_2)
                 else:
                     remove_from_population.append(item)
             bad_comparators.remove(item)
 
-        sorted_combined = sorted(remove_from_population, key=lambda x: x[3], reverse=True)
+        sorted_combined = sorted(remove_from_population, key=lambda x: x[2], reverse=True)
         for item in sorted_combined:
-            self.population[item[1]].comparisons.remove(item[0].value)
-            self.population[item[1]].gen[item[2]].remove(item[0])
+            self.population[item[1]].gen.remove(item[0])
+            self.population[item[1]].comparisons_number = len(self.population[item[1]].gen)
 
         return
 
-    def genetic_diversification_special(self):
-        return 0
-
     def find_other_comparator(self, comparators, item):
+        # ------ בניית גן לפי bins -------
+        # for comp in comparators:
+        #     if item[0].value != comp[0].value and\
+        #             comp[0].value not in self.population[item[1]].comparisons and\
+        #             item[0].value not in self.population[comp[1]].comparisons:
+        #         return comp
+
         for comp in comparators:
             if item[0].value != comp[0].value and\
-                    comp[0].value not in self.population[item[1]].comparisons and\
-                    item[0].value not in self.population[comp[1]].comparisons:
+                    comp[0].value not in self.population[item[1]].gen and\
+                    item[0].value not in self.population[comp[1]].gen:
                 return comp
         return None
+
+    def genetic_diversification_special(self):
+        return 0
 
 
 def average_fitness(fitness: list):
@@ -167,26 +201,37 @@ def average_fitness(fitness: list):
 
 
 def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: Data):
+    # ------ בניית גן לפי bins -------
+    # phases_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
+    # comparisons_num = int((len(parent1.comparisons) + len(parent2.comparisons)) / 2)
+    # if data.sorting_list_size == 16:
+    #     child_gen = SmartInit.smart_vector_16().copy()
+    #     comparisons_num -= SmartInit.num_comparators_init_vector_16
+    # elif data.sorting_list_size == 8:
+    #     child_gen = SmartInit.smart_vector_8().copy()
+    #     comparisons_num -= SmartInit.num_comparators_init_vector_8
+    #
+    # current_phases_num = len(child_gen)
+    # for i in range(current_phases_num, phases_num):
+    #     if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:
+    #         child_gen.append(parent1.gen[i].copy())
+    #         comparisons_num -= len(parent1.gen[i])
+    #     elif i < len(parent2.gen) and parent2.gen[i]:
+    #         child_gen.append(parent2.gen[i].copy())
+    #         comparisons_num -= len(parent2.gen[i])
+    #
+    # child = SortingNetwork(data, child_gen)
 
-    phases_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
-    comparisons_num = int((len(parent1.comparisons) + len(parent2.comparisons)) / 2)
-    if data.sorting_list_size == 16:
-        child_gen = SmartInit.smart_vector_16().copy()
-        comparisons_num -= SmartInit.num_comparators_init_vector_16
-    elif data.sorting_list_size == 8:
-        child_gen = SmartInit.smart_vector_8().copy()
-        comparisons_num -= SmartInit.num_comparators_init_vector_8
-
-    current_phases_num = len(child_gen)
-    for i in range(current_phases_num, phases_num):
+    comparisons_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
+    child_gen = SortingNetworkHandler.create_generate_bitonic_network(data.sorting_list_size)
+    for i in range(len(child_gen), comparisons_num):
         if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:
             child_gen.append(parent1.gen[i].copy())
-            comparisons_num -= len(parent1.gen[i])
         elif i < len(parent2.gen) and parent2.gen[i]:
             child_gen.append(parent2.gen[i].copy())
-            comparisons_num -= len(parent2.gen[i])
 
     child = SortingNetwork(data, child_gen)
+
     return child
 
 
