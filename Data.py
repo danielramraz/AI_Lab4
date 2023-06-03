@@ -31,7 +31,7 @@ class Data:
 
     def _init_consts(self):
         self.population_size = 100
-        self.max_generations = 100
+        self.max_generations = 10
         return
 
     def init_smart_vector(self):

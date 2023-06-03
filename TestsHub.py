@@ -18,33 +18,39 @@ def run_tests(sorting_networks, parasites) -> tuple:
             for k, comperator in enumerate(phase):
                 test_score.append(comperator.score)
         
-        print(f"{i} the sorting network is ")
-        sorting_network.print_sorting_network()
-        print(f"{i} the total score for this sorting network is {test_score}")
-    
+        # print(f"{i} the sorting network is ")
+        # sorting_network.print_sorting_network()
+        # print(f"{i} the total score for this sorting network is {test_score}")
+        
     return sorting_networks, parasites
 
 def test_sol_with_list(sorting_network, parasite) -> None:
-    # score = []
+    print(f"the un-solved parasite is {parasite.unsorted_list}")
+    # print(f"the sorting network is ")
+    # sorting_network.print_sorting_network()
+
     unsorted_list = parasite.unsorted_list
 
     for i, phase in enumerate(sorting_network.gen):
         for k, comperator in enumerate(phase):
-            swap(comperator, unsorted_list)
+            comper_n_swap(comperator, unsorted_list)
     
-    # score = np.array(score)
-    # print(f"the score is {score}")
+    print(f"the solved parasite is {parasite.unsorted_list} - solved")
+    # print(f"the sorting network after is ")
+    # sorting_network.print_sorting_network()
+
     return
     
-def swap(comperator, lst) -> None:
+def comper_n_swap(comperator, lst) -> None:
+    # print(f"the comperator is {comperator.value}")
     x = comperator.value[0]
     y = comperator.value[1]
 
-    if lst[x] >= lst[y]:
+    if lst[x] <= lst[y]:
         comperator.score += 0
         return
     
-    if lst[x] < lst[y]:
+    if lst[x] > lst[y]:
         temp = lst[x]
         lst[x] = lst[y]
         lst[y] = temp
