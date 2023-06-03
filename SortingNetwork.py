@@ -141,5 +141,11 @@ class SortingNetwork:
                 comparisons.append(item)
         return comparisons
 
-
+    def print_sorting_network(self) -> None:
+        sorting_network = sum(self.gen, [])
+        
+        for i, comperator in enumerate(sorting_network): 
+            print(i, comperator.value, comperator.score)
+                
+        return
 

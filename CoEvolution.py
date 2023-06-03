@@ -28,10 +28,13 @@ class CoEvolution:
     def solve_sorting_network_problem(self) -> None:
         for generation in range(self.data.max_generations):
             self.sorting_networks.genetic_algorithm()
-            self.challengers.genetic_algorithem()
+            self.challengers.genetic_algorithm()
 
             parasites = self.challengers.get_parasites()
             sorting_networks = self.sorting_networks.get_sorting_networks()
+
+            print(f"parasites = {parasites}")
+            print(f"sorting_networks = {sorting_networks}")
             
             sorting_network_tests_results, parasites_tests_results = TestsHub.run_tests(sorting_networks, parasites)
             

@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import random
 import math
 # ----------- Consts Parameters -----------
-ELITE_PERCENTAGE = 0.10
+ELITE_PERCENTAGE = 0.05
 # ----------- Consts Name  -----------
 NONE = 0
 SINGLE = 1
