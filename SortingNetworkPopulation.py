@@ -188,21 +188,29 @@ class SortingNetworkPopulation:
         #     self.population[item[1]].gen[item[2]].remove(item[0])
         for i, ind in enumerate(self.population):
             comparators_scores = [comparator.score for j, comparator in enumerate(ind.gen)]
-            min_score = min(comparators_scores)
-            bad_comparators = [(comparator, j) for j, comparator in enumerate(ind.gen) if comparator.score == min_score]
-            mutations_iterations = random.randint(0, 4)
-            while mutations_iterations > 0:
-                item = random.sample(bad_comparators, k=1)[0]
-                self.indirect_replacement(item, i)
-                bad_comparators.remove(item)
-                mutations_iterations -= 1
+            # min_score = min(comparators_scores)
+            # bad_comparators = [(comparator, j) for j, comparator in enumerate(ind.gen) if comparator.score == min_score]
+            # mutations_iterations = random.randint(0, 4)
+            # while mutations_iterations > 0:
+            #     item = random.sample(bad_comparators, k=1)[0]
+            #     self.indirect_replacement(item, i)
+            #     bad_comparators.remove(item)
+            #     mutations_iterations -= 1
 
-            # try to remove all comparators with score 0  -------------------------------------
-            # print(f"the comparators_scores are: {comparators_scores}")
-            # for j, score in enumerate(comparators_scores):
-            #     if score == 0:
-            #         self.remove_n_add_new_comp(ind, j)
             # ---------------------------------------------------------------------------------
+            # ------------try to remove all comparators with score 0  -------------------------
+            # print(f"the comparators_scores are: {comparators_scores}")
+            bad_comparators_indexes = []
+            for k, score in enumerate(comparators_scores):
+                if score == 0:
+                    bad_comparators_indexes.append(k)
+            # print(f"the bad comparators indexes are: {bad_comparators_indexes}")
+
+            for j, comp_index in enumerate(bad_comparators_indexes):
+                self.remove_n_add_new_comp(ind, comp_index)
+            # ---------------------------------------------------------------------------------
+            # ---------------------------------------------------------------------------------
+
 
         # remove_from_population = []
         # while bad_comparators:
@@ -239,11 +247,14 @@ class SortingNetworkPopulation:
 
         return
 
-    def remove_n_add_new_comp(self, ind: SortingNetwork, j: int)->None:
-        ind.remove_comparator(ind.gen[j])
+    def remove_n_add_new_comp(self, ind: SortingNetwork, comp_index: int)->None:
+        # remove the comparator j in the sorting network
+        ind.remove_comparator(ind.gen[comp_index])
+        # Creating a new random comparator
         numbers = range(self.data.sorting_list_size)
         values = tuple(random.sample(numbers, k=2))
         new_comparator = Comparator(values)
+        # push new comparator to sorting network and update the score
         ind.gen.append(new_comparator)
         ind.calc_score()
         return
@@ -263,7 +274,7 @@ class SortingNetworkPopulation:
         # Inserting the new comparator in a random index in the sorting network
         index = random.randint(0, gen_size)
         self.population[ind_index].gen.insert(index, comparator)
-
+        
         return
 
     def find_other_comparator(self, comparators, item):
