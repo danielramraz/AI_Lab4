@@ -1,7 +1,7 @@
-# ----------- File For Genetic Algorithm -----------
+# ----------- Project Files -----------
 import SmartInit
-inputs_text_sorting_list_size = "enter the size of the vectors: \n"
 
+inputs_text_sorting_list_size = "enter the size of the vectors: \n"
 
 class Data:
     sorting_list_size: int
@@ -31,7 +31,7 @@ class Data:
 
     def _init_consts(self):
         self.population_size = 100
-        self.max_generations = 100
+        self.max_generations = 10
         return
 
     def init_smart_vector(self):
