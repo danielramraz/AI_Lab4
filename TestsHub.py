@@ -18,7 +18,8 @@ def run_tests(sorting_networks: list, parasites: list) -> tuple:
     for i, sorting_network in enumerate(sorting_networks):
         print(f"====================== sorting_network index = {i}")
         parasites_copy = []
-        parasites_copy = parasites.copy()
+        for i, p_x in enumerate(parasites):
+            parasites_copy.append(p_x.copy())
         
         for r, p_x in enumerate(parasites_copy):
             print(f"the parasites copy: {p_x.unsorted_list}")
