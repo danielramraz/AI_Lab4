@@ -1,4 +1,4 @@
-# ----------- File For Genetic Algorithm -----------
+# ----------- Project Files -----------
 import Data
 import SmartInit
 from Comparator import Comparator
@@ -141,5 +141,11 @@ class SortingNetwork:
                 comparisons.append(item)
         return comparisons
 
-
+    def print_sorting_network(self) -> None:
+        sorting_network = sum(self.gen, [])
+        
+        for i, comperator in enumerate(sorting_network): 
+            print(i, comperator.value, comperator.score)
+                
+        return
 

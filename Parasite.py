@@ -34,3 +34,10 @@ class Parasite:
         random.shuffle(self.unsorted_list)
         self.score = self.fitness(self.unsorted_list)
         return
+
+    def copy(self):
+        new_unsorted_list = self.unsorted_list.copy()
+        new_parasite = Parasite(unsorted_list=new_unsorted_list)
+        return new_parasite
+
+    
