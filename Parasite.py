@@ -8,6 +8,7 @@ import random
 class Parasite:
     unsorted_list: list
     score: float
+    score_test: float
 
     def __init__(self, list_size = None, unsorted_list: list = None) -> None:
         if unsorted_list == None:

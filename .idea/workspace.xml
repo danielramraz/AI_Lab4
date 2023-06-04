@@ -57,23 +57,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/SortingNetworkPopulation.py</url>
-          <line>101</line>
-          <option name="timeStamp" value="65" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/SortingNetworkPopulation.py</url>
-          <line>61</line>
-          <option name="timeStamp" value="66" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/SortingNetworkPopulation.py</url>
-          <line>60</line>
-          <option name="timeStamp" value="67" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -87,6 +70,7 @@
         <watch expression="gen[5]" />
         <watch expression="gen[5]" />
         <watch expression="individual.comparisons_number" />
+        <watch expression="self.population[4]" />
       </configuration>
       <inline-watch fileUrl="file://$PROJECT_DIR$/SmartInit.py" line="0">
         <watch expression="__exception__.__len__()" language="Python" />

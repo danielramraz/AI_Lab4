@@ -6,7 +6,7 @@ import numpy as np
 
 # ----------- Consts ----------
 MUTATION_INDIVIDUALS = 20
-ELITE_PERCENTAGE = 0.05
+ELITE_PERCENTAGE = 0.20
 
 
 class UnsolvedSoringPopulation:
@@ -102,8 +102,8 @@ class UnsolvedSoringPopulation:
         return child_gen
 
     def print_population(self) -> None:
-        for i, parasite in enumerate(self.population):
-            print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
+        # for i, parasite in enumerate(self.population):
+        #     print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
         return
     
     def get_parasites(self) -> list:
@@ -116,6 +116,6 @@ class UnsolvedSoringPopulation:
         return elite_parasites
     
     def print_parasites(self, parasites: list) -> None:
-        for i, parasite in enumerate(parasites):
-            print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
+        # for i, parasite in enumerate(parasites):
+        #     print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
         return

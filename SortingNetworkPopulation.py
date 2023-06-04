@@ -1,9 +1,10 @@
 # ----------- File For Genetic Algorithm -----------
-import Comparator
 import Data
-import SmartInit
+import Niche
+from Comparator import Comparator
 from SortingNetworkHandler import SortingNetwork
 import SortingNetworkHandler
+import Clustering
 # ----------- Python Package -----------
 import time
 import numpy as np
@@ -11,7 +12,8 @@ import matplotlib.pyplot as plt
 import random
 import math
 # ----------- Consts Parameters -----------
-ELITE_PERCENTAGE = 0.05
+ELITE_PERCENTAGE = 0.30
+MUTATION_RATE = 3
 # ----------- Consts Name  -----------
 NONE = 0
 SINGLE = 1
@@ -33,6 +35,7 @@ class SortingNetworkPopulation:
         self.best_individual = None
         self.best_fitness = 0
         self.test_result = []
+        self.niches = []
 
         for index in range(self.data.population_size):
             individual = SortingNetwork(self.data)
@@ -43,10 +46,10 @@ class SortingNetworkPopulation:
     def set_fitnesses(self):
         self.fitnesses = []
         for individual in self.population:
-            self.fitnesses.append(individual.score)
+            self.fitnesses.append(individual.score_test)
         return
 
-    def genetic_algorithm(self):
+    def genetic_algorithm(self, generation_index):
         # ----------- Printing graphs for the report -----------
         # x1 = []
         # y1 = []
@@ -56,16 +59,38 @@ class SortingNetworkPopulation:
         #        xlabel='Generation number',
         #        ylabel='Genetic diversification distance')
         # ----------- Elitism -----------
-        # Select the best individuals for reproduction
         elites = self.get_sorting_networks()
-        self.population = elites
-        self.fix_population_by_testing()
+
+        if generation_index % MUTATION_RATE == 0:
+            population_copy = self.population
+            self.population = elites
+            self.fix_population_by_testing()
+            for ind in population_copy:
+                if ind not in self.population:
+                    self.population.append(ind)
+
+        # Select the best individuals for reproduction
+        # elites = self.get_sorting_networks()
+        # for ind in elites:
+        #     self.population.remove(ind)
+
+        # ----------- Clustering -----------
+        # if generation_index % 10 == 0:
+        #     self.niches = []
+        #     clusters = Clustering.shared_fitness_cluster(self.population)
+        #     for cluster in clusters:
+        #         niche = Niche.Niche(cluster)
+        #         self.niches.append(niche)
 
         # ----------- Print Fitness Information -----------
         gen_time = time.time()
-        average, variance, sd = average_fitness(self.fitnesses)
-        # x1.append(generation_index)
-        # y1.append(average)
+        # print(f"========================================= {generation_index}")
+        # for index, niche in enumerate(self.niches):
+        #     average, variance, sd = self.average_fitness(niche.fitnesses)
+        #     print(f"Average for niche {index + 1} is {average}")
+        #     print(f"Selection Pressure for niche {index + 1} is {variance}")
+        #     x1.append(generation_index)
+        #     y1.append(average)
 
         # ----------- Generate New Individuals -----------
         offspring = []
@@ -74,19 +99,36 @@ class SortingNetworkPopulation:
             parent2 = random.choice(elites)
             child = crossover_operator(parent1, parent2, self.data)
             offspring.append(child)
+        # for niche in self.niches:
+        #     niche.generate_individuals(self.data)
 
         # ----------- Update Population -----------
-        self.population += offspring
+        self.population = offspring + elites
+        for ind in self.population:
+            ind.calc_score()
         self.set_fitnesses()
+        # self.population = []
+        # for niche in self.niches:
+        #     for ind in niche.individuals:
+        #         self.population.append(ind)
+        # self.set_fitnesses()
 
         # ----------- Genetic Diversification -----------
-        distance = 0
-        for ind in self.population:
-            distance += ind.genetic_diversification_distance(self.population)
-        distance = distance / len(self.population)
-        special = self.genetic_diversification_special()
-        print(f"The genetic diversification distance is: {distance}")
-        print(f"The genetic diversification special is: {special}")
+        # distance = 0
+        # for ind in self.population:
+        #     distance += ind.genetic_diversification_distance(self.population)
+        # distance = distance / len(self.population)
+        # special = self.genetic_diversification_special()
+        # print(f"The genetic diversification distance is: {distance}")
+        # print(f"The genetic diversification special is: {special}")
+        # distance_all = 0
+        # for index, niche in enumerate(self.niches):
+        #     distance = 0
+        #     for ind in niche.individuals:
+        #         distance += ind.genetic_diversification_distance(niche.individuals)
+        #     distance = distance / len(self.population)
+        #     distance_all += distance
+        #     print(f"The genetic diversification distance for niche {index + 1} is: {distance}")
 
         # ----------- Print Time Information -----------
         # print(f"The absolute time for this gen is {time.time() - gen_time} sec")
@@ -94,12 +136,16 @@ class SortingNetworkPopulation:
 
         # ----------- Best Solution -----------
         # Find the individual with the highest fitness
-        self.best_individual = self.population[0]
+        if generation_index == 0:
+            self.best_individual = self.population[0]
+
         for individual in self.population:
+            # if self.best_individual.score > individual.score and self.best_individual.score_test < individual.score_test:
             if self.best_individual.score_test < individual.score_test:
                 self.best_individual = individual
 
         self.best_fitness = self.best_individual.score_test
+        print("Sorting Network best_fitness:",  self.best_fitness)
         # ax.plot(np.array(x1), np.array(y1))
         # plt.show()
         return
@@ -107,7 +153,7 @@ class SortingNetworkPopulation:
     def get_sorting_networks(self):
         # Select the best individuals for testing
         elite_size = int(self.data.population_size * ELITE_PERCENTAGE)
-        elite_indices = sorted(range(self.data.population_size), key=lambda i: self.fitnesses[i], reverse=False)[:elite_size]
+        elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses[i], reverse=False)[:elite_size]
         elites = [self.population[i] for i in elite_indices]
 
         return elites
@@ -139,31 +185,67 @@ class SortingNetworkPopulation:
         # for item in sorted_combined:
         #     self.population[item[1]].comparisons.remove(item[0].value)
         #     self.population[item[1]].gen[item[2]].remove(item[0])
+        for i, ind in enumerate(self.population):
+            comparators_scores = [comparator.score for j, comparator in enumerate(ind.gen)]
+            min_score = min(comparators_scores)
+            bad_comparators = [(comparator, j) for j, comparator in enumerate(ind.gen) if comparator.score == min_score]
+            mutations_iterations = random.randint(0, 4)
+            while mutations_iterations > 0:
+                item = random.sample(bad_comparators, k=1)[0]
+                self.indirect_replacement(item, i)
+                bad_comparators.remove(item)
+                mutations_iterations -= 1
 
-        bad_comparators = [(comparator, i, j)
-                           for i, ind in enumerate(self.population)
-                           for j, comparator in enumerate(ind.gen)
-                           if comparator.score == 0]
+        # remove_from_population = []
+        # while bad_comparators:
+        #     item = bad_comparators[0]
+        #     if random.random() < 0.2:
+        #         remove_from_population.append(item)
+        #     else:
+        #         item_2 = self.find_other_comparator(bad_comparators, item)
+        #         if item_2:
+        #             self.population[item[1]].gen[item[2]] = item_2[0].copy()
+        #             self.population[item_2[1]].gen[item_2[2]] = item[0].copy()
+        #             bad_comparators.remove(item_2)
+        #         else:
+        #             remove_from_population.append(item)
+        #     bad_comparators.remove(item)
+        #
+        # sorted_combined = sorted(remove_from_population, key=lambda x: x[2], reverse=True)
+        # for item in sorted_combined:
+        #     self.population[item[1]].gen.remove(item[0])
+        #     self.population[item[1]].comparisons_number = len(self.population[item[1]].gen)
+        #
+        # remove_from_population = []
+        # mutations_iterations = random.randint(1, 4)
+        # while mutations_iterations > 0:
+        #     item = random.sample(bad_comparators, k=1)[0]
+        #     self.indirect_replacement(item)
+        #     remove_from_population.append(item)
+        #     bad_comparators.remove(item)
+        #     mutations_iterations -= 1
 
-        remove_from_population = []
-        while bad_comparators:
-            item = bad_comparators[0]
-            if random.random() < 0.2:
-                remove_from_population.append(item)
-            else:
-                item_2 = self.find_other_comparator(bad_comparators, item)
-                if item_2:
-                    self.population[item[1]].gen[item[2]] = item_2[0].copy()
-                    self.population[item_2[1]].gen[item_2[2]] = item[0].copy()
-                    bad_comparators.remove(item_2)
-                else:
-                    remove_from_population.append(item)
-            bad_comparators.remove(item)
+        # sorted_combined = sorted(remove_from_population, key=lambda x: x[2], reverse=True)
+        # for item in sorted_combined:
+        #     self.population[item[1]].gen.remove_compertor(item[0])
 
-        sorted_combined = sorted(remove_from_population, key=lambda x: x[2], reverse=True)
-        for item in sorted_combined:
-            self.population[item[1]].gen.remove(item[0])
-            self.population[item[1]].comparisons_number = len(self.population[item[1]].gen)
+        return
+
+    def indirect_replacement(self, item, ind_index):
+        gen_size = len(self.population[ind_index].gen)
+        self.population[ind_index].remove_comparator(item[0])
+
+        # Creating a new random comparator
+        numbers = [i for i in range(self.data.sorting_list_size)]
+        values = random.sample(numbers, k=2)
+        if values[0] > values[1]:
+            values[0], values[1] = values[1], values[0]
+        values = tuple(values)
+        comparator = Comparator(values)
+
+        # Inserting the new comparator in a random index in the sorting network
+        index = random.randint(0, gen_size)
+        self.population[ind_index].gen.insert(index, comparator)
 
         return
 
