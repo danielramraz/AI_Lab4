@@ -7,13 +7,6 @@ import numpy as np
 # ----------- Consts ----------
 
 def run_tests(sorting_networks: list, parasites: list) -> tuple:
-    # parasites_copy = []
-    # for h in range(len(sorting_networks)):
-    #     parasites_copy.append(parasites.copy())
-    
-    # for h in range(len(sorting_networks)):
-    #     for r in range(len(parasites_copy[h])):
-    #         print(f"the parasites copy: {parasites_copy[h][r].unsorted_list}")
 
     for i, sorting_network in enumerate(sorting_networks):
         print(f"====================== sorting_network index = {i}")
@@ -27,19 +20,19 @@ def run_tests(sorting_networks: list, parasites: list) -> tuple:
         for k, p_y in enumerate(parasites_copy):
             test_sol_with_list(sorting_network, p_y)
         
-        # test_score = []
-        # for j, phase in enumerate(sorting_network.gen):
-        #     for k, comperator in enumerate(phase):
-        #         test_score.append(comperator.score)
+        test_score = []
+        for j, phase in enumerate(sorting_network.gen):
+            for k, comperator in enumerate(phase):
+                test_score.append(comperator.score)
         
-        # print(f"{i} the sorting network is ")
-        # sorting_network.print_sorting_network()
-        # print(f"{i} the total score for this sorting network is {test_score}")
+        print(f"{i} the sorting network is ")
+        sorting_network.print_sorting_network()
+        print(f"{i} the total score for this sorting network is {test_score}")
         
     return sorting_networks, parasites
 
 def test_sol_with_list(sorting_network: SortingNetwork, parasite: Parasite) -> None:
-    print(f"the un-solved parasite is {parasite.unsorted_list}")
+    # print(f"the un-solved parasite is {parasite.unsorted_list}")
     # print(f"the sorting network is ")
     # sorting_network.print_sorting_network()
 
@@ -49,7 +42,7 @@ def test_sol_with_list(sorting_network: SortingNetwork, parasite: Parasite) -> N
         for k, comperator in enumerate(phase):
             comper_n_swap(comperator, unsorted_list)
     
-    print(f"the solved parasite is {parasite.unsorted_list} - solved")
+    # print(f"the solved parasite is {parasite.unsorted_list} - solved")
     # print(f"the sorting network after is ")
     # sorting_network.print_sorting_network()
 
