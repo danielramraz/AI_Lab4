@@ -173,7 +173,14 @@ class SortingNetwork:
         del_comparator_index = comparisons.index(comparator.value)
         self.gen.remove(self.gen[del_comparator_index])
         return
-
+    
+    def print_sorting_network(self) -> None:
+        # sorting_network = sum(self.gen, [])
+        
+        for i, comperator in enumerate(self.gen): 
+            print(i, comperator.value, comperator.score)
+                
+        return
 
 def create_generate_bitonic_network(sorting_list_size):
     comparisons = generate_bitonic_network(sorting_list_size)

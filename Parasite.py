@@ -20,15 +20,15 @@ class Parasite:
         self.score = self.fitness(self.unsorted_list)
         return
 
-    def fitness(self, parasite) -> float:
-        ''' the lowest score is the must suffled
-        the highest score is sum of i^2 , 
-        that is sorted list or almost sorted list'''
+    def fitness(self, gen: list) -> float:
 
         score = 0
-        for index, value in enumerate(parasite):
-            score -= index * value
-
+        # for index, value in enumerate(parasite):
+        #     score -= index * value
+        for i in range(len(gen)):
+            for j in range(i + 1, len(gen)):
+                if gen[i] > gen[j]:
+                    score += 1
         return score
     
     def mutation(self) -> None:

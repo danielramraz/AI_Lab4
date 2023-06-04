@@ -56,9 +56,11 @@ class UnsolvedSoringPopulation:
             # Generate new individuals by applying crossover and mutation operators
             offspring = []
             while len(offspring) < self.population_size - elite_size:            
-                parent1 = random.choice(elites)
-                parent2 = random.choice(elites)
-                child_gen = self.cx(parent1, parent2)
+                # parent1 = random.choice(elites)
+                # parent2 = random.choice(elites)
+                # child_gen = self.cx(parent1, parent2)
+                child_gen = list(range(self.sorting_list_size))
+                random.shuffle(child_gen)
                 child = Parasite.Parasite(unsorted_list = child_gen)
                 offspring.append(child)
                 
@@ -102,8 +104,8 @@ class UnsolvedSoringPopulation:
         return child_gen
 
     def print_population(self) -> None:
-        # for i, parasite in enumerate(self.population):
-        #     print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
+        for i, parasite in enumerate(self.population):
+            print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
         return
     
     def get_parasites(self) -> list:
@@ -112,10 +114,10 @@ class UnsolvedSoringPopulation:
                             key=lambda parasite: parasite.score, 
                             reverse = True)[:elite_size]
         
-        self.print_parasites(elite_parasites)
+        # self.print_parasites(elite_parasites)
         return elite_parasites
     
     def print_parasites(self, parasites: list) -> None:
-        # for i, parasite in enumerate(parasites):
-        #     print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
+        for i, parasite in enumerate(parasites):
+            print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
         return

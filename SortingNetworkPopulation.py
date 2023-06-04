@@ -143,6 +143,7 @@ class SortingNetworkPopulation:
             # if self.best_individual.score > individual.score and self.best_individual.score_test < individual.score_test:
             if self.best_individual.score_test < individual.score_test:
                 self.best_individual = individual
+                print("best individual changed")
 
         self.best_fitness = self.best_individual.score_test
         print("Sorting Network best_fitness:",  self.best_fitness)
@@ -196,6 +197,13 @@ class SortingNetworkPopulation:
                 bad_comparators.remove(item)
                 mutations_iterations -= 1
 
+            # try to remove all comparators with score 0  -------------------------------------
+            print(f"the comparators_scores are: {comparators_scores}")
+            for j, score in enumerate(comparators_scores):
+                if score == 0:
+                    self.remove_n_add_new_comp(ind, j)
+            # ---------------------------------------------------------------------------------
+
         # remove_from_population = []
         # while bad_comparators:
         #     item = bad_comparators[0]
@@ -231,7 +239,16 @@ class SortingNetworkPopulation:
 
         return
 
-    def indirect_replacement(self, item, ind_index):
+    def remove_n_add_new_comp(self, ind: SortingNetwork, j: int)->None:
+        ind.remove_comparator(ind.gen[j])
+        numbers = range(self.data.sorting_list_size)
+        values = tuple(random.sample(numbers, k=2))
+        new_comparator = Comparator(values)
+        ind.gen.append(new_comparator)
+        ind.calc_score()
+        return
+    
+    def indirect_replacement(self, item: SortingNetwork, ind_index):
         gen_size = len(self.population[ind_index].gen)
         self.population[ind_index].remove_comparator(item[0])
 
