@@ -198,10 +198,10 @@ class SortingNetworkPopulation:
                 mutations_iterations -= 1
 
             # try to remove all comparators with score 0  -------------------------------------
-            print(f"the comparators_scores are: {comparators_scores}")
-            for j, score in enumerate(comparators_scores):
-                if score == 0:
-                    self.remove_n_add_new_comp(ind, j)
+            # print(f"the comparators_scores are: {comparators_scores}")
+            # for j, score in enumerate(comparators_scores):
+            #     if score == 0:
+            #         self.remove_n_add_new_comp(ind, j)
             # ---------------------------------------------------------------------------------
 
         # remove_from_population = []

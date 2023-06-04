@@ -43,15 +43,15 @@ class CoEvolution:
             self.sorting_networks.genetic_algorithm(generation_index)
             self.challengers.genetic_algorithm()
 
-            unsorted_list = list(range(16))
-            random.shuffle(unsorted_list)
-            print("---------------------------")
-            print("unsorted_list:", unsorted_list)
-            for k, comperator in enumerate(self.sorting_networks.best_individual.gen):
-                TestsHub.comper_n_swap(comperator, unsorted_list)
-            print("sorted_list:", unsorted_list)
-            
-            self.sorting_networks.best_individual.print_sorting_network()
+        unsorted_list = list(range(16))
+        random.shuffle(unsorted_list)
+        print("---------------------------")
+        print("unsorted_list:", unsorted_list)
+        for k, comperator in enumerate(self.sorting_networks.best_individual.gen):
+            TestsHub.comper_n_swap(comperator, unsorted_list)
+        print("sorted_list:", unsorted_list)
+        
+        self.sorting_networks.best_individual.print_sorting_network()
 
         return
     
