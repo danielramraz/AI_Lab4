@@ -5,7 +5,6 @@ from Comparator import Comparator
 # ----------- Python Package -----------
 import numpy as np
 import random
-# ----------- Consts Parameters -----------
 # ----------- Consts Name  -----------
 MAX_ATTEMPTS = 5
 
@@ -16,29 +15,24 @@ class SortingNetwork:
     score_share: float
     gen: list
     comparisons_number: int
-    comparisons: list
 
-    def __init__(self, data: Data, gen=None):
+    def __init__(self, data: Data, gen=None) -> None:
+        self.comparisons_number = SmartInit.ideal_num_comparators_vector_16
         if gen is not None:
             self.gen = gen
-            # self.comparisons = self.find_comparisons()
         else:
-            # self.gen,  self.comparisons = self.create_gen(data)
             self.gen = self.create_gen(data)
-        # self.comparisons_number = len(self.comparisons)
-        self.comparisons_number = len(self.gen)
         self.calc_score()
         self.score_test = 0
         self.score_share = 0
 
         return
 
-    def create_gen(self, data):
+    def create_gen(self, data: Data) -> list:
         numbers = [i for i in range(data.sorting_list_size)]
         gen = SmartInit.smart_vector_16().copy()
-        comparators_num = 60
 
-        while len(gen) < comparators_num:
+        while len(gen) < self.comparisons_number:
             values = random.sample(numbers, k=2)
             if values[0] > values[1]:
                 values[0],  values[1] = values[1],  values[0]
@@ -48,14 +42,14 @@ class SortingNetwork:
 
         return gen
 
-    def calc_score(self):
+    def calc_score(self) -> None:
         numbers_in_gen = np.array(self.find_numbers_in_gen())
         freq = np.bincount(numbers_in_gen)
         self.score = np.max(freq)
 
         return
 
-    def find_numbers_in_gen(self):
+    def find_numbers_in_gen(self) -> list:
         numbers_in_gen = []
         for i, comper in enumerate(self.gen):
             numbers_in_gen.append(comper.value[0])
@@ -63,20 +57,8 @@ class SortingNetwork:
 
         return numbers_in_gen
 
-    def calc_comparisons(self):
-        comparisons = sum([len(item) for i, item in enumerate(self.gen)])
-        return comparisons
-
-    def find_comparisons(self):
-        comparisons = []
-        for i, phase in enumerate(self.gen):
-            for j, comparator in enumerate(phase):
-                item = (comparator.value[0], comparator.value[1])
-                comparisons.append(item)
-        return comparisons
-
     # distance = different comparators at the same index
-    def distance_func(self, ind):
+    def distance_func(self, ind) -> float:
         self_comparators = [comp.value for comp in self.gen]
         ind_comparators = [comp.value for comp in ind.gen]
         self_comparators_set = set(self_comparators)
@@ -85,7 +67,7 @@ class SortingNetwork:
         return dist
 
     # distance = different comparators at the same index between gen and population gens
-    def genetic_diversification_distance(self, population):
+    def genetic_diversification_distance(self, population: list) -> float:
         dist = 0
         self_comparators_set = set([comp.value for comp in self.gen])
         for ind in population:
@@ -96,7 +78,7 @@ class SortingNetwork:
         dist = dist / len(population)
         return dist
 
-    def remove_comparator(self, comp_index):
+    def remove_comparator(self, comp_index: int) -> None:
         self.gen.remove(self.gen[comp_index])
         return
     
@@ -107,7 +89,7 @@ class SortingNetwork:
         return
 
 
-def create_generate_bitonic_network(sorting_list_size):
+def create_generate_bitonic_network(sorting_list_size: int) -> list:
     comparisons = generate_bitonic_network(sorting_list_size)
     new_comparisons = []
     for i, comp in enumerate(comparisons):
@@ -117,7 +99,7 @@ def create_generate_bitonic_network(sorting_list_size):
     return new_comparisons
 
 
-def generate_bitonic_network(sorting_list_size):
+def generate_bitonic_network(sorting_list_size: int) -> list:
     if sorting_list_size == 1:
         return []
 

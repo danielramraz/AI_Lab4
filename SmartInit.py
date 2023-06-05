@@ -7,6 +7,7 @@ init_vector_16 = [
     [[0, 8], [1, 9], [2, 10], [3, 11], [4, 12], [5, 13], [6, 14], [7, 15]]
 ]
 num_comparators_init_vector_16 = 32
+ideal_num_comparators_vector_16 = 60
 
 
 def smart_vector_16():
@@ -25,15 +26,14 @@ init_vector_8 = [
     [[0, 4], [1, 5], [2, 6], [3, 7]]
 ]
 num_comparators_init_vector_8 = 12
+ideal_num_comparators_vector_8 = 19
 
 
 def smart_vector_8():
     smart_init_vector_8 = []
-    for phase in init_vector_8:
-        new_phase = []
+    for phase in init_vector_16:
         for item in phase:
             comparator = Comparator(item)
-            new_phase.append(comparator)
-        smart_init_vector_8.append(new_phase)
+            smart_init_vector_8.append(comparator)
 
     return smart_init_vector_8

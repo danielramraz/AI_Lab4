@@ -40,31 +40,35 @@ class CoEvolution:
                 self.sorting_networks.genetic_algorithm(generation_index)
                 self.challengers.genetic_algorithm()
 
-
-            sorting_network_tests_results, parasites_tests_results = TestsHub.run_tests(sorting_networks, 
-                                                                                        parasites)
+            sorting_network_tests_results, parasites_tests_results = TestsHub.run_tests(sorting_networks, parasites)
             
             self.sorting_networks.tests_results = sorting_network_tests_results
             self.challengers.tests_results = parasites_tests_results
 
-        self.sorting_networks.set_best()
-        print("Depth: ", self.sorting_networks.best_individual.score)
-        unsorted_list = list(range(16))
-        random.shuffle(unsorted_list)
-        print("---------------------------")
-        print("unsorted_list:", unsorted_list)
-        for k, comperator in enumerate(self.sorting_networks.best_individual.gen):
-            TestsHub.comper_n_swap(comperator, unsorted_list)
-        print("sorted_list:", unsorted_list)
-
         # ----------- Print Time Information -----------
-        # print(f"The absolute time for this gen is {time.time() - gen_time} sec")
-        # print(f"The ticks time for this gen is {int(time.perf_counter())}")
+        print(f"The absolute time for this gen is {time.time() - gen_time} sec")
+        print(f"The ticks time for this gen is {int(time.perf_counter())}")
 
+        self.sorting_networks.set_best()
+        self.test_best_sorting_network()
         self.sorting_networks.best_individual.print_sorting_network()
 
         return
-    
+
+    def test_best_sorting_network(self) -> None:
+        print("Depth: ", self.sorting_networks.best_individual.score)
+
+        for i in range(10):
+            unsorted_list = list(range(16))
+            random.shuffle(unsorted_list)
+            print(f"----- Test {i+1} -----")
+            print("unsorted_list:", unsorted_list)
+            for k, comparator in enumerate(self.sorting_networks.best_individual.gen):
+                TestsHub.comper_n_swap(comparator, unsorted_list)
+            print("sorted_list:", unsorted_list)
+
+        return
+
     def print_solution_as_network(self) -> None:
         
         return
