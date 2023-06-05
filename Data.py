@@ -30,8 +30,8 @@ class Data:
         return
 
     def _init_consts(self):
-        self.population_size = 100
-        self.max_generations = 100
+        self.population_size = 1000
+        self.max_generations = 200
         return
 
     def init_smart_vector(self):
@@ -43,5 +43,3 @@ class Data:
             self.num_comparators_init_vector = SmartInit.num_comparators_init_vector_8
 
         return
-
-

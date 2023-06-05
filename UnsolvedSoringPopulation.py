@@ -34,16 +34,11 @@ class UnsolvedSoringPopulation:
         return
 
     def genetic_algorithm(self) -> None:
-
-        # scores = []
-
-        #starting GA
         for generation_index in range(self.max_generations):
             for index, parasite in enumerate(self.population):
                 self.fitnesses[index] = parasite.score
 
             average_fitness = np.average(self.fitnesses)
-            # gen_time = time.time()
             # print(f"========================================= {generation_index}")
             # print(f"Average for this gen is {average_fitness}")
 
@@ -52,13 +47,11 @@ class UnsolvedSoringPopulation:
             elites = sorted(self.population, 
                             key=lambda parasite: parasite.score, 
                             reverse = True)[:elite_size] 
-            # scores.append(np.average(self.fitnesses))
             # Generate new individuals by applying crossover and mutation operators
             offspring = []
             while len(offspring) < self.population_size - elite_size:            
-                parent1 = random.choice(elites)
-                parent2 = random.choice(elites)
-                child_gen = self.cx(parent1, parent2)
+                child_gen = list(range(self.sorting_list_size))
+                random.shuffle(child_gen)
                 child = Parasite.Parasite(unsorted_list = child_gen)
                 offspring.append(child)
                 
@@ -97,25 +90,20 @@ class UnsolvedSoringPopulation:
             cycle_no += 1
 
         child_gen = [p1[i] if n % 2 else p2[i] for i, n in enumerate(cycles)]
-        # [print(f"sol-> {ind.index}->") for ind in child_gen]
-
         return child_gen
 
     def print_population(self) -> None:
-        # for i, parasite in enumerate(self.population):
-        #     print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
+        for i, parasite in enumerate(self.population):
+            print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
         return
     
     def get_parasites(self) -> list:
         elite_size = int(self.population_size * ELITE_PERCENTAGE)
-        elite_parasites = sorted(self.population, 
-                            key=lambda parasite: parasite.score, 
-                            reverse = True)[:elite_size]
+        elite_parasites = sorted(self.population, key=lambda parasite: parasite.score, reverse=True)[:elite_size]
         
-        self.print_parasites(elite_parasites)
         return elite_parasites
     
     def print_parasites(self, parasites: list) -> None:
-        # for i, parasite in enumerate(parasites):
-        #     print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
+        for i, parasite in enumerate(parasites):
+            print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
         return

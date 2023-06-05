@@ -12,11 +12,9 @@ num_comparators_init_vector_16 = 32
 def smart_vector_16():
     smart_init_vector_16 = []
     for phase in init_vector_16:
-        new_phase = []
         for item in phase:
             comparator = Comparator(item)
-            new_phase.append(comparator)
-        smart_init_vector_16.append(new_phase)
+            smart_init_vector_16.append(comparator)
 
     return smart_init_vector_16
 
