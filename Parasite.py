@@ -23,8 +23,6 @@ class Parasite:
     def fitness(self, gen: list) -> float:
 
         score = 0
-        # for index, value in enumerate(parasite):
-        #     score -= index * value
         for i in range(len(gen)):
             for j in range(i + 1, len(gen)):
                 if gen[i] > gen[j]:

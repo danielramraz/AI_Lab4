@@ -34,72 +34,8 @@ class SortingNetwork:
         return
 
     def create_gen(self, data):
-        # ------ בניית גן לפי bins -------
-        # comparisons = self.generate_bitonic_network(data.sorting_list_size)
-        # if data.sorting_list_size == 16:
-        #     gen = SmartInit.smart_vector_16().copy()
-        # elif data.sorting_list_size == 8:
-        #     gen = SmartInit.smart_vector_8().copy()
-        #
-        # comparators_num = data.sorting_list_size * np.log2(data.sorting_list_size)
-        # current_comparators_num_in_gen = data.num_comparators_init_vector
-        #
-        # while current_comparators_num_in_gen < comparators_num:
-        #     # Defining the optional indexes for comparison
-        #     numbers = [i for i in range(data.sorting_list_size)]
-        #     comparators_in_phase = [i for i in range(1, int(data.sorting_list_size/2)+1)]
-        #
-        #     # Setting the number of comparators in a phase
-        #     # so that no more comparators are created than the final number of comparators
-        #     attempts = 0
-        #     while True:
-        #         num_comparators_in_phase = random.sample(comparators_in_phase, k=1)[0]
-        #         if current_comparators_num_in_gen + num_comparators_in_phase <= comparators_num:
-        #             break
-        #         comparators_in_phase.remove(num_comparators_in_phase)
-        #
-        #     # Initialize phase
-        #     phase = []
-        #     while num_comparators_in_phase > 0:
-        #         attempts = 0
-        #         # Random select indexes for comparison
-        #         while attempts < MAX_ATTEMPTS:
-        #             values = random.sample(numbers, k=2)
-        #             if values[0] > values[1]:
-        #                 values[0],  values[1] = values[1],  values[0]
-        #             values = tuple(values)
-        #             # Checking if there is an identical comparator
-        #             if values not in comparisons:
-        #                 break
-        #             attempts += 1
-        #
-        #             # Checking if there are 2 numbers left in the list of index options
-        #             # and there is a comparator with these indexes - Then we will finish the phase
-        #             # pair = (numbers[0], numbers[1])
-        #             # if len(numbers) == 2 and pair in comparisons:
-        #             #     num_comparators_in_phase = 0
-        #             #     break
-        #
-        #         if attempts == MAX_ATTEMPTS:
-        #             num_comparators_in_phase = 0
-        #
-        #         # If  we haven't finished the phase -
-        #         # Add the comparator to the phase and remove its indexes from the optional list of indexes
-        #         if num_comparators_in_phase != 0:
-        #             comparisons.append(values)
-        #             comparator = Comparator(values)
-        #             numbers.remove(values[0])
-        #             numbers.remove(values[1])
-        #             phase.append(comparator)
-        #             num_comparators_in_phase -= 1
-        #             current_comparators_num_in_gen += 1
-        #
-        #     # Add the phase to the sorting network
-        #     gen.append(phase)
-
         numbers = [i for i in range(data.sorting_list_size)]
-        gen = create_generate_bitonic_network(data.sorting_list_size)
-        # comparators_num = data.sorting_list_size * np.log2(data.sorting_list_size)
+        gen = SmartInit.smart_vector_16().copy()
         comparators_num = 60
 
         while len(gen) < comparators_num:
@@ -114,8 +50,6 @@ class SortingNetwork:
 
     def calc_score(self):
         numbers_in_gen = np.array(self.find_numbers_in_gen())
-        # var = np.var(numbers_in_gen)
-        # self.score = var
         freq = np.bincount(numbers_in_gen)
         self.score = np.max(freq)
 
@@ -123,12 +57,6 @@ class SortingNetwork:
 
     def find_numbers_in_gen(self):
         numbers_in_gen = []
-        # ------ בניית גן לפי bins -------
-        # for i, phase in enumerate(self.gen):
-        #     for j, comper in enumerate(phase):
-        #         numbers_in_gen.append(comper.value[0])
-        #         numbers_in_gen.append(comper.value[1])
-
         for i, comper in enumerate(self.gen):
             numbers_in_gen.append(comper.value[0])
             numbers_in_gen.append(comper.value[1])
@@ -168,19 +96,16 @@ class SortingNetwork:
         dist = dist / len(population)
         return dist
 
-    def remove_comparator(self, comparator):
-        comparisons = [comp.value for comp in self.gen]
-        del_comparator_index = comparisons.index(comparator.value)
-        self.gen.remove(self.gen[del_comparator_index])
+    def remove_comparator(self, comp_index):
+        self.gen.remove(self.gen[comp_index])
         return
     
     def print_sorting_network(self) -> None:
-        # sorting_network = sum(self.gen, [])
-        
         for i, comperator in enumerate(self.gen): 
             print(i, comperator.value, comperator.score)
                 
         return
+
 
 def create_generate_bitonic_network(sorting_list_size):
     comparisons = generate_bitonic_network(sorting_list_size)
