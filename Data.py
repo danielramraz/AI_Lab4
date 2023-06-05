@@ -1,7 +1,7 @@
 # ----------- Project Files -----------
 import SmartInit
-
 inputs_text_sorting_list_size = "enter the size of the vectors: \n"
+
 
 class Data:
     sorting_list_size: int
@@ -30,16 +30,14 @@ class Data:
         return
 
     def _init_consts(self):
-        self.population_size = 1000
+        self.population_size = 400
         self.max_generations = 200
         return
 
     def init_smart_vector(self):
         if self.sorting_list_size == 16:
-            # self.smart_init_vector = SmartInit.smart_vector_16().copy()
             self.num_comparators_init_vector = SmartInit.num_comparators_init_vector_16
         elif self.sorting_list_size == 8:
-            # self.smart_init_vector = SmartInit.smart_vector_8().copy()
             self.num_comparators_init_vector = SmartInit.num_comparators_init_vector_8
 
         return
