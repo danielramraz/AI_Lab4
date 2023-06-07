@@ -45,8 +45,8 @@ class UnsolvedSoringPopulation:
             # Select the best individuals for reproduction
             elite_size = int(self.population_size * ELITE_PERCENTAGE)
             elites = sorted(self.population, 
-                            key=lambda parasite: parasite.score, 
-                            reverse = True)[:elite_size] 
+                            key=lambda parasite: parasite.score_test,
+                            reverse=False)[:elite_size]
             # Generate new individuals by applying crossover and mutation operators
             offspring = []
             while len(offspring) < self.population_size - elite_size:            
@@ -64,8 +64,8 @@ class UnsolvedSoringPopulation:
 
         # Find the parasite with the highest fitness        
         best_parasite = sorted(self.population, 
-                               key=lambda parasite: parasite.score, 
-                               reverse = False)[-1]                 
+                               key=lambda parasite: parasite.score_test,
+                               reverse=False)[0]
 
         best_fitness = best_parasite.score
         # print_scores_grah(scores)   

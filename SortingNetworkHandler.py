@@ -16,14 +16,18 @@ class SortingNetwork:
     gen: list
     comparisons_number: int
 
-    def __init__(self, data: Data, gen=None) -> None:
+    def __init__(self, data: Data = None, gen: list = None, score_test: float = None) -> None:
         self.comparisons_number = SmartInit.ideal_num_comparators_vector_16
         if gen is not None:
             self.gen = gen
         else:
             self.gen = self.create_gen(data)
         self.calc_score()
-        self.score_test = 0
+        if score_test is not None:
+            self.score_test = score_test
+        else:
+            self.score_test = 0
+
         self.score_share = 0
 
         return
@@ -87,6 +91,15 @@ class SortingNetwork:
             print(i, comperator.value, comperator.score)
                 
         return
+
+    def copy(self):
+        new_gen = []
+        for comperator in self.gen:
+            new_comperator = comperator.copy()
+            new_gen.append(new_comperator)
+
+        new_sorting_network = SortingNetwork(gen=new_gen, score_test=self.score_test)
+        return new_sorting_network
 
 
 def create_generate_bitonic_network(sorting_list_size: int) -> list:
