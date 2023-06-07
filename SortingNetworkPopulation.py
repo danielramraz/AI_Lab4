@@ -164,7 +164,7 @@ class SortingNetworkPopulation:
         for i, ind in enumerate(self.population):
             min_score = min([comparator.score for j, comparator in enumerate(ind.gen)])
             bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
-                                     if comparator.score == min_score and j >= SmartInit.num_comparators_init_vector_16]
+                                     if comparator.score == 0 and j >= SmartInit.num_comparators_init_vector_16]
             bad_comparators_index.reverse()
             self.remove_bad_comparators(ind, bad_comparators_index)
             self.indirect_replacement(ind, len(bad_comparators_index))

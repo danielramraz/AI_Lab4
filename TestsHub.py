@@ -10,6 +10,7 @@ def run_tests(sorting_networks: list, parasites: list) -> tuple:
     for i, sorting_network in enumerate(sorting_networks):
         parasites_copy = []
         sorting_network.score_test = 0
+        total_score = 0
 
         for c, comperator in enumerate(sorting_network.gen):
             comperator.score = 0
@@ -19,11 +20,17 @@ def run_tests(sorting_networks: list, parasites: list) -> tuple:
 
         for k, p_y in enumerate(parasites_copy):
             test_sol_with_list(sorting_network, p_y)
+            # total_score += test_sol_with_list(sorting_network, p_y)
+
+        # if total_score == 0:
+        #     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FINISH! 100 AI")
+        #     return sorting_network, None
                 
     return sorting_networks, parasites
 
 
 def test_sol_with_list(sorting_network: SortingNetwork, parasite: Parasite) -> None:
+
     local_unsorted_list = parasite.unsorted_list
 
     for k, comperator in enumerate(sorting_network.gen):
@@ -32,6 +39,7 @@ def test_sol_with_list(sorting_network: SortingNetwork, parasite: Parasite) -> N
     # the new score for the network is the dif in the inputs before and after the attempt of sorting
     after_sort_score = fitness(local_unsorted_list)
     sorting_network.score_test += (parasite.score - after_sort_score)
+    parasite.score_test -= sorting_network.score_test
     return
 
 

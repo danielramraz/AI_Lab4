@@ -18,6 +18,7 @@ class Parasite:
             self.unsorted_list = unsorted_list
 
         self.score = self.fitness(self.unsorted_list)
+        self.score_test = 0
         return
 
     def fitness(self, gen: list) -> float:

@@ -30,7 +30,7 @@ class Data:
         return
 
     def _init_consts(self):
-        self.population_size = 400
+        self.population_size = 200
         self.max_generations = 200
         return
 

@@ -1,6 +1,7 @@
 # ----------- Project Files -----------
 import random
 
+import Comparator
 from Data import Data
 from SortingNetworkPopulation import SortingNetworkPopulation
 from UnsolvedSoringPopulation import UnsolvedSoringPopulation
@@ -41,6 +42,9 @@ class CoEvolution:
                 self.challengers.genetic_algorithm()
 
             sorting_network_tests_results, parasites_tests_results = TestsHub.run_tests(sorting_networks, parasites)
+            # if parasites_tests_results is None:
+            #     self.sorting_networks.best_individual = sorting_network_tests_results
+            #     break
             
             self.sorting_networks.tests_results = sorting_network_tests_results
             self.challengers.tests_results = parasites_tests_results
@@ -49,7 +53,7 @@ class CoEvolution:
         print(f"The absolute time for this gen is {time.time() - gen_time} sec")
         print(f"The ticks time for this gen is {int(time.perf_counter())}")
 
-        self.sorting_networks.set_best()
+        # self.sorting_networks.set_best()
         self.test_best_sorting_network()
         self.sorting_networks.best_individual.print_sorting_network()
 
@@ -64,7 +68,7 @@ class CoEvolution:
             print(f"----- Test {i+1} -----")
             print("unsorted_list:", unsorted_list)
             for k, comparator in enumerate(self.sorting_networks.best_individual.gen):
-                TestsHub.comper_n_swap(comparator, unsorted_list)
+                self.comper_n_swap(comparator, unsorted_list)
             print("sorted_list:", unsorted_list)
 
         return
@@ -72,3 +76,13 @@ class CoEvolution:
     def print_solution_as_network(self) -> None:
         
         return
+
+    def comper_n_swap(self, comperator: Comparator, lst: list) -> None:
+        x = comperator.value[0]
+        y = comperator.value[1]
+
+        if lst[x] > lst[y]:
+            temp = lst[x]
+            lst[x] = lst[y]
+            lst[y] = temp
+            return
