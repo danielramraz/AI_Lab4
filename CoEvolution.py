@@ -34,12 +34,12 @@ class CoEvolution:
         for generation_index in range(self.data.max_generations):
             print(f"================================= generation_index ========= {generation_index}")
 
-            parasites = self.challengers.get_parasites()
-            sorting_networks = self.sorting_networks.get_sorting_networks()
-
-            if generation_index != 0:
+            if generation_index > 0:
                 self.sorting_networks.genetic_algorithm(generation_index)
                 self.challengers.genetic_algorithm()
+
+            parasites = self.challengers.get_parasites()
+            sorting_networks = self.sorting_networks.get_sorting_networks()
 
             sorting_network_tests_results, parasites_tests_results = TestsHub.run_tests(sorting_networks, parasites)
             # if parasites_tests_results is None:
@@ -53,7 +53,7 @@ class CoEvolution:
         print(f"The absolute time for this gen is {time.time() - gen_time} sec")
         print(f"The ticks time for this gen is {int(time.perf_counter())}")
 
-        # self.sorting_networks.set_best()
+        self.sorting_networks.set_best()
         self.test_best_sorting_network()
         self.sorting_networks.best_individual.print_sorting_network()
 
