@@ -1,14 +1,13 @@
 # ----------- Project Files -----------
-import random
-
 from Data import Data
 from SortingNetworkPopulation import SortingNetworkPopulation
 from UnsolvedSoringPopulation import UnsolvedSoringPopulation
 import SortingNetworkHandler
 import TestsHub
+import FinalTest
 # ----------- Python Package -----------
 import time
-import threading
+import random
 import numpy as np
 # ----------- Consts ----------
 setting_vector = [16]
@@ -50,9 +49,10 @@ class CoEvolution:
         print(f"The ticks time for this gen is {int(time.perf_counter())}")
 
         self.sorting_networks.set_best()
-        self.test_best_sorting_network()
+        # self.test_best_sorting_network()
         self.sorting_networks.best_individual.print_sorting_network()
-
+        FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.challengers)
+        self.sorting_networks.best_individual.print_sorting_network()
         return
 
     def test_best_sorting_network(self) -> None:
