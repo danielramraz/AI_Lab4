@@ -38,7 +38,7 @@ class UnsolvedSoringPopulation:
             for index, parasite in enumerate(self.population):
                 self.fitnesses[index] = parasite.score
 
-            average_fitness = np.average(self.fitnesses)
+            # average_fitness = np.average(self.fitnesses)
             # print(f"========================================= {generation_index}")
             # print(f"Average for this gen is {average_fitness}")
 
@@ -71,27 +71,6 @@ class UnsolvedSoringPopulation:
         # print_scores_grah(scores)   
         return best_parasite.unsorted_list , best_fitness
 
-    def cx(self, parent1: Parasite, parent2: Parasite) -> list:
-        p1 = parent1.unsorted_list
-        p2 = parent2.unsorted_list
-
-        cycles = [-1] * len(p1)
-        cycle_no = 1
-        cycle_start = (i for i, v in enumerate(cycles) if v < 0)
-
-        for pos in cycle_start:
-
-            while cycles[pos] < 0:
-                cycles[pos] = cycle_no
-                if p2[pos] in p1:
-                    pos = p1.index(p2[pos])
-                else:
-                    pos = 0
-            cycle_no += 1
-
-        child_gen = [p1[i] if n % 2 else p2[i] for i, n in enumerate(cycles)]
-        return child_gen
-
     def print_population(self) -> None:
         for i, parasite in enumerate(self.population):
             print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
@@ -101,7 +80,14 @@ class UnsolvedSoringPopulation:
         elite_size = int(self.population_size * ELITE_PERCENTAGE)
         elite_parasites = sorted(self.population, key=lambda parasite: parasite.score, reverse=True)[:elite_size]
         
-        return elite_parasites
+        random_parasites = []
+        for i in range(elite_size):
+            unsorted_random_list = list(range(self.sorting_list_size))
+            random.shuffle(unsorted_random_list)
+            unsorted_random_list = Parasite.Parasite(unsorted_list = unsorted_random_list)
+            random_parasites.append(unsorted_random_list)
+
+        return elite_parasites + random_parasites
     
     def print_parasites(self, parasites: list) -> None:
         for i, parasite in enumerate(parasites):

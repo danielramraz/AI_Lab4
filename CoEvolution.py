@@ -1,4 +1,5 @@
 # ----------- Project Files -----------
+from datetime import timedelta
 import random
 
 import Comparator
@@ -51,7 +52,9 @@ class CoEvolution:
             self.challengers.tests_results = parasites_tests_results
 
         # ----------- Print Time Information -----------
-        print(f"The absolute time for this gen is {time.time() - gen_time} sec")
+        total_time_sec = time.time() - gen_time
+        total_time = timedelta(seconds=total_time_sec)
+        print(f"The absolute time for this gen is {total_time} sec")
         print(f"The ticks time for this gen is {int(time.perf_counter())}")
 
         self.sorting_networks.set_best()
