@@ -34,10 +34,6 @@ class CoEvolution:
         for generation_index in range(self.data.max_generations):
             print(f"================================= generation_index ========= {generation_index}")
 
-            if generation_index > 0:
-                self.sorting_networks.genetic_algorithm(generation_index)
-                self.challengers.genetic_algorithm()
-
             parasites = self.challengers.get_parasites()
             sorting_networks = self.sorting_networks.get_sorting_networks()
 
@@ -48,6 +44,9 @@ class CoEvolution:
             
             self.sorting_networks.tests_results = sorting_network_tests_results
             self.challengers.tests_results = parasites_tests_results
+
+            self.sorting_networks.genetic_algorithm(generation_index)
+            self.challengers.genetic_algorithm()
 
         # ----------- Print Time Information -----------
         print(f"The absolute time for this gen is {time.time() - gen_time} sec")

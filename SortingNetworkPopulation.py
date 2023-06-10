@@ -14,7 +14,7 @@ import random
 import math
 # ----------- Consts Parameters -----------
 ELITE_PERCENTAGE = 0.30
-MUTATION_RATE = 5
+MUTATION_RATE = 10
 # ----------- Consts Name  -----------
 NONE = 0
 SINGLE = 1
@@ -65,7 +65,7 @@ class SortingNetworkPopulation:
     def genetic_algorithm(self, generation_index: int) -> None:
 
         # ----------- Update Best Sorting Network After Test -----------
-        if generation_index == 1:
+        if generation_index == 0:
             self.best_individual = self.population[0]
 
         for individual in self.population:
@@ -79,16 +79,24 @@ class SortingNetworkPopulation:
         self.best_fitness = self.best_individual.score_test
         print("Sorting Network best_fitness:",  self.best_fitness)
 
-        # -----------  Fix Sorting Network After Test -----------
-        population_copy = self.population
-        self.population = self.tests_results
-        self.fix_population_by_testing()
-        self.population = population_copy
-
         # ----------- Elitism -----------
         self.set_fitnesses()
         elites = self.get_elite_networks()
-        self.population = elites
+
+        # -----------  Fix Sorting Network After Test -----------
+        if generation_index % MUTATION_RATE:
+            self.population = self.tests_results
+            self.fix_population_by_testing()
+            self.population = self.tests_results + elites
+
+        else:
+            self.population = elites
+
+        # population_copy = self.population
+        # self.population = self.tests_results
+        # self.fix_population_by_testing()
+        # self.population = population_copy
+
 
         # ----------- Update Population -----------
         # for ind in population_copy:
@@ -119,7 +127,8 @@ class SortingNetworkPopulation:
 
         # ----------- Generate New Individuals -----------
         offspring = []
-        while len(offspring) < self.data.population_size - len(elites):
+        # while len(offspring) < self.data.population_size - len(elites):
+        while len(offspring) + len(self.population) < self.data.population_size:
             parent1 = random.choice(elites)
             parent2 = random.choice(elites)
             child = crossover_operator(parent1, parent2, self.data)
