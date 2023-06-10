@@ -107,3 +107,11 @@ class UnsolvedSoringPopulation:
         for i, parasite in enumerate(parasites):
             print(f"the {i} parasite -> {parasite.unsorted_list}, and his score {parasite.score}")
         return
+    
+    def get_parasites_as_lists(self):
+        temp_parasites = self.get_parasites()
+        parasites_as_lists = []
+        for parasite in temp_parasites:
+            parasites_as_lists.append(parasite.unsorted_list)
+
+        return parasites_as_lists

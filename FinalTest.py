@@ -1,4 +1,5 @@
 # ----------- Project Files -----------
+import numpy as np
 from Comparator import Comparator
 from Parasite import Parasite
 from SortingNetworkHandler import SortingNetwork
@@ -15,13 +16,13 @@ sorted_list = []
 def set_local_testing(challengers: UnsolvedSoringPopulation) -> None:
 
     global sorted_list
-    # global parasites_tests
+    global parasites_tests
     global random_tests
     global engineered_tests
     global sorted_list
 
     sorted_list = list(range(16))
-    # parasites_tests = challengers.get_parasites()
+    parasites_tests = challengers.get_parasites_as_lists()
     for i in range(10):
         unsorted_random_list = list(range(16))
         random.shuffle(unsorted_random_list)
@@ -33,34 +34,38 @@ def set_local_testing(challengers: UnsolvedSoringPopulation) -> None:
                             [15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0],
                             [0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8]]
     
-    for test in engineered_examples:
+    for index, test in enumerate(engineered_examples):
         engineered_tests.append(test)
-        engineered_tests.append(test.reverse)  
-
+        engineered_tests.append(test.copy())
+        engineered_tests[index*2].reverse()
+   
     return
 
 def sorting_network_final_test(sorting_network: SortingNetwork, challengers: UnsolvedSoringPopulation) -> None:
     global sorted_list
-    # global parasites_tests
+    global parasites_tests
     global random_tests
     global engineered_tests
     global sorted_list
 
     set_local_testing(challengers)
 
-    # print(f"----- start parasites tests -----")
-    # for parasite in parasites_tests:
-    #     test_network_with_list(sorting_network, parasite)
-    # print(f"finish with parasites tests !")
+    print(f"---------- start parasites tests ----------")
+    for parasite in parasites_tests:
+        test_network_with_list(sorting_network, parasite)
+        # print(f"engineered case {parasite}")
+    print(f"finish with parasites tests !")
 
-    print(f"----- start random tests -----")
+    print(f"---------- start random tests ----------")
     for test in random_tests:
         test_network_with_list(sorting_network, test)
+        # print(f"engineered case {test}")
     print(f"finish with random tests !")
 
-    print(f"----- start engineered tests -----")
+    print(f"---------- start engineered tests ----------")
     for case in engineered_tests:
         test_network_with_list(sorting_network, case)
+        # print(f"engineered case {case}")
     print(f"finish with engineered tests !")
 
     print(f"====================\nfinish with all tests !!!!!!!")
