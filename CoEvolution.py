@@ -1,4 +1,5 @@
 # ----------- Project Files -----------
+from datetime import timedelta
 import random
 
 import Comparator
@@ -7,9 +8,10 @@ from SortingNetworkPopulation import SortingNetworkPopulation
 from UnsolvedSoringPopulation import UnsolvedSoringPopulation
 import SortingNetworkHandler
 import TestsHub
+import FinalTest
 # ----------- Python Package -----------
 import time
-import threading
+import random
 import numpy as np
 # ----------- Consts ----------
 setting_vector = [16]
@@ -50,13 +52,16 @@ class CoEvolution:
             self.challengers.tests_results = parasites_tests_results
 
         # ----------- Print Time Information -----------
-        print(f"The absolute time for this gen is {time.time() - gen_time} sec")
+        total_time_sec = time.time() - gen_time
+        total_time = timedelta(seconds=total_time_sec)
+        print(f"The absolute time for this gen is {total_time} sec")
         print(f"The ticks time for this gen is {int(time.perf_counter())}")
 
-        # self.sorting_networks.set_best()
-        self.test_best_sorting_network()
+        self.sorting_networks.set_best()
+        # self.test_best_sorting_network()
         self.sorting_networks.best_individual.print_sorting_network()
-
+        FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.challengers)
+        self.sorting_networks.best_individual.print_sorting_network()
         return
 
     def test_best_sorting_network(self) -> None:
