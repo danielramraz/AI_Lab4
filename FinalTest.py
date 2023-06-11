@@ -41,6 +41,7 @@ def set_local_testing(challengers: UnsolvedSoringPopulation) -> None:
    
     return
 
+
 def sorting_network_final_test(sorting_network: SortingNetwork, challengers: UnsolvedSoringPopulation) -> None:
     global sorted_list
     global parasites_tests
@@ -101,6 +102,7 @@ def comper_n_swap(comperator: Comparator, lst: list) -> None:
         lst[y] = temp
         comperator.score += 1
         return
+
 
 def check_solved_list(lst: list) -> bool:
     if lst == sorted_list:

@@ -68,6 +68,8 @@ class SortingNetworkPopulation:
         if generation_index == 0:
             self.best_individual = self.population[0]
 
+        old_best_individual = self.best_individual
+
         for individual in self.population:
             if self.best_individual.score_test < individual.score_test:
                 self.best_individual = individual.copy()
@@ -84,7 +86,9 @@ class SortingNetworkPopulation:
         elites = self.get_elite_networks()
 
         # -----------  Fix Sorting Network After Test -----------
-        if generation_index % MUTATION_RATE:
+        # if generation_index % MUTATION_RATE:
+        if old_best_individual.score_test == self.best_individual.score_test:
+            print(" IN MUTATION")
             self.population = self.tests_results
             self.fix_population_by_testing()
             self.population = self.tests_results + elites
