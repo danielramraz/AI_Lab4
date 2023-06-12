@@ -38,7 +38,7 @@ def smart_vector_8():
 
     return smart_init_vector_8
 
-# hilles solution from 32 index comparator
+# Hilles solution from 32 index comparator
 hilles_singleton_flag = True
 hilles_solution_suffix= [
     [5,13],[6,9],[3,12],[1,2],[7,11],[13,14],[4,8],
@@ -47,7 +47,7 @@ hilles_solution_suffix= [
     [7,9],[10,12],[7,8],[9,10],[11,12],[6,7],[8,9]
 ]
 
-def hilles_suffix_solution():
+def hilles_suffix_solution()-> list:
     soloution_suffix = []
     for comp in hilles_solution_suffix:
         comparator = Comparator(comp)
