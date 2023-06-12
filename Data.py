@@ -30,8 +30,8 @@ class Data:
         return
 
     def _init_consts(self):
-        self.population_size = 1000
-        self.max_generations = 200
+        self.population_size = 400
+        self.max_generations = 2
         return
 
     def init_smart_vector(self):

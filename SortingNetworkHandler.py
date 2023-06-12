@@ -5,6 +5,7 @@ from Comparator import Comparator
 # ----------- Python Package -----------
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 # ----------- Consts Name  -----------
 MAX_ATTEMPTS = 5
 
@@ -36,6 +37,13 @@ class SortingNetwork:
         numbers = [i for i in range(data.sorting_list_size)]
         gen = SmartInit.smart_vector_16().copy()
 
+        # if SmartInit.hilles_singleton_flag:
+        #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()
+        #     for comp in hilles_suffix:
+        #         gen.append(comp)
+        #     SmartInit.hilles_singleton_flag = False
+        #     return gen
+        
         while len(gen) < self.comparisons_number:
             values = random.sample(numbers, k=2)
             if values[0] > values[1]:
@@ -86,10 +94,9 @@ class SortingNetwork:
         self.gen.remove(self.gen[comp_index])
         return
     
-    def print_sorting_network(self) -> None:
+    def console_print_sorting_network(self) -> None:
         for i, comperator in enumerate(self.gen): 
-            print(i, comperator.value, comperator.score)
-                
+            print(i, comperator.value, comperator.score)  
         return
 
     def copy(self):
@@ -100,8 +107,7 @@ class SortingNetwork:
 
         new_sorting_network = SortingNetwork(gen=new_gen, score_test=self.score_test)
         return new_sorting_network
-
-
+    
 def create_generate_bitonic_network(sorting_list_size: int) -> list:
     comparisons = generate_bitonic_network(sorting_list_size)
     new_comparisons = []
@@ -126,5 +132,3 @@ def generate_bitonic_network(sorting_list_size: int) -> list:
         comparisons.append((i, i + sorting_list_size // 2))
 
     return comparisons
-
-
