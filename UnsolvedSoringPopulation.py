@@ -6,7 +6,7 @@ import numpy as np
 
 # ----------- Consts ----------
 MUTATION_INDIVIDUALS = 20
-ELITE_PERCENTAGE = 0.20
+ELITE_PERCENTAGE = 0.30
 
 
 class UnsolvedSoringPopulation:

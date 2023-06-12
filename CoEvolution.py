@@ -56,7 +56,7 @@ class CoEvolution:
         print(f"The absolute time for this gen is {total_time} sec")
         print(f"The ticks time for this gen is {int(time.perf_counter())}")
 
-        self.sorting_networks.set_best()
+        self.sorting_networks.set_best_sorting_networks()
         self.test_best_sorting_network()
         FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.challengers)
         self.sorting_networks.best_individual.print_sorting_network()

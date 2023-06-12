@@ -99,6 +99,7 @@
         <watch expression="gen[5]" />
         <watch expression="individual.comparisons_number" />
         <watch expression="self.population[4]" />
+        <watch expression="self.ax" />
       </configuration>
       <inline-watch fileUrl="file://$PROJECT_DIR$/SmartInit.py" line="0">
         <watch expression="__exception__.__len__()" language="Python" />
