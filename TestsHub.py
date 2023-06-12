@@ -25,7 +25,7 @@ def run_tests(sorting_networks: list, parasites: list) -> tuple:
         sorting_network.score_test = sorting_network.score_test / len(parasites)
 
     for j, parasite in enumerate(parasites):
-        parasite.score_test = parasite.score_test / len(parasites)
+        parasite.score_test = parasite.score_test / len(sorting_networks)
                 
     return sorting_networks, parasites
 
