@@ -1,21 +1,12 @@
-# 0:1,2:3,4:5,6:7,8:9,10:11,12:13,14:15
-# 0:2,1:3,4:6,5:7,8:10,9:11,12:14,13:15
-# 0:4,1:5,2:6,3:7,8:12,9:13,10:14,11:15
-# 0:8,1:9,2:10,3:11,4:12,5:13,6:14,7:15
-# 5:10,6:9,3:12,13:14,7:11,1:2,4:8
-# 1:4,7:13,2:8,11:14
-# 2:4,5:6,9:10,11:13,3:8,7:12
-# 6:8,10:12,3:5,7:9
-# 3:4,5:6,7:8,9:10,11:12
-# 6:7,8:9
-
-import argparse
-import sys
-
+from IPython.display import SVG, display
+from SortingNetworkHandler import SortingNetwork
 
 class Comparator:
-	def __init__(self, s):
-		inputs = s.strip().split(":")
+	i1: int
+	i2: int
+	
+	def __init__(self, s: tuple):
+		inputs = s
 		input1 = int(inputs[0])
 		input2 = int(inputs[1])
 		if input1 < input2:
@@ -166,124 +157,14 @@ def count_ones(x):
 	return result
 
 
-def read_comparison_network(filename):
+def read_comparison_network(sorting_network_object: SortingNetwork):
 	cn = ComparisonNetwork()
-	if filename:
-		with open(filename, 'r') as f:
-			for line in f:
-				for c in line.split(","):
-					cn.append(Comparator(c))
-	else:
-		for line in sys.stdin:
-			for c in line.split(","):
-				cn.append(Comparator(c))
+	for comp in sorting_network_object.gen:
+		cn.append(Comparator(comp.value))
 	return cn
 
 
-def main2():
-	parser = argparse.ArgumentParser()
-	parser.add_argument("-i", "--input", metavar="inputfile",
-						help="specify a file containing comparison network definition")
-	parser.add_argument("-o", "--output", metavar="outputfile", nargs='?', const='',
-						help="specify a file for saving the comparison network definition")
-	parser.add_argument("-c", "--check", action="store_true", help="check whether it is a sorting network")
-	parser.add_argument("--show-progress", action="store_true", help="show percent complete while checking whether it is a sorting network")
-	parser.add_argument("-s", "--sort", metavar="list", nargs='?', const='',
-						help="sorts the list using the input comparison network")
-	parser.add_argument("--svg", metavar="outputfile", nargs='?', const='', help="generate SVG")
-	args = parser.parse_args()
-
-	if args.check:
-		cn = read_comparison_network(args.input)
-		if cn.is_sorting_network(args.show_progress):
-			print("It is a sorting network!")
-		else:
-			print("It is not a sorting network.")
-
-	if args.svg or args.svg == "":
-		cn = read_comparison_network(args.input)
-		if args.svg == "":
-			print(cn.svg())
-		else:
-			with open(args.svg, "w") as f:
-				f.write(cn.svg())
-
-	if args.output or args.output == "":
-		cn = read_comparison_network(args.input)
-		if args.output == "":
-			print(str(cn))
-		else:
-			with open(args.output, "w") as f:
-				f.write(str(cn))
-
-	if args.sort or args.sort == "":
-		cn = read_comparison_network(args.input)
-		if args.sort == "":
-			input_sequence = eval(sys.stdin.readline())
-		else:
-			input_sequence = eval(args.sort)
-		for sorted_item in cn.sort_sequence(input_sequence):
-			print(sorted_item)
+def SVG_print_sorting_network(sorting_network_object: SortingNetwork):
+	cn = read_comparison_network(sorting_network_object)
+	display(SVG(cn.svg()))
 			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import matplotlib.pyplot as plt
-
-class SortingNetwork:
-    def __init__(self, gen):
-        self.gen = gen
-
-    def get_max_input(self):
-        max_input = 0
-        for comp in self.gen:
-            max_input = max(max_input, max(comp.value))
-        return max_input
-
-class Comparator:
-    def __init__(self, value):
-        self.value = value
-
-def plot_sorting_network(sorting_network):
-    comparators = sorting_network.gen
-    num_layers = sorting_network.get_max_input() + 1
-
-    fig, ax = plt.subplots()
-    ax.set_aspect('equal')
-    ax.axis('off')
-
-    spacing = 1.0 / (num_layers + 2)
-
-    for comp in comparators:
-        x_coord = comp.index * spacing
-
-        y_coords = [(num_layers - comp.value[0] + 1) * spacing, (num_layers - comp.value[1] + 1) * spacing]
-
-        ax.plot([x_coord, x_coord], y_coords, 'k', linewidth=1)
-        ax.plot(x_coord, y_coords[0], 'ko', markersize=4)
-        ax.plot(x_coord, y_coords[1], 'ko', markersize=4)
-
-    for i in range(num_layers + 1):
-        ax.plot([0, len(comparators) * spacing], [i * spacing, i * spacing], 'k', linewidth=0.5, linestyle='--')
-
-    plt.show()
-
-
-# Example usage
-# comparators = [Comparator((1, 0)), Comparator((2, 1)), Comparator((0, 2))]
-# sorting_network = SortingNetwork(comparators)
-# plot_sorting_network(sorting_network)
-
-

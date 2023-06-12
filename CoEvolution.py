@@ -1,20 +1,16 @@
 # ----------- Project Files -----------
-import cProfile
-from datetime import timedelta
-import pstats
-import random
-
-import Comparator
 from Data import Data
 from SortingNetworkPopulation import SortingNetworkPopulation
 from UnsolvedSoringPopulation import UnsolvedSoringPopulation
 import SortingNetworkHandler
 import TestsHub
 import FinalTest
+import SVG_SortingNetwork
 # ----------- Python Package -----------
 import time
-import random
-import numpy as np
+import cProfile
+from datetime import timedelta
+import pstats
 # ----------- Consts ----------
 setting_vector = [16]
 
@@ -55,9 +51,9 @@ class CoEvolution:
 
 
         self.sorting_networks.set_best()
-        self.sorting_networks.best_individual.print_sorting_network()
+        self.sorting_networks.best_individual.console_print_sorting_network()
         FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.challengers)
-        self.sorting_networks.best_individual.print_sorting_network()
+        self.sorting_networks.best_individual.console_print_sorting_network()
         
 
         # ----------- Print Time and Comput Information -----------
@@ -70,11 +66,10 @@ class CoEvolution:
         profile.disable()
         ps = pstats.Stats(profile)
         ps.sort_stats('cumtime') 
-        ps.print_stats()
+        ps.print_stats(10)
 
         return
 
     def print_solution_as_network(self) -> None:
-        SortingNetworkHandler.plot_sorting_network2(self.sorting_networks.best_individual)
-
+        SVG_SortingNetwork.SVG_print_sorting_network(self.sorting_networks.best_individual)
         return

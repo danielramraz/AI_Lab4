@@ -42,7 +42,6 @@ class UnsolvedSoringPopulation:
         elites = sorted(self.population, 
                         key=lambda parasite: parasite.score_test,
                         reverse=False)[:elite_size]
-        
         # Generate new individuals by applying crossover and mutation operators
         offspring = []
         while len(offspring) < self.population_size - elite_size:            
