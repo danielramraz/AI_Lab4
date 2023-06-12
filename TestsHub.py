@@ -66,3 +66,5 @@ def fitness(gen: list) -> float:
             if gen[i] > gen[j]:
                 score += 1
     return score
+
+
