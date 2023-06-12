@@ -5,6 +5,7 @@ from Comparator import Comparator
 # ----------- Python Package -----------
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 # ----------- Consts Name  -----------
 MAX_ATTEMPTS = 5
 
@@ -101,7 +102,12 @@ class SortingNetwork:
         new_sorting_network = SortingNetwork(gen=new_gen, score_test=self.score_test)
         return new_sorting_network
 
-
+    def get_max_input(self):
+        max_input = 0
+        for comp in self.gen:
+            max_input = max(max_input, max(comp.value))
+        return max_input
+    
 def create_generate_bitonic_network(sorting_list_size: int) -> list:
     comparisons = generate_bitonic_network(sorting_list_size)
     new_comparisons = []
@@ -128,3 +134,64 @@ def generate_bitonic_network(sorting_list_size: int) -> list:
     return comparisons
 
 
+def plot_sorting_network(sorting_network: SortingNetwork) -> None:
+    # Extract the comparators from the sorting network
+    comparators = [comp.value for comp in sorting_network.gen]
+
+    # Create a graph using matplotlib
+    fig, ax = plt.subplots()
+    ax.set_aspect('equal')
+    ax.axis('off')
+
+    # Calculate the number of layers in the sorting network
+    num_layers = max(max(pair) for pair in comparators)
+
+    # Set the horizontal spacing between the comparators
+    spacing = 1.0 / (num_layers + 2)
+
+    # Plot the comparators
+    for i, (x, y) in enumerate(comparators):
+        # Calculate the x-coordinates of the comparators
+        x_coords = [i * spacing, (i + 1) * spacing]
+
+        # Calculate the y-coordinates of the comparators
+        y_coords = [(num_layers - x) * spacing, (num_layers - y ) * spacing]
+
+        # Plot the lines connecting the comparators
+        ax.plot(x_coords, y_coords, 'k', linewidth=0.5)
+
+        # Plot the circles representing the comparators
+        ax.plot(x_coords, y_coords, 'ko', markersize=4)
+
+    # Plot horizontal lines representing the index
+    for i in range(num_layers + 1):
+        ax.plot([0, len(comparators) * spacing], [i * spacing, i * spacing], 'k', linewidth=0.5, linestyle='--')
+
+    # Show the plot
+    plt.show()
+
+
+
+def plot_sorting_network2(sorting_network: SortingNetwork) -> None:
+    comparators = sorting_network.gen
+    num_layers = sorting_network.get_max_input() + 1
+
+    fig, ax = plt.subplots()
+    ax.set_aspect('equal')
+    ax.axis('off')
+
+    spacing = 1.0 / (num_layers + 2)
+
+    for comp in comparators:
+        x_coord = comp.index * spacing
+
+        y_coords = [(num_layers - comp.value[0] + 1) * spacing, (num_layers - comp.value[1] + 1) * spacing]
+
+        ax.plot([x_coord, x_coord], y_coords, 'k', linewidth=1)
+        ax.plot(x_coord, y_coords[0], 'ko', markersize=4)
+        ax.plot(x_coord, y_coords[1], 'ko', markersize=4)
+
+    for i in range(num_layers + 1):
+        ax.plot([0, len(comparators) * spacing], [i * spacing, i * spacing], 'k', linewidth=0.5, linestyle='--')
+
+    plt.show()

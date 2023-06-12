@@ -6,7 +6,7 @@ import numpy as np
 
 # ----------- Consts ----------
 MUTATION_INDIVIDUALS = 20
-ELITE_PERCENTAGE = 0.20
+ELITE_PERCENTAGE = 0.10
 
 
 class UnsolvedSoringPopulation:
@@ -34,33 +34,29 @@ class UnsolvedSoringPopulation:
         return
 
     def genetic_algorithm(self) -> None:
-        for generation_index in range(self.max_generations):
-            for index, parasite in enumerate(self.population):
-                self.fitnesses[index] = parasite.score
+        for index, parasite in enumerate(self.population):
+            self.fitnesses[index] = parasite.score
 
-            # average_fitness = np.average(self.fitnesses)
-            # print(f"========================================= {generation_index}")
-            # print(f"Average for this gen is {average_fitness}")
-
-            # Select the best individuals for reproduction
-            elite_size = int(self.population_size * ELITE_PERCENTAGE)
-            elites = sorted(self.population, 
-                            key=lambda parasite: parasite.score_test,
-                            reverse=False)[:elite_size]
-            # Generate new individuals by applying crossover and mutation operators
-            offspring = []
-            while len(offspring) < self.population_size - elite_size:            
-                child_gen = list(range(self.sorting_list_size))
-                random.shuffle(child_gen)
-                child = Parasite.Parasite(unsorted_list = child_gen)
-                offspring.append(child)
-                
-            # mutation
-            mutation_indexes = random.sample(range(len(offspring)), k= MUTATION_INDIVIDUALS)
-            for i, index in enumerate(mutation_indexes):         
-                offspring[index].mutation()
+        # Select the best individuals for reproduction
+        elite_size = int(self.population_size * ELITE_PERCENTAGE)
+        elites = sorted(self.population, 
+                        key=lambda parasite: parasite.score_test,
+                        reverse=False)[:elite_size]
+        
+        # Generate new individuals by applying crossover and mutation operators
+        offspring = []
+        while len(offspring) < self.population_size - elite_size:            
+            child_gen = list(range(self.sorting_list_size))
+            random.shuffle(child_gen)
+            child = Parasite.Parasite(unsorted_list = child_gen)
+            offspring.append(child)
             
-            self.population = elites + offspring
+        # mutation
+        mutation_indexes = random.sample(range(len(offspring)), k= MUTATION_INDIVIDUALS)
+        for i, index in enumerate(mutation_indexes):         
+            offspring[index].mutation()
+        
+        self.population = elites + offspring
 
         # Find the parasite with the highest fitness        
         best_parasite = sorted(self.population, 
