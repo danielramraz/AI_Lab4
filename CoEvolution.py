@@ -55,10 +55,12 @@ class CoEvolution:
         total_time = timedelta(seconds=total_time_sec)
         print(f"The absolute time for this gen is {total_time} sec")
         print(f"The ticks time for this gen is {int(time.perf_counter())}")
+
         self.sorting_networks.set_best_sorting_networks()
-        self.test_best_sorting_network()
+        print("Depth: ", self.sorting_networks.best_individual.score)
+        self.sorting_networks.best_individual.console_print_sorting_network()
+        # self.test_best_sorting_network()
         FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.challengers)
-        self.sorting_networks.best_individual.print_sorting_network()
         return
 
     def test_best_sorting_network(self) -> None:

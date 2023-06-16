@@ -52,7 +52,7 @@ class SortingNetworkPopulation:
         self.y1 = []
         self.ax = plt.axes()
         self.ax.set(xlim=(0, 200),
-                    ylim=(0, 60000),
+                    ylim=(0, 16),
                     xlabel='Generation number',
                     ylabel='Best Fitness')
         return
@@ -77,21 +77,9 @@ class SortingNetworkPopulation:
         elites = self.get_elite_networks()
 
         # -----------  Fix Sorting Network After Test -----------
-        # if old_best_individual.score_test == self.best_individual.score_test:
-        # if generation_index % MUTATION_RATE == 0:
-            # print(" IN MUTATION")
         self.population = self.get_sorting_networks_for_mutation()
         self.fix_population_by_testing()
         self.population += elites + [self.best_individual.copy()]
-
-        # else:
-        #     self.population = elites + [self.best_individual.copy()]
-
-        # population_copy = self.population
-        # self.population = self.tests_results
-        # self.fix_population_by_testing()
-        # self.population = population_copy
-
 
         # ----------- Update Population -----------
         # for ind in population_copy:
@@ -160,29 +148,11 @@ class SortingNetworkPopulation:
         #     distance_all += distance
         #     print(f"The genetic diversification distance for niche {index + 1} is: {distance}")
 
-        # ----------- Best Solution -----------
-        # Find the individual with the highest fitness
-
-        # ----------- Update Best Sorting Network -----------
-        # if generation_index == 1:
-        #     self.best_individual = self.population[0]
-        #
-        # for individual in self.population:
-        #     if self.best_individual.score_test < individual.score_test:
-        #         self.best_individual = individual.copy()
-        #         print("best individual changed")
-        #     elif self.best_individual.score_test == individual.score_test and self.best_individual.score > individual.score:
-        #         self.best_individual = individual.copy()
-        #         print("best individual changed + Depth")
-        #
-        # self.best_fitness = self.best_individual.score_test
-        # print("Sorting Network best_fitness:",  self.best_fitness)
-
         self.x1.append(generation_index)
         self.y1.append(self.best_fitness)
-        # if generation_index == self.data.max_generations-1:
-        #     self.ax.plot(np.array(self.x1), np.array(self.y1))
-        #     plt.show()
+        if generation_index == self.data.max_generations-1:
+            self.ax.plot(np.array(self.x1), np.array(self.y1))
+            plt.show()
         return
 
     def get_elite_networks(self) -> list:
@@ -195,14 +165,12 @@ class SortingNetworkPopulation:
 
     def get_sorting_networks(self) -> list:
         # Select individuals for testing
-
         elite_size = int(self.data.population_size * ELITE_PERCENTAGE)
         # elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses[i], reverse=False)[:elite_size]
         # elites = [self.population[i] for i in elite_indices]
 
         sorting_networks_for_test = [ind for ind in self.population if ind.score >= 13]
         if len(sorting_networks_for_test) > elite_size:
-
             # ----------- Tournament Ranking -----------
             sorting_networks_for_test = random.sample(sorting_networks_for_test, k=elite_size)
 
@@ -222,13 +190,13 @@ class SortingNetworkPopulation:
 
     def get_sorting_networks_for_mutation(self) -> list:
         mutation_size = int(self.data.population_size * MUTATION_PERCENTAGE)
+
+        # Best fittns: 15.15
         # sorting_networks_for_mutation = [ind for ind in self.population if ind.score_test > 0]
         # if len(sorting_networks_for_mutation) > mutation_size:
         #     sorting_networks_for_mutation = random.sample(sorting_networks_for_mutation, k=mutation_size)
 
-        # NEXT RUN TRY THIS
         sorting_networks_for_mutation = random.sample(self.population, k=mutation_size)
-
         print("Size sorting_networks for mutation:", len(sorting_networks_for_mutation))
         return sorting_networks_for_mutation
 

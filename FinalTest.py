@@ -50,6 +50,7 @@ def sorting_network_final_test(sorting_network: SortingNetwork, challengers: Uns
     global sorted_list
 
     set_local_testing(challengers)
+    accuracy = 0
 
     print(f"---------- start parasites tests ----------")
     success_tests = 0
@@ -59,6 +60,7 @@ def sorting_network_final_test(sorting_network: SortingNetwork, challengers: Uns
     print("Tests sorted correctly: ", success_tests)
     print("Tests WAS NOT sorted correctly: ", len(parasites_tests) - success_tests)
     print(f"finish with parasites tests !")
+    accuracy += success_tests
 
     print(f"---------- start random tests ----------")
     success_tests = 0
@@ -68,6 +70,7 @@ def sorting_network_final_test(sorting_network: SortingNetwork, challengers: Uns
     print("Tests sorted correctly: ", success_tests)
     print("Tests WAS NOT sorted correctly: ", len(random_tests) - success_tests)
     print(f"finish with random tests !")
+    accuracy += success_tests
 
     print(f"---------- start engineered tests ----------")
     success_tests = 0
@@ -77,8 +80,12 @@ def sorting_network_final_test(sorting_network: SortingNetwork, challengers: Uns
     print("Tests sorted correctly: ", success_tests)
     print("Tests WAS NOT sorted correctly: ", len(engineered_tests) - success_tests)
     print(f"finish with engineered tests !")
+    accuracy += success_tests
 
     print(f"====================\nfinish with all tests !!!!!!!")
+    accuracy = (accuracy / (len(parasites_tests) + len(random_tests) + len(engineered_tests))) * 100
+    print(f"Tests sorted correctly with accuracy: {accuracy}%")
+
     return
 
 
