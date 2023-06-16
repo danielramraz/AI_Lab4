@@ -53,7 +53,9 @@ class CoEvolution:
             self.sorting_networks.genetic_algorithm(generation_index)
             self.challengers.genetic_algorithm()
 
-            self.change_elite_percentage(generation_index, self.sorting_networks, self.challengers)
+            self.change_elite_percentage(generation_index, 
+                                         self.sorting_networks, 
+                                         self.challengers)
 
             gen_time_sec = int(time.time() - gen_time)
             local_gen_time = timedelta(seconds=gen_time_sec)
@@ -73,7 +75,8 @@ class CoEvolution:
 
         self.sorting_networks.set_best_sorting_networks()
         print("Depth: ", self.sorting_networks.best_individual.score)
-        # self.sorting_networks.best_individual.console_print_sorting_network()
+        self.sorting_networks.best_individual.console_print_sorting_network()
+        self.sorting_networks.best_individual.save_sorting_network_to_file()
         FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.challengers)
         return
 
@@ -81,7 +84,7 @@ class CoEvolution:
                                 pop1: SortingNetworkPopulation, 
                                 pop2: UnsolvedSoringPopulation) -> None:
         period = 25                             # const period of generations we switch from exploration to exploitation
-        exploration_mode = False                # starting with exploration mode
+        exploration_mode = True                # starting with exploration mode
         exploitation_mode = not exploration_mode
 
         if generation % period == 0:

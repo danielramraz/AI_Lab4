@@ -188,7 +188,7 @@ class SortingNetworkPopulation:
             #
             # elites = [sorting_networks_for_test[i] for i in elite_indices]
             # sorting_networks_for_test = elites
-        print("Size sorting_networks for test:", len(sorting_networks_for_test))
+        # print("Size sorting_networks for test:", len(sorting_networks_for_test))
         return sorting_networks_for_test
 
     def get_sorting_networks_for_mutation(self) -> list:
