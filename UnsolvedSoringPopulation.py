@@ -1,4 +1,5 @@
 # ----------- Project Files -----------
+from Data import Data
 import Parasite
 # ----------- Python Package -----------
 import random
@@ -6,7 +7,7 @@ import numpy as np
 
 # ----------- Consts ----------
 MUTATION_INDIVIDUALS = 20
-ELITE_PERCENTAGE = 0.30
+# ELITE_PERCENTAGE = 0.30
 
 
 class UnsolvedSoringPopulation:
@@ -17,6 +18,9 @@ class UnsolvedSoringPopulation:
     max_generations: int
     sorting_list_size: int
 
+    ELITE_PERCENTAGE: float
+    data: Data
+
     def __init__(self, data) -> None:
         self.population = []
         self.fitnesses = []
@@ -24,6 +28,8 @@ class UnsolvedSoringPopulation:
         self.population_size = len(self.population)
         self.max_generations = data.max_generations
         self.sorting_list_size = data.sorting_list_size
+        self.ELITE_PERCENTAGE = data.initial_unsolved_soring_network_elite_percentage
+        self.data = data
         return
     
     def create_population(self, data) -> None:
@@ -38,7 +44,7 @@ class UnsolvedSoringPopulation:
             self.fitnesses[index] = parasite.score
 
         # Select the best individuals for reproduction
-        elite_size = int(self.population_size * ELITE_PERCENTAGE)
+        elite_size = int(self.population_size * self.ELITE_PERCENTAGE)
         elites = sorted(self.population, 
                         key=lambda parasite: parasite.score_test,
                         reverse=False)[:elite_size]
@@ -72,7 +78,7 @@ class UnsolvedSoringPopulation:
         return
     
     def get_parasites(self) -> list:
-        elite_size = int(self.population_size * ELITE_PERCENTAGE)
+        elite_size = int(self.population_size * self.ELITE_PERCENTAGE / 2)
         elite_parasites = sorted(self.population, key=lambda parasite: parasite.score, reverse=True)[:elite_size]
         
         random_parasites = []
@@ -96,3 +102,8 @@ class UnsolvedSoringPopulation:
             parasites_as_lists.append(parasite.unsorted_list)
 
         return parasites_as_lists
+    
+    def set_elite_percentage(self, perc: float) -> None:
+        self.ELITE_PERCENTAGE = perc
+        return
+    

@@ -9,7 +9,7 @@ import random
 
 
 parasites_tests = []        # get best parasites
-random_tests = []           # 10 random tests
+random_tests = []           # 100 random tests
 engineered_tests = []       # some spacial cases
 sorted_list = []            
 
@@ -23,7 +23,7 @@ def set_local_testing(challengers: UnsolvedSoringPopulation) -> None:
 
     sorted_list = list(range(16))
     parasites_tests = challengers.get_parasites_as_lists()
-    for i in range(10):
+    for i in range(100):
         unsorted_random_list = list(range(16))
         random.shuffle(unsorted_random_list)
         random_tests.append(unsorted_random_list)

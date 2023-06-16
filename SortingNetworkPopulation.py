@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import random
 import math
 # ----------- Consts Parameters -----------
-ELITE_PERCENTAGE = 0.30
+# ELITE_PERCENTAGE = 0.30
 MUTATION_PERCENTAGE = 0.30
 MUTATION_RATE = 5
 # ----------- Consts Name  -----------
@@ -31,6 +31,8 @@ class SortingNetworkPopulation:
     best_individual: SortingNetwork
     best_fitness: float
 
+    ELITE_PERCENTAGE: float
+    
     def __init__(self, data: Data):
         self.data = data
         self.population = []
@@ -38,6 +40,7 @@ class SortingNetworkPopulation:
         self.fitnesses_test = []
         self.test_result = []
         self.niches = []
+        self.ELITE_PERCENTAGE = data.initial_parasites_elite_percentage
 
         for index in range(self.data.population_size):
             individual = SortingNetwork(self.data)
@@ -157,7 +160,7 @@ class SortingNetworkPopulation:
 
     def get_elite_networks(self) -> list:
         # Select the best individuals for evolution
-        elite_size = int(self.data.population_size * ELITE_PERCENTAGE)
+        elite_size = int(self.data.population_size * self.ELITE_PERCENTAGE)
         elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses_test[i], reverse=True)[:elite_size]
         elites = [self.population[i].copy() for i in elite_indices]
 
@@ -165,7 +168,7 @@ class SortingNetworkPopulation:
 
     def get_sorting_networks(self) -> list:
         # Select individuals for testing
-        elite_size = int(self.data.population_size * ELITE_PERCENTAGE)
+        elite_size = int(self.data.population_size * self.ELITE_PERCENTAGE)
         # elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses[i], reverse=False)[:elite_size]
         # elites = [self.population[i] for i in elite_indices]
 
@@ -251,6 +254,10 @@ class SortingNetworkPopulation:
 
     def genetic_diversification_special(self):
         return 0
+    
+    def set_elite_percentage(self, perc: float) -> None:
+        self.ELITE_PERCENTAGE = perc
+        return
 
 
 def average_fitness(fitness: list):
