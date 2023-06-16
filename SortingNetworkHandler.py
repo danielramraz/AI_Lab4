@@ -95,11 +95,16 @@ class SortingNetwork:
         return
     
     def console_print_sorting_network(self) -> None:
-        out_file = open("BestSortingNetwork.txt", "w")
         for i, comperator in enumerate(self.gen): 
             print(i, comperator.value, comperator.score)
+        return
+    
+    def save_sorting_network_to_file(self) -> None:
+        out_file = open("BestSortingNetwork.txt", "w")
+        for i, comperator in enumerate(self.gen): 
             out_file.write(str(comperator.value))
             out_file.write("\n")
+    
         out_file.close()
         return
 

@@ -2,7 +2,7 @@
 # -----------Students ID -----------
 # ID_1: 305283111
 # ID_2: 207479940
-# ----------- Project Files -----------כעת
+# ----------- Project Files -----------
 import CoEvolution
 
 
