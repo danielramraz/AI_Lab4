@@ -2,7 +2,6 @@
 class Comparator:
     score: float
     value: tuple
-    index: int
 
     def __init__(self, value):
         self.value = tuple(value)
@@ -10,4 +9,5 @@ class Comparator:
 
     def copy(self):
         new_comparator = Comparator(self.value)
+        new_comparator.score = self.score
         return new_comparator

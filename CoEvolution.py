@@ -10,6 +10,7 @@ import SVG_SortingNetwork
 import time
 import cProfile
 from datetime import timedelta
+import random
 import pstats
 # ----------- Consts ----------
 setting_vector = [16]
@@ -40,21 +41,13 @@ class CoEvolution:
             parasites = self.challengers.get_parasites()
             sorting_networks = self.sorting_networks.get_sorting_networks()
 
-            if generation_index != 0:
-                self.sorting_networks.genetic_algorithm(generation_index)
-                self.challengers.genetic_algorithm()
-
             sorting_network_tests_results, parasites_tests_results = TestsHub.run_tests(sorting_networks, parasites)
             
             self.sorting_networks.tests_results = sorting_network_tests_results
             self.challengers.tests_results = parasites_tests_results
 
-
-        self.sorting_networks.set_best()
-        self.sorting_networks.best_individual.console_print_sorting_network()
-        FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.challengers)
-        self.sorting_networks.best_individual.console_print_sorting_network()
-        
+            self.sorting_networks.genetic_algorithm(generation_index)
+            self.challengers.genetic_algorithm()
 
         # ----------- Print Time and Comput Information -----------
 
@@ -63,10 +56,29 @@ class CoEvolution:
         print(f"The absolute time for this gen is {total_time} sec")
         print(f"The ticks time for this gen is {int(time.perf_counter())}")
 
-        profile.disable()
-        ps = pstats.Stats(profile)
-        ps.sort_stats('cumtime') 
-        ps.print_stats(10)
+        self.sorting_networks.set_best_sorting_networks()
+        print("Depth: ", self.sorting_networks.best_individual.score)
+        self.sorting_networks.best_individual.console_print_sorting_network()
+        # self.test_best_sorting_network()
+        FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.challengers)
+        return
+
+    def test_best_sorting_network(self) -> None:
+        print("Depth: ", self.sorting_networks.best_individual.score)
+
+        for i in range(10):
+            unsorted_list = list(range(16))
+            random.shuffle(unsorted_list)
+            print(f"----- Test {i+1} -----")
+            print("unsorted_list:", unsorted_list)
+            for k, comparator in enumerate(self.sorting_networks.best_individual.gen):
+                self.comper_n_swap(comparator, unsorted_list)
+            print("sorted_list:", unsorted_list)
+
+        # profile.disable()
+        # ps = pstats.Stats(profile)
+        # ps.sort_stats('cumtime')
+        # ps.print_stats(10)
 
         return
 

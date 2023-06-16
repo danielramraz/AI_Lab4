@@ -95,8 +95,12 @@ class SortingNetwork:
         return
     
     def console_print_sorting_network(self) -> None:
+        out_file = open("BestSortingNetwork.txt", "w")
         for i, comperator in enumerate(self.gen): 
-            print(i, comperator.value, comperator.score)  
+            print(i, comperator.value, comperator.score)
+            out_file.write(str(comperator.value))
+            out_file.write("\n")
+        out_file.close()
         return
 
     def copy(self):
@@ -107,6 +111,7 @@ class SortingNetwork:
 
         new_sorting_network = SortingNetwork(gen=new_gen, score_test=self.score_test)
         return new_sorting_network
+
     
 def create_generate_bitonic_network(sorting_list_size: int) -> list:
     comparisons = generate_bitonic_network(sorting_list_size)
