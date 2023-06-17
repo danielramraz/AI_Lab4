@@ -31,7 +31,6 @@ class CoEvolution:
 
     def solve_sorting_network_problem(self) -> None:
         sol_time = time.time()
-
         for generation_index in range(self.data.max_generations):
             gen_time = time.time()
             profile = cProfile.Profile()
@@ -83,14 +82,15 @@ class CoEvolution:
     def change_elite_percentage(self, generation: int, 
                                 pop1: SortingNetworkPopulation, 
                                 pop2: UnsolvedSoringPopulation) -> None:
-        period = 25                             # const period of generations we switch from exploration to exploitation
+        period = 100                             # const period of generations we switch from exploration to exploitation
         exploration_mode = True                # starting with exploration mode
         exploitation_mode = not exploration_mode
 
-        if generation % period == 0:
+        if generation % period == 0 and generation > 0:
+            print("EXPLOTAION!!!!")
             exploration_mode = not exploration_mode
 
-        if exploration_mode :
+        if exploration_mode:
             pop1.set_elite_percentage(0.3)
             pop2.set_elite_percentage(0.1)
         elif exploitation_mode:

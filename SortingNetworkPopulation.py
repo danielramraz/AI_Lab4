@@ -54,7 +54,7 @@ class SortingNetworkPopulation:
         self.x1 = []
         self.y1 = []
         self.ax = plt.axes()
-        self.ax.set(xlim=(0, 200),
+        self.ax.set(xlim=(0, 10000),
                     ylim=(0, 16),
                     xlabel='Generation number',
                     ylabel='Best Fitness')
@@ -167,28 +167,20 @@ class SortingNetworkPopulation:
         return elites
 
     def get_sorting_networks(self) -> list:
-        # Select individuals for testing
-        elite_size = int(self.data.population_size * self.ELITE_PERCENTAGE)
-        # elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses[i], reverse=False)[:elite_size]
-        # elites = [self.population[i] for i in elite_indices]
+        size = int(self.data.population_size * self.ELITE_PERCENTAGE)
 
-        sorting_networks_for_test = [ind for ind in self.population if ind.score >= 13]
-        if len(sorting_networks_for_test) > elite_size:
-            # ----------- Tournament Ranking -----------
-            sorting_networks_for_test = random.sample(sorting_networks_for_test, k=elite_size)
+        # Select individuals for testing from the elite
+        elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses[i], reverse=False)[:int(size/2)]
+        elites = [self.population[i] for i in elite_indices]
 
-            # ----------- Elite -----------
-            # sorting_networks_for_test_fitnesses = []
-            # for ind in sorting_networks_for_test:
-            #     sorting_networks_for_test_fitnesses.append(ind.score_test)
+        # Select individuals for testing with valid depth
+        sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 13]
+        if len(sorting_networks_valid_depth) > int(size/2):
+            sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=int(size/2))
 
-            # elite_indices = sorted(range(len(sorting_networks_for_test)),
-            #                        key=lambda i: sorting_networks_for_test_fitnesses[i],
-            #                        reverse=True)[:elite_size]
-            #
-            # elites = [sorting_networks_for_test[i] for i in elite_indices]
-            # sorting_networks_for_test = elites
-        # print("Size sorting_networks for test:", len(sorting_networks_for_test))
+        sorting_networks_for_test = elites + sorting_networks_valid_depth
+        print("Size sorting_networks for test:", len(sorting_networks_for_test))
+
         return sorting_networks_for_test
 
     def get_sorting_networks_for_mutation(self) -> list:
