@@ -84,7 +84,7 @@ class CoEvolution:
                                 pop1: SortingNetworkPopulation, 
                                 pop2: UnsolvedSoringPopulation) -> None:
         period = 25                             # const period of generations we switch from exploration to exploitation
-        exploration_mode = True                # starting with exploration mode
+        exploration_mode = False                # starting with exploration mode
         exploitation_mode = not exploration_mode
 
         if generation % period == 0:
@@ -92,9 +92,9 @@ class CoEvolution:
 
         if exploration_mode :
             pop1.set_elite_percentage(0.3)
-            pop2.set_elite_percentage(0.1)
+            pop2.set_elite_percentage(0.2)
         elif exploitation_mode:
-            pop1.set_elite_percentage(0.1)
+            pop1.set_elite_percentage(0.2)
             pop2.set_elite_percentage(0.3)
 
         return
