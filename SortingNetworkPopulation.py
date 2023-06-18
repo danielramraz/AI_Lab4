@@ -80,9 +80,11 @@ class SortingNetworkPopulation:
         elites = self.get_elite_networks()
 
         # -----------  Fix Sorting Network After Test -----------
-        self.population = self.get_sorting_networks_for_mutation()
-        self.fix_population_by_testing()
-        self.population += elites + [self.best_individual.copy()]
+        first_run = generation_index == 0
+        if not first_run:
+            self.population = self.get_sorting_networks_for_mutation()
+            self.fix_population_by_testing()
+            self.population += elites + [self.best_individual.copy()]
 
         # ----------- Update Population -----------
         # for ind in population_copy:
@@ -167,28 +169,19 @@ class SortingNetworkPopulation:
         return elites
 
     def get_sorting_networks(self) -> list:
-        # Select individuals for testing
-        elite_size = int(self.data.population_size * self.ELITE_PERCENTAGE)
-        # elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses[i], reverse=False)[:elite_size]
-        # elites = [self.population[i] for i in elite_indices]
+        size = int(self.data.population_size * self.ELITE_PERCENTAGE)
 
-        sorting_networks_for_test = [ind for ind in self.population if ind.score >= 13]
-        if len(sorting_networks_for_test) > elite_size:
-            # ----------- Tournament Ranking -----------
-            sorting_networks_for_test = random.sample(sorting_networks_for_test, k=elite_size)
+        # Select individuals for testing from the elite
+        elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses[i], reverse=False)[:int(size/2)]
+        elites = [self.population[i] for i in elite_indices]
 
-            # ----------- Elite -----------
-            # sorting_networks_for_test_fitnesses = []
-            # for ind in sorting_networks_for_test:
-            #     sorting_networks_for_test_fitnesses.append(ind.score_test)
+        # Select individuals for testing with valid depth
+        sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 13]
+        if len(sorting_networks_valid_depth) > int(size/2):
+            sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=int(size/2))
 
-            # elite_indices = sorted(range(len(sorting_networks_for_test)),
-            #                        key=lambda i: sorting_networks_for_test_fitnesses[i],
-            #                        reverse=True)[:elite_size]
-            #
-            # elites = [sorting_networks_for_test[i] for i in elite_indices]
-            # sorting_networks_for_test = elites
-        # print("Size sorting_networks for test:", len(sorting_networks_for_test))
+        sorting_networks_for_test = elites + sorting_networks_valid_depth
+        print("Size sorting_networks for test:", len(sorting_networks_for_test))
         return sorting_networks_for_test
 
     def get_sorting_networks_for_mutation(self) -> list:
@@ -205,9 +198,18 @@ class SortingNetworkPopulation:
 
     def fix_population_by_testing(self) -> None:
         for i, ind in enumerate(self.population):
-            min_score = min([comparator.score for j, comparator in enumerate(ind.gen)])
-            bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
-                                     if comparator.score == min_score and j >= SmartInit.num_comparators_init_vector_16]
+            scores_list = [comparator.score for j, comparator in enumerate(ind.gen)]
+            min_score = min(scores_list)
+            scores_list.remove(min_score)
+            if not scores_list:
+                return
+            sec_min_score = min(scores_list)
+            bad_comparators_index = []
+            for j, comparator in enumerate(ind.gen):
+                if comparator.score == min_score or comparator.score == sec_min_score:
+                    if j >= SmartInit.num_comparators_init_vector_16: 
+                        bad_comparators_index.append(j)
+            
             bad_comparators_index.reverse()
             self.remove_bad_comparators(ind, bad_comparators_index)
             self.indirect_replacement(ind, len(bad_comparators_index))
