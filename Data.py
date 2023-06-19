@@ -9,7 +9,7 @@ class Data:
     max_generations: int
     smart_init_vector: list
     num_comparators_init_vector: int
-    initial_unsolved_soring_network_elite_percentage: float
+    initial_soring_network_elite_percentage: float
     initial_parasites_elite_percentage: float
 
     def __init__(self, setting_vector=None):
@@ -34,7 +34,7 @@ class Data:
     def _init_consts(self):
         self.population_size = 4000
         self.max_generations = 200
-        self.initial_unsolved_soring_network_elite_percentage = 0.1
+        self.initial_soring_network_elite_percentage = 0.1
         self.initial_parasites_elite_percentage = 0.1
         return
 

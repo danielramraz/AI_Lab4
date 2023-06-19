@@ -40,7 +40,7 @@ class SortingNetworkPopulation:
         self.fitnesses_test = []
         self.test_result = []
         self.niches = []
-        self.ELITE_PERCENTAGE = data.initial_parasites_elite_percentage
+        self.ELITE_PERCENTAGE = data.initial_soring_network_elite_percentage
 
         for index in range(self.data.population_size):
             individual = SortingNetwork(self.data)
@@ -193,7 +193,7 @@ class SortingNetworkPopulation:
         #     sorting_networks_for_mutation = random.sample(sorting_networks_for_mutation, k=mutation_size)
 
         sorting_networks_for_mutation = random.sample(self.population, k=mutation_size)
-        print("Size sorting_networks for mutation:", len(sorting_networks_for_mutation))
+        # print("Size sorting_networks for mutation:", len(sorting_networks_for_mutation))
         return sorting_networks_for_mutation
 
     def fix_population_by_testing(self) -> None:
