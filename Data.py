@@ -1,5 +1,7 @@
 # ----------- Project Files -----------
 import SmartInit
+
+
 inputs_text_sorting_list_size = "enter the size of the vectors: \n"
 
 
