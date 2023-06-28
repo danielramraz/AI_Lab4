@@ -180,7 +180,6 @@ class SortingNetworkPopulation:
             sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=int(size))
 
         # sorting_networks_for_test = sorting_networks_valid_depth + [self.best_individual.copy()]
-        # RUN AFTER
         sorting_networks_for_test = sorting_networks_valid_depth + [self.best_individual]
         print("Size sorting_networks for test:", len(sorting_networks_for_test))
 
@@ -192,20 +191,23 @@ class SortingNetworkPopulation:
         # sorting_networks_for_mutation = [ind for ind in self.population if ind.score_test > 0]
         # if len(sorting_networks_for_mutation) > mutation_size:
         #     sorting_networks_for_mutation = random.sample(sorting_networks_for_mutation, k=mutation_size)
-        if generation_index <= 175:
-            population = []
-            for i in range(len(self.population)):
-                if self.population[i].score_test not in elites_score_test:
-                    population.append(self.population[i])
-        else:
-            population = self.population
 
-        if len(population) > mutation_size:
-            sorting_networks_for_mutation = random.sample(population, k=mutation_size)
-        else:
-            sorting_networks_for_mutation = population
+        # if generation_index <= 175:
+        #     population = []
+        #     for i in range(len(self.population)):
+        #         if self.population[i].score_test not in elites_score_test:
+        #             population.append(self.population[i])
+        # else:
+        #     population = self.population
+        #
+        # if len(population) > mutation_size:
+        #     sorting_networks_for_mutation = random.sample(population, k=mutation_size)
+        # else:
+        #     sorting_networks_for_mutation = population
 
+        sorting_networks_for_mutation = random.sample(self.population, k=mutation_size)
         print("Size sorting_networks for mutation:", len(sorting_networks_for_mutation))
+
         return sorting_networks_for_mutation
 
     def fix_population_by_testing(self) -> None:
