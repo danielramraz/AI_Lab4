@@ -55,10 +55,20 @@ class SortingNetwork:
         return gen
 
     def calc_score(self) -> None:
-        numbers_in_gen = np.array(self.find_numbers_in_gen())
-        freq = np.bincount(numbers_in_gen)
-        self.score = np.max(freq)
+        # numbers_in_gen = np.array(self.find_numbers_in_gen())
+        # freq = np.bincount(numbers_in_gen)
+        # self.score = np.max(freq)
 
+        numbers = []
+        depth = 0
+        for comp in self.gen:
+            if comp.value[0] in numbers or comp.value[1] in numbers:
+                depth += 1
+                numbers = []
+            numbers.append(comp.value[0])
+            numbers.append(comp.value[1])
+
+        self.score = depth
         return
 
     def find_numbers_in_gen(self) -> list:
