@@ -35,14 +35,22 @@ class SortingNetwork:
 
     def create_gen(self, data: Data) -> list:
         numbers = [i for i in range(data.sorting_list_size)]
+        # gen = []
         gen = SmartInit.smart_vector_16().copy()
 
-        if SmartInit.hilles_singleton_flag:
-            hilles_suffix = SmartInit.hilles_suffix_solution().copy()
-            for comp in hilles_suffix:
-                gen.append(comp)
-            SmartInit.hilles_singleton_flag = False
-            return gen
+        # if SmartInit.hilles_singleton_flag:
+        #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()
+        #     for comp in hilles_suffix:
+        #         gen.append(comp)
+        #     SmartInit.hilles_singleton_flag = False
+        #     return gen
+        
+        # if SmartInit.hilles_singleton_flag:
+        #     hilles_sol = SmartInit.hilles_full_solution().copy()
+        #     for comp in hilles_sol:
+        #         gen.append(comp)
+        #     SmartInit.hilles_singleton_flag = False
+        #     return gen
         
         while len(gen) < self.comparisons_number:
             values = random.sample(numbers, k=2)
@@ -60,7 +68,7 @@ class SortingNetwork:
         # self.score = np.max(freq)
 
         numbers = []
-        depth = 0
+        depth = 1
         for comp in self.gen:
             if comp.value[0] in numbers or comp.value[1] in numbers:
                 depth += 1

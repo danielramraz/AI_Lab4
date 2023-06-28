@@ -89,17 +89,17 @@ class CoEvolution:
         if generation % period == 0 and generation > 0:
             exploration_mode = not exploration_mode
 
-        if generation == 50 or generation == 100 or generation == 150:
-            pop1.set_elite_percentage(0.5)
-            pop2.set_elite_percentage(0.5)
-            return
+        # if generation == 50 or generation == 100 or generation == 150:
+        #     pop1.set_elite_percentage(0.5)
+        #     pop2.set_elite_percentage(0.5)
+        #     return
 
-        if exploration_mode :
-            pop1.set_elite_percentage(0.03)
-            pop2.set_elite_percentage(0.02)
+        if exploration_mode:
+            pop1.set_elite_percentage(0.5)
+            pop2.set_elite_percentage(0.2)
         elif exploitation_mode:
-            pop1.set_elite_percentage(0.02)
-            pop2.set_elite_percentage(0.03)
+            pop1.set_elite_percentage(0.2)
+            pop2.set_elite_percentage(0.5)
 
         return
     

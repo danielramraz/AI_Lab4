@@ -175,13 +175,13 @@ class SortingNetworkPopulation:
         # elites = [self.population[i] for i in elite_indices]
 
         # Select individuals for testing with valid depth
-        sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 13]
+        sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 10]
         if len(sorting_networks_valid_depth) > int(size):
             sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=int(size))
 
         # sorting_networks_for_test = sorting_networks_valid_depth + [self.best_individual.copy()]
         sorting_networks_for_test = sorting_networks_valid_depth + [self.best_individual]
-        print("Size sorting_networks for test:", len(sorting_networks_for_test))
+        # print("Size sorting_networks for test:", len(sorting_networks_for_test))
 
         return sorting_networks_for_test
 
@@ -214,7 +214,8 @@ class SortingNetworkPopulation:
         for i, ind in enumerate(self.population):
             min_score = min([comparator.score for j, comparator in enumerate(ind.gen)])
             bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
-                                     if comparator.score == min_score and j >= SmartInit.num_comparators_init_vector_16]
+                                     if comparator.score == min_score ]
+                                    #  if comparator.score == min_score and j >= SmartInit.num_comparators_init_vector_16]
 
             # bad_comparators_index.reverse()
             if len(bad_comparators_index) > 3:
@@ -288,7 +289,7 @@ def average_fitness(fitness: list):
 def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: Data) -> SortingNetwork:
 
     comparisons_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
-    child_gen = SmartInit.smart_vector_16().copy()
+    child_gen = [] #SmartInit.smart_vector_16().copy()
     init_len_child_gen = len(child_gen)
     for i in range(init_len_child_gen, comparisons_num):
         if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:
