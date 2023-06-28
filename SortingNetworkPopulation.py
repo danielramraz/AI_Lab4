@@ -148,7 +148,7 @@ class SortingNetworkPopulation:
         #     sorting_networks_for_mutation = population
 
         sorting_networks_for_mutation = random.sample(self.population, k=mutation_size)
-        print("Size sorting_networks for mutation:", len(sorting_networks_for_mutation))
+        # print("Size sorting_networks for mutation:", len(sorting_networks_for_mutation))
 
         return sorting_networks_for_mutation
 
