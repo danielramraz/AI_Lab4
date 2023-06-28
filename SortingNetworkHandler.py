@@ -37,12 +37,12 @@ class SortingNetwork:
         numbers = [i for i in range(data.sorting_list_size)]
         gen = SmartInit.smart_vector_16().copy()
 
-        # if SmartInit.hilles_singleton_flag:
-        #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()
-        #     for comp in hilles_suffix:
-        #         gen.append(comp)
-        #     SmartInit.hilles_singleton_flag = False
-        #     return gen
+        if SmartInit.hilles_singleton_flag:
+            hilles_suffix = SmartInit.hilles_suffix_solution().copy()
+            for comp in hilles_suffix:
+                gen.append(comp)
+            SmartInit.hilles_singleton_flag = False
+            return gen
         
         while len(gen) < self.comparisons_number:
             values = random.sample(numbers, k=2)
