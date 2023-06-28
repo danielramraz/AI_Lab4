@@ -40,7 +40,7 @@ class SortingNetworkPopulation:
         self.fitnesses_test = []
         self.test_result = []
         self.niches = []
-        self.ELITE_PERCENTAGE = data.initial_soring_network_elite_percentage
+        self.ELITE_PERCENTAGE = data.initial_parasites_elite_percentage
 
         for index in range(self.data.population_size):
             individual = SortingNetwork(self.data)
@@ -72,7 +72,6 @@ class SortingNetworkPopulation:
     def genetic_algorithm(self, generation_index: int) -> None:
 
         # ----------- Update Best Sorting Network After Test -----------
-        old_best_individual = self.best_individual
         self.set_best_sorting_networks()
 
         # ----------- Elitism -----------
@@ -80,39 +79,9 @@ class SortingNetworkPopulation:
         elites = self.get_elite_networks()
 
         # -----------  Fix Sorting Network After Test -----------
-        # if generation_index < 175:
         self.population = self.get_sorting_networks_for_mutation(elites, generation_index)
         self.fix_population_by_testing()
         self.population += elites
-        # else:
-        #     self.population = elites
-
-        # ----------- Update Population -----------
-        # for ind in population_copy:
-        #     if ind not in self.population:
-        #         self.population.append(ind)
-
-        # Select the best individuals for reproduction
-        # elites = self.get_sorting_networks()
-        # for ind in elites:
-        #     self.population.remove(ind)
-
-        # ----------- Clustering -----------
-        # if generation_index % 10 == 0:
-        #     self.niches = []
-        #     clusters = Clustering.shared_fitness_cluster(self.population)
-        #     for cluster in clusters:
-        #         niche = Niche.Niche(cluster)
-        #         self.niches.append(niche)
-
-        # ----------- Print Fitness Information -----------
-        # print(f"========================================= {generation_index}")
-        # for index, niche in enumerate(self.niches):
-        #     average, variance, sd = self.average_fitness(niche.fitnesses)
-        #     print(f"Average for niche {index + 1} is {average}")
-        #     print(f"Selection Pressure for niche {index + 1} is {variance}")
-        #     x1.append(generation_index)
-        #     y1.append(average)
 
         # ----------- Generate New Individuals -----------
         offspring = []
@@ -121,37 +90,11 @@ class SortingNetworkPopulation:
             parent2 = random.choice(elites)
             child = crossover_operator(parent1, parent2, self.data)
             offspring.append(child)
-        # for niche in self.niches:
-        #     niche.generate_individuals(self.data)
 
         # ----------- Update Population -----------
         self.population += offspring
         for ind in self.population:
             ind.calc_score()
-
-        # self.population = []
-        # for niche in self.niches:
-        #     for ind in niche.individuals:
-        #         self.population.append(ind)
-        # self.set_fitnesses()
-
-        # ----------- Genetic Diversification -----------
-        # distance = 0
-        # for ind in self.population:
-        #     distance += ind.genetic_diversification_distance(self.population)
-        # distance = distance / len(self.population)
-        # special = self.genetic_diversification_special()
-        # print(f"The genetic diversification distance is: {distance}")
-        # print(f"The genetic diversification special is: {special}")
-
-        # distance_all = 0
-        # for index, niche in enumerate(self.niches):
-        #     distance = 0
-        #     for ind in niche.individuals:
-        #         distance += ind.genetic_diversification_distance(niche.individuals)
-        #     distance = distance / len(self.population)
-        #     distance_all += distance
-        #     print(f"The genetic diversification distance for niche {index + 1} is: {distance}")
 
         self.x1.append(generation_index)
         self.y1.append(self.best_fitness)
@@ -169,19 +112,18 @@ class SortingNetworkPopulation:
         return elites
 
     def get_sorting_networks(self, generation_index: int) -> list:
-        size = int(self.data.population_size * self.ELITE_PERCENTAGE)
-        # Select individuals for testing from the elite
-        # elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses_test[i], reverse=False)[:int(size/2)]
-        # elites = [self.population[i] for i in elite_indices]
+        elite_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
+        elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses_test[i], reverse=True)[:elite_size]
+        elites = [self.population[i] for i in elite_indices]
 
         # Select individuals for testing with valid depth
+        random_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
         sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 10]
-        if len(sorting_networks_valid_depth) > int(size):
-            sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=int(size))
+        if len(sorting_networks_valid_depth) > random_size:
+            sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
 
-        # sorting_networks_for_test = sorting_networks_valid_depth + [self.best_individual.copy()]
-        sorting_networks_for_test = sorting_networks_valid_depth + [self.best_individual]
-        # print("Size sorting_networks for test:", len(sorting_networks_for_test))
+        sorting_networks_for_test = sorting_networks_valid_depth + elites + [self.best_individual]
+        print("Size sorting_networks for test:", len(sorting_networks_for_test))
 
         return sorting_networks_for_test
 
@@ -213,9 +155,11 @@ class SortingNetworkPopulation:
     def fix_population_by_testing(self) -> None:
         for i, ind in enumerate(self.population):
             min_score = min([comparator.score for j, comparator in enumerate(ind.gen)])
+            # bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
+            #                          if comparator.score == min_score and j >= SmartInit.num_comparators_init_vector_16]
+
             bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
-                                     if comparator.score == min_score ]
-                                    #  if comparator.score == min_score and j >= SmartInit.num_comparators_init_vector_16]
+                                     if comparator.score == min_score]
 
             if len(bad_comparators_index) > 3:
                 bad_comparators_index = random.sample(bad_comparators_index, k=3)
@@ -288,7 +232,8 @@ def average_fitness(fitness: list):
 def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: Data) -> SortingNetwork:
 
     comparisons_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
-    child_gen = [] #SmartInit.smart_vector_16().copy()
+    # child_gen = SmartInit.smart_vector_16().copy()
+    child_gen = []
     init_len_child_gen = len(child_gen)
     for i in range(init_len_child_gen, comparisons_num):
         if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:
