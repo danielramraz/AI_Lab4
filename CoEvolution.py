@@ -31,7 +31,6 @@ class CoEvolution:
 
     def solve_sorting_network_problem(self) -> None:
         sol_time = time.time()
-
         for generation_index in range(self.data.max_generations):
             gen_time = time.time()
             profile = cProfile.Profile()
@@ -40,9 +39,9 @@ class CoEvolution:
             print(f"================================= generation_index ========= {generation_index}")
 
             parasites = self.challengers.get_parasites()
-            sorting_networks = self.sorting_networks.get_sorting_networks()
+            sorting_networks = self.sorting_networks.get_sorting_networks(generation_index)
             print(f"the size of the test is {len(sorting_networks)} sorting networks and {len(parasites)} parasites")
-            calc = len(sorting_networks)* len(parasites)
+            calc = len(sorting_networks) * len(parasites)
             print(f"which is {calc:,} calcules for run_tests function")
             
             sorting_network_tests_results, parasites_tests_results = TestsHub.run_tests(sorting_networks, parasites)
@@ -87,7 +86,7 @@ class CoEvolution:
         exploration_mode = True                # starting with exploration mode
         exploitation_mode = not exploration_mode
 
-        if generation % period == 0:
+        if generation % period == 0 and generation > 0:
             exploration_mode = not exploration_mode
 
         if generation == 50 or generation == 100 or generation == 150:

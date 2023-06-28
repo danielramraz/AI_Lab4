@@ -37,12 +37,12 @@ class SortingNetwork:
         numbers = [i for i in range(data.sorting_list_size)]
         gen = SmartInit.smart_vector_16().copy()
 
-        # if SmartInit.hilles_singleton_flag:
-        #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()
-        #     for comp in hilles_suffix:
-        #         gen.append(comp)
-        #     SmartInit.hilles_singleton_flag = False
-        #     return gen
+        if SmartInit.hilles_singleton_flag:
+            hilles_suffix = SmartInit.hilles_suffix_solution().copy()
+            for comp in hilles_suffix:
+                gen.append(comp)
+            SmartInit.hilles_singleton_flag = False
+            return gen
         
         while len(gen) < self.comparisons_number:
             values = random.sample(numbers, k=2)
@@ -55,10 +55,20 @@ class SortingNetwork:
         return gen
 
     def calc_score(self) -> None:
-        numbers_in_gen = np.array(self.find_numbers_in_gen())
-        freq = np.bincount(numbers_in_gen)
-        self.score = np.max(freq)
+        # numbers_in_gen = np.array(self.find_numbers_in_gen())
+        # freq = np.bincount(numbers_in_gen)
+        # self.score = np.max(freq)
 
+        numbers = []
+        depth = 0
+        for comp in self.gen:
+            if comp.value[0] in numbers or comp.value[1] in numbers:
+                depth += 1
+                numbers = []
+            numbers.append(comp.value[0])
+            numbers.append(comp.value[1])
+
+        self.score = depth
         return
 
     def find_numbers_in_gen(self) -> list:
