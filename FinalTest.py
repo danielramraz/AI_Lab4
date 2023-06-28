@@ -98,9 +98,9 @@ def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list)
         # print("test sorted correctly !")
         return 1
     
-    print("the following test wasn't sorted correctly !")
-    print(f"the test => {origin_test}")
-    print(f"the result => {unsolved_list} ------ unsolved !")
+    # print("the following test wasn't sorted correctly !")
+    # print(f"the test => {origin_test}")
+    # print(f"the result => {unsolved_list} ------ unsolved !")
     return 0
 
 

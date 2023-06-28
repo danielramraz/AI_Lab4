@@ -217,7 +217,6 @@ class SortingNetworkPopulation:
                                      if comparator.score == min_score ]
                                     #  if comparator.score == min_score and j >= SmartInit.num_comparators_init_vector_16]
 
-            # bad_comparators_index.reverse()
             if len(bad_comparators_index) > 3:
                 bad_comparators_index = random.sample(bad_comparators_index, k=3)
             bad_comparators_index.sort(reverse=True)
