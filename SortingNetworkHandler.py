@@ -35,8 +35,7 @@ class SortingNetwork:
 
     def create_gen(self, data: Data) -> list:
         numbers = [i for i in range(data.sorting_list_size)]
-        # gen = SmartInit.smart_vector_16().copy()
-        gen = []
+        gen = SmartInit.smart_vector_16().copy()
 
         # if SmartInit.hilles_singleton_flag:
         #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()
