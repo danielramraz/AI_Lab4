@@ -79,9 +79,9 @@ class SortingNetworkPopulation:
         elites = self.get_elite_networks()
 
         # -----------  Fix Sorting Network After Test -----------
-        self.population = self.get_sorting_networks_for_mutation(elites, generation_index)
+        self.population, sorting_networks_for_mutation_copy = self.get_sorting_networks_for_mutation(generation_index)
         self.fix_population_by_testing()
-        self.population += elites
+        self.population += elites + sorting_networks_for_mutation_copy
 
         # ----------- Generate New Individuals -----------
         offspring = []
@@ -123,17 +123,22 @@ class SortingNetworkPopulation:
 
         return sorting_networks_for_test
 
-    def get_sorting_networks_for_mutation(self, elites: list, generation_index: int) -> list:
+    def get_sorting_networks_for_mutation(self, generation_index: int) -> list:
         mutation_size = int(self.data.population_size * MUTATION_PERCENTAGE)
         # sorting_networks_for_mutation = random.sample(self.population, k=mutation_size)
 
         population_with_test_score = [ind for i, ind in enumerate(self.population) if ind.score_test > 0]
-        sorting_networks_for_mutation = random.sample(population_with_test_score, k=mutation_size) + \
-                                        [self.best_individual.copy()]
+        sorting_networks_for_mutation = random.sample(population_with_test_score, k=mutation_size)
 
+        sorting_networks_for_mutation_copy = []
+        if generation_index > 0:
+            for ind in sorting_networks_for_mutation:
+                sorting_networks_for_mutation_copy.append(ind.copy())
+
+        sorting_networks_for_mutation += [self.best_individual.copy()]
         print("Size sorting_networks for mutation:", len(sorting_networks_for_mutation))
 
-        return sorting_networks_for_mutation
+        return sorting_networks_for_mutation, sorting_networks_for_mutation_copy
 
     def fix_population_by_testing(self) -> None:
         for i, ind in enumerate(self.population):
