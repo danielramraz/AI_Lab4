@@ -33,8 +33,8 @@ class CoEvolution:
         sol_time = time.time()
         for generation_index in range(self.data.max_generations):
             gen_time = time.time()
-            profile = cProfile.Profile()
-            profile.enable()
+            # profile = cProfile.Profile()
+            # profile.enable()
 
             print(f"================================= generation_index ========= {generation_index}")
 
@@ -60,10 +60,10 @@ class CoEvolution:
             local_gen_time = timedelta(seconds=gen_time_sec)
             print(f"The time for this gen is {local_gen_time}")
 
-            profile.disable()
-            ps = pstats.Stats(profile)
-            ps.sort_stats('cumtime')
-            ps.print_stats(5)
+            # profile.disable()
+            # ps = pstats.Stats(profile)
+            # ps.sort_stats('cumtime')
+            # ps.print_stats(5)
 
         # ----------- Print Time and Comput Information -----------
 
@@ -82,7 +82,7 @@ class CoEvolution:
     def change_elite_percentage(self, generation: int, 
                                 pop1: SortingNetworkPopulation, 
                                 pop2: UnsolvedSoringPopulation) -> None:
-        period = 10                             # const period of generations we switch from exploration to exploitation
+        period = 30                             # const period of generations we switch from exploration to exploitation
         exploration_mode = True                # starting with exploration mode
         exploitation_mode = not exploration_mode
 
@@ -95,11 +95,11 @@ class CoEvolution:
         #     return
 
         if exploration_mode:
-            pop1.set_elite_percentage(0.5)
-            pop2.set_elite_percentage(0.2)
+            pop1.set_elite_percentage(0.3)
+            pop2.set_elite_percentage(0.1)
         elif exploitation_mode:
-            pop1.set_elite_percentage(0.2)
-            pop2.set_elite_percentage(0.5)
+            pop1.set_elite_percentage(0.1)
+            pop2.set_elite_percentage(0.3)
 
         return
     

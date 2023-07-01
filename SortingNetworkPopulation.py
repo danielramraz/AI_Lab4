@@ -15,7 +15,7 @@ import math
 # ----------- Consts Parameters -----------
 ELITE_PERCENTAGE_ORIG = 0.30
 MUTATION_PERCENTAGE = 0.30
-MUTATION_RATE = 5
+# MUTATION_RATE = 5
 # ----------- Consts Name  -----------
 NONE = 0
 SINGLE = 1
@@ -54,7 +54,7 @@ class SortingNetworkPopulation:
         self.x1 = []
         self.y1 = []
         self.ax = plt.axes()
-        self.ax.set(xlim=(0, 200),
+        self.ax.set(xlim=(0, data.max_generations),
                     ylim=(0, 16),
                     xlabel='Generation number',
                     ylabel='Best Fitness')
@@ -118,12 +118,12 @@ class SortingNetworkPopulation:
 
         # Select individuals for testing with valid depth
         random_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
-        sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 10]
+        sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 13]
         if len(sorting_networks_valid_depth) > random_size:
             sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
 
         sorting_networks_for_test = sorting_networks_valid_depth + elites + [self.best_individual]
-        print("Size sorting_networks for test:", len(sorting_networks_for_test))
+        # print("Size sorting_networks for test:", len(sorting_networks_for_test))
 
         return sorting_networks_for_test
 
@@ -232,8 +232,8 @@ def average_fitness(fitness: list):
 def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: Data) -> SortingNetwork:
 
     comparisons_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
-    # child_gen = SmartInit.smart_vector_16().copy()
-    child_gen = []
+    child_gen = SmartInit.smart_vector_16().copy()
+    # child_gen = []
     init_len_child_gen = len(child_gen)
     for i in range(init_len_child_gen, comparisons_num):
         if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:

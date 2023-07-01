@@ -35,9 +35,9 @@ class Data:
 
     def _init_consts(self):
         self.population_size = 4000
-        self.max_generations = 200
-        self.initial_unsolved_soring_network_elite_percentage = 0.3
-        self.initial_parasites_elite_percentage = 0.3
+        self.max_generations = 600
+        self.initial_unsolved_soring_network_elite_percentage = 0.1
+        self.initial_parasites_elite_percentage = 0.1
         return
 
     def init_smart_vector(self):
