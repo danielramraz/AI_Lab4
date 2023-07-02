@@ -82,24 +82,26 @@ class CoEvolution:
     def change_elite_percentage(self, generation: int, 
                                 pop1: SortingNetworkPopulation, 
                                 pop2: UnsolvedSoringPopulation) -> None:
-        period = 30                             # const period of generations we switch from exploration to exploitation
-        exploration_mode = True                # starting with exploration mode
-        exploitation_mode = not exploration_mode
-
-        if generation % period == 0 and generation > 0:
-            exploration_mode = not exploration_mode
+        # const period of generations we switch from exploration to exploitation
+        period = 30                             
 
         # if generation == 50 or generation == 100 or generation == 150:
         #     pop1.set_elite_percentage(0.5)
         #     pop2.set_elite_percentage(0.5)
         #     return
 
-        if exploration_mode:
-            pop1.set_elite_percentage(0.3)
-            pop2.set_elite_percentage(0.1)
-        elif exploitation_mode:
-            pop1.set_elite_percentage(0.1)
-            pop2.set_elite_percentage(0.3)
+        if generation % period == 0 and generation > 0:
+            if generation/period % 2:
+                exploration_mode = False
+            else:
+                exploration_mode = True
+            
+            if exploration_mode:
+                pop1.set_elite_percentage(0.03)
+                pop2.set_elite_percentage(0.01)
+            else:
+                pop1.set_elite_percentage(0.01)
+                pop2.set_elite_percentage(0.03)
 
         return
     

@@ -90,7 +90,7 @@ def sorting_network_final_test(sorting_network: SortingNetwork, challengers: Uns
 
 
 def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list) -> int:
-    origin_test = unsolved_list.copy()
+    # origin_test = unsolved_list.copy()
     for k, comperator in enumerate(sorting_network.gen):
         comper_n_swap(comperator, unsolved_list)
 
