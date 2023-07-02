@@ -13,9 +13,7 @@ import matplotlib.pyplot as plt
 import random
 import math
 # ----------- Consts Parameters -----------
-ELITE_PERCENTAGE_ORIG = 0.30
 MUTATION_PERCENTAGE = 0.30
-MUTATION_RATE = 5
 # ----------- Consts Name  -----------
 NONE = 0
 SINGLE = 1
@@ -40,7 +38,7 @@ class SortingNetworkPopulation:
         self.fitnesses_test = []
         self.test_result = []
         self.niches = []
-        self.ELITE_PERCENTAGE = data.initial_parasites_elite_percentage
+        self.ELITE_PERCENTAGE = data.initial_unsolved_soring_network_elite_percentage
 
         for index in range(self.data.population_size):
             individual = SortingNetwork(self.data)
@@ -54,7 +52,7 @@ class SortingNetworkPopulation:
         self.x1 = []
         self.y1 = []
         self.ax = plt.axes()
-        self.ax.set(xlim=(0, 200),
+        self.ax.set(xlim=(0, self.data.max_generations),
                     ylim=(0, 16),
                     xlabel='Generation number',
                     ylabel='Best Fitness')
@@ -79,9 +77,9 @@ class SortingNetworkPopulation:
         elites = self.get_elite_networks()
 
         # -----------  Fix Sorting Network After Test -----------
-        self.population, sorting_networks_for_mutation_copy = self.get_sorting_networks_for_mutation(generation_index)
+        self.population = self.get_sorting_networks_for_mutation()
         self.fix_population_by_testing()
-        self.population += elites + sorting_networks_for_mutation_copy
+        self.population += elites
 
         # ----------- Generate New Individuals -----------
         offspring = []
@@ -105,7 +103,7 @@ class SortingNetworkPopulation:
 
     def get_elite_networks(self) -> list:
         # Select the best individuals for evolution
-        elite_size = int(self.data.population_size * ELITE_PERCENTAGE_ORIG)
+        elite_size = int(self.data.population_size * self.ELITE_PERCENTAGE)
         elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses_test[i], reverse=True)[:elite_size]
         elites = [self.population[i].copy() for i in elite_indices]
 
@@ -123,22 +121,22 @@ class SortingNetworkPopulation:
 
         return sorting_networks_for_test
 
-    def get_sorting_networks_for_mutation(self, generation_index: int) -> list:
+    def get_sorting_networks_for_mutation(self) -> list:
         mutation_size = int(self.data.population_size * MUTATION_PERCENTAGE)
-        # sorting_networks_for_mutation = random.sample(self.population, k=mutation_size)
+        sorting_networks_for_mutation = random.sample(self.population, k=mutation_size)
 
-        population_with_test_score = [ind for i, ind in enumerate(self.population) if ind.score_test > 0]
-        sorting_networks_for_mutation = random.sample(population_with_test_score, k=mutation_size)
-
-        sorting_networks_for_mutation_copy = []
-        if generation_index > 0:
-            for ind in sorting_networks_for_mutation:
-                sorting_networks_for_mutation_copy.append(ind.copy())
+        # population_with_test_score = [ind for i, ind in enumerate(self.population) if ind.score_test > 0]
+        # sorting_networks_for_mutation = random.sample(population_with_test_score, k=mutation_size)
+        #
+        # sorting_networks_for_mutation_copy = []
+        # if generation_index > 0:
+        #     for ind in sorting_networks_for_mutation:
+        #         sorting_networks_for_mutation_copy.append(ind.copy())
 
         sorting_networks_for_mutation += [self.best_individual.copy()]
         print("Size sorting_networks for mutation:", len(sorting_networks_for_mutation))
 
-        return sorting_networks_for_mutation, sorting_networks_for_mutation_copy
+        return sorting_networks_for_mutation
 
     def fix_population_by_testing(self) -> None:
         for i, ind in enumerate(self.population):
@@ -152,9 +150,6 @@ class SortingNetworkPopulation:
 
             if len(bad_comparators_index) > 3:
                 bad_comparators_index = random.sample(bad_comparators_index, k=3)
-
-            # comparators_index = [j for j, comparator in enumerate(ind.gen) if j >= SmartInit.num_comparators_init_vector_16]
-            # bad_comparators_index = random.sample(comparators_index, k=3)
 
             bad_comparators_index.sort(reverse=True)
             self.remove_bad_comparators(ind, bad_comparators_index)
