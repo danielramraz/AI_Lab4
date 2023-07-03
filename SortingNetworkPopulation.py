@@ -110,14 +110,18 @@ class SortingNetworkPopulation:
         return elites
 
     def get_sorting_networks(self, generation_index: int) -> list:
+        elite_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
+        elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses_test[i], reverse=True)[:elite_size]
+        elites = [self.population[i] for i in elite_indices]
+
         # Select individuals for testing with valid depth
-        random_size = int((self.data.population_size * self.ELITE_PERCENTAGE))
+        random_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
         sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 13]
         if len(sorting_networks_valid_depth) > random_size:
             sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
 
-        sorting_networks_for_test = sorting_networks_valid_depth + [self.best_individual]
-        print("Size sorting_networks for test:", len(sorting_networks_for_test))
+        sorting_networks_for_test = sorting_networks_valid_depth + elites + [self.best_individual]
+        # print("Size sorting_networks for test:", len(sorting_networks_for_test))
 
         return sorting_networks_for_test
 
@@ -127,11 +131,6 @@ class SortingNetworkPopulation:
 
         # population_with_test_score = [ind for i, ind in enumerate(self.population) if ind.score_test > 0]
         # sorting_networks_for_mutation = random.sample(population_with_test_score, k=mutation_size)
-        #
-        # sorting_networks_for_mutation_copy = []
-        # if generation_index > 0:
-        #     for ind in sorting_networks_for_mutation:
-        #         sorting_networks_for_mutation_copy.append(ind.copy())
 
         sorting_networks_for_mutation += [self.best_individual.copy()]
         print("Size sorting_networks for mutation:", len(sorting_networks_for_mutation))
