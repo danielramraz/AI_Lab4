@@ -33,8 +33,8 @@ class CoEvolution:
         sol_time = time.time()
         for generation_index in range(self.data.max_generations):
             gen_time = time.time()
-            profile = cProfile.Profile()
-            profile.enable()
+            # profile = cProfile.Profile()
+            # profile.enable()
 
             print(f"================================= generation_index ========= {generation_index}")
 
@@ -60,10 +60,10 @@ class CoEvolution:
             local_gen_time = timedelta(seconds=gen_time_sec)
             print(f"The time for this gen is {local_gen_time}")
 
-            profile.disable()
-            ps = pstats.Stats(profile)
-            ps.sort_stats('cumtime')
-            ps.print_stats(5)
+            # profile.disable()
+            # ps = pstats.Stats(profile)
+            # ps.sort_stats('cumtime')
+            # ps.print_stats(5)
 
         # ----------- Print Time and Comput Information -----------
 
@@ -82,19 +82,31 @@ class CoEvolution:
     def change_elite_percentage(self, generation: int, 
                                 pop1: SortingNetworkPopulation, 
                                 pop2: UnsolvedSoringPopulation) -> None:
-        period = 200                             # const period of generations we switch from exploration to exploitation
-        exploration_mode = True                # starting with exploration mode
-        exploitation_mode = not exploration_mode
+        # const period of generations we switch from exploration to exploitation
+        period = 30                             
+
+        if generation == 299 or generation == 149 or generation == 449 or generation == 29:
+            pop1.set_elite_percentage(0.2)
+            pop2.set_elite_percentage(0.4)
+            return
+        
+        if generation/ self.data.max_generations > 0.95:
+            pop1.set_elite_percentage(0.2)
+            pop2.set_elite_percentage(0.4)
+            return
 
         if generation % period == 0 and generation > 0:
-            exploration_mode = not exploration_mode
-
-        if exploration_mode:
-            pop1.set_elite_percentage(0.3)
-            pop2.set_elite_percentage(0.3)
-        elif exploitation_mode:
-            pop1.set_elite_percentage(0.3)
-            pop2.set_elite_percentage(0.3)
+            if generation/period % 2:
+                exploration_mode = False
+            else:
+                exploration_mode = True
+            
+            if exploration_mode:
+                pop1.set_elite_percentage(0.03)
+                pop2.set_elite_percentage(0.01)
+            else:
+                pop1.set_elite_percentage(0.01)
+                pop2.set_elite_percentage(0.03)
 
         return
     

@@ -28,7 +28,7 @@ class UnsolvedSoringPopulation:
         self.population_size = len(self.population)
         self.max_generations = data.max_generations
         self.sorting_list_size = data.sorting_list_size
-        self.ELITE_PERCENTAGE = data.initial_unsolved_soring_network_elite_percentage
+        self.ELITE_PERCENTAGE = data.initial_parasites_elite_percentage
         self.data = data
         return
     
