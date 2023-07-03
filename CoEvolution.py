@@ -85,10 +85,15 @@ class CoEvolution:
         # const period of generations we switch from exploration to exploitation
         period = 30                             
 
-        # if generation == 50 or generation == 100 or generation == 150:
-        #     pop1.set_elite_percentage(0.5)
-        #     pop2.set_elite_percentage(0.5)
-        #     return
+        if generation == 299 or generation == 149 or generation == 449 or generation == 29:
+            pop1.set_elite_percentage(0.2)
+            pop2.set_elite_percentage(0.4)
+            return
+        
+        if generation/ self.data.max_generations > 0.95:
+            pop1.set_elite_percentage(0.2)
+            pop2.set_elite_percentage(0.4)
+            return
 
         if generation % period == 0 and generation > 0:
             if generation/period % 2:
