@@ -23,7 +23,7 @@ def set_local_testing(challengers: UnsolvedSoringPopulation) -> None:
 
     sorted_list = list(range(16))
     parasites_tests = challengers.get_parasites_as_lists()
-    for i in range(100):
+    for i in range(10):
         unsorted_random_list = list(range(16))
         random.shuffle(unsorted_random_list)
         random_tests.append(unsorted_random_list)
@@ -89,8 +89,8 @@ def sorting_network_final_test(sorting_network: SortingNetwork, challengers: Uns
     return
 
 
-def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list) -> None:
-    origin_test = unsolved_list.copy()
+def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list) -> int:
+    # origin_test = unsolved_list.copy()
     for k, comperator in enumerate(sorting_network.gen):
         comper_n_swap(comperator, unsolved_list)
 

@@ -44,6 +44,13 @@ class SortingNetwork:
         #     SmartInit.hilles_singleton_flag = False
         #     return gen
         
+        # if SmartInit.hilles_singleton_flag:
+        #     hilles_suffix = SmartInit.hilles_full_solution().copy()
+        #     for comp in hilles_suffix:
+        #         gen.append(comp)
+        #     SmartInit.hilles_singleton_flag = False
+        #     return gen    
+
         while len(gen) < self.comparisons_number:
             values = random.sample(numbers, k=2)
             if values[0] > values[1]:

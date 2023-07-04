@@ -1,5 +1,7 @@
 # ----------- Project Files -----------
 import SmartInit
+
+
 inputs_text_sorting_list_size = "enter the size of the vectors: \n"
 
 
@@ -9,7 +11,7 @@ class Data:
     max_generations: int
     smart_init_vector: list
     num_comparators_init_vector: int
-    initial_unsolved_soring_network_elite_percentage: float
+    initial_soring_network_elite_percentage: float
     initial_parasites_elite_percentage: float
 
     def __init__(self, setting_vector=None):
@@ -36,6 +38,7 @@ class Data:
         self.max_generations = 400
         self.initial_unsolved_soring_network_elite_percentage = 0.3
         self.initial_parasites_elite_percentage = 0.2
+
         return
 
     def init_smart_vector(self):
