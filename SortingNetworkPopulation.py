@@ -130,16 +130,17 @@ class SortingNetworkPopulation:
 
     def get_sorting_networks_for_mutation(self) -> list:
         mutation_size = int(self.data.population_size * MUTATION_PERCENTAGE)
-        best_in_pop = False
 
-        if self.best_individual in self.population:
-            best_in_pop = True
-            self.population.remove(self.best_individual)
+        # best_in_pop = False
+        #
+        # if self.best_individual in self.population:
+        #     best_in_pop = True
+        #     self.population.remove(self.best_individual)
 
         sorting_networks_for_mutation = random.sample(self.population, k=mutation_size)
 
-        if best_in_pop:
-            self.population.append(self.best_individual)
+        # if best_in_pop:
+        #     self.population.append(self.best_individual)
 
         return sorting_networks_for_mutation
 
