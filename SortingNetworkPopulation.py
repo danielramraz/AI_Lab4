@@ -232,11 +232,12 @@ def average_fitness(fitness: list):
 def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: Data) -> SortingNetwork:
 
     comparisons_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
-    child_gen = SmartInit.smart_vector_16().copy()
-    # child_gen = []
+    # child_gen = SmartInit.smart_vector_16().copy()
+    child_gen = []
     init_len_child_gen = len(child_gen)
     for i in range(init_len_child_gen, comparisons_num):
-        if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:
+        # if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:
+        if parent1.gen[i].score >= parent2.gen[i].score:
             child_gen.append(parent1.gen[i].copy())
         elif i < len(parent2.gen) and parent2.gen[i]:
             child_gen.append(parent2.gen[i].copy())
@@ -244,10 +245,3 @@ def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: D
     child = SortingNetwork(data, child_gen)
 
     return child
-
-
-
-
-
-
-
