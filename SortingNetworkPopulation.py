@@ -121,10 +121,10 @@ class SortingNetworkPopulation:
             sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
 
         sorting_networks_for_test = sorting_networks_valid_depth + elites + [self.best_individual]
-        if generation_index > 0:
-            best_individual_after_mutation = self.best_individual.copy()
-            self.mutation_for_sorting_network(best_individual_after_mutation)
-            sorting_networks_for_test += [best_individual_after_mutation]
+        # if generation_index > 0:
+        #     best_individual_after_mutation = self.best_individual.copy()
+        #     self.mutation_for_sorting_network(best_individual_after_mutation)
+        #     sorting_networks_for_test += [best_individual_after_mutation]
 
         return sorting_networks_for_test
 
@@ -241,7 +241,7 @@ def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: D
     child_gen = SmartInit.smart_vector_16().copy()
     init_len_child_gen = len(child_gen)
     for i in range(init_len_child_gen, comparisons_num):
-        if parent1.gen[i].score > parent2.gen[i].score:
+        if parent1.gen[i].score >= parent2.gen[i].score:
             child_gen.append(parent1.gen[i].copy())
         else:
             child_gen.append(parent2.gen[i].copy())
