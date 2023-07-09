@@ -40,7 +40,6 @@ class SortingNetworkPopulation:
         self.niches = []
         self.ELITE_PERCENTAGE = data.initial_unsolved_soring_network_elite_percentage
 
-
         for index in range(self.data.population_size):
             individual = SortingNetwork(self.data)
             self.population.append(individual)
@@ -78,12 +77,9 @@ class SortingNetworkPopulation:
         elites = self.get_elite_networks()
 
         # -----------  Fix Sorting Network After Test -----------
-        if generation_index < 350:
-            self.population = self.get_sorting_networks_for_mutation()
-            self.mutation_population()
-            self.population += elites
-        else:
-            self.population = elites
+        self.population = self.get_sorting_networks_for_mutation()
+        self.mutation_population()
+        self.population += elites
 
         # ----------- Generate New Individuals -----------
         offspring = []
@@ -245,10 +241,14 @@ def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: D
     child_gen = SmartInit.smart_vector_16().copy()
     init_len_child_gen = len(child_gen)
     for i in range(init_len_child_gen, comparisons_num):
-        if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:
+        if parent1.gen[i].score > parent2.gen[i].score:
             child_gen.append(parent1.gen[i].copy())
-        elif i < len(parent2.gen) and parent2.gen[i]:
+        else:
             child_gen.append(parent2.gen[i].copy())
+        # if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:
+        #     child_gen.append(parent1.gen[i].copy())
+        # elif i < len(parent2.gen) and parent2.gen[i]:
+        #     child_gen.append(parent2.gen[i].copy())
 
     child = SortingNetwork(data, child_gen)
 

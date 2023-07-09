@@ -90,14 +90,13 @@ class CoEvolution:
             exploration_mode = not exploration_mode
 
         if exploration_mode:
-            pop1.set_elite_percentage(0.3)
-            pop2.set_elite_percentage(0.2)
-        else:
-            pop1.set_elite_percentage(0.2)
+            pop1.set_elite_percentage(0.4)
             pop2.set_elite_percentage(0.3)
+        else:
+            pop1.set_elite_percentage(0.3)
+            pop2.set_elite_percentage(0.4)
+
         return
-
-
         # period = 30
         # if generation == 299 or generation == 149 or generation == 449 or generation == 29:
         #     pop1.set_elite_percentage(0.2)
@@ -122,7 +121,7 @@ class CoEvolution:
         #         pop1.set_elite_percentage(0.02)
         #         pop2.set_elite_percentage(0.03)
         # return
-        #
+
     def print_solution_as_network(self) -> None:
         SVG_SortingNetwork.SVG_print_sorting_network(self.sorting_networks.best_individual)
         return

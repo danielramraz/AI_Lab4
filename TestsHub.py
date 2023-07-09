@@ -5,6 +5,7 @@ from SortingNetworkHandler import SortingNetwork
 import SortingNetworkHandler
 
 
+
 def run_tests(sorting_networks: list, parasites: list) -> tuple:
 
     for i, sorting_network in enumerate(sorting_networks):
