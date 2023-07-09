@@ -31,6 +31,8 @@ class CoEvolution:
 
     def solve_sorting_network_problem(self) -> None:
         sol_time = time.time()
+        # end_count = 10
+
         for generation_index in range(self.data.max_generations):
             gen_time = time.time()
             # profile = cProfile.Profile()
@@ -59,6 +61,11 @@ class CoEvolution:
             gen_time_sec = int(time.time() - gen_time)
             local_gen_time = timedelta(seconds=gen_time_sec)
             print(f"The time for this gen is {local_gen_time}")
+
+            # if self.sorting_networks.best_fitness == 16:
+            #     end_count -= 1
+            #     if end_count == 0:
+            #         break
 
             # profile.disable()
             # ps = pstats.Stats(profile)
@@ -102,11 +109,11 @@ class CoEvolution:
                 exploration_mode = True
             
             if exploration_mode:
-                pop1.set_elite_percentage(0.03)
-                pop2.set_elite_percentage(0.01)
-            else:
-                pop1.set_elite_percentage(0.01)
+                pop1.set_elite_percentage(0.08)
                 pop2.set_elite_percentage(0.03)
+            else:
+                pop1.set_elite_percentage(0.03)
+                pop2.set_elite_percentage(0.08)
 
         return
     

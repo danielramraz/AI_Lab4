@@ -119,6 +119,7 @@ class SortingNetwork:
     
     def save_sorting_network_to_file(self) -> None:
         out_file = open("BestSortingNetwork.txt", "w")
+        out_file.truncate(0)        # clear the file
         for i, comperator in enumerate(self.gen): 
             out_file.write(str(comperator.value))
             out_file.write("\n")
