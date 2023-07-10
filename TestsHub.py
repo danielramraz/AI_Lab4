@@ -12,8 +12,8 @@ def run_tests(sorting_networks: list, parasites: list) -> tuple:
         sorting_network.score_test = 0
         total_score = 0
 
-        for c, comperator in enumerate(sorting_network.gen):
-            comperator.score = 0
+        # for c, comperator in enumerate(sorting_network.gen):
+        #     comperator.score = 0
 
         for j, p_x in enumerate(parasites):
             parasites_copy.append(p_x.copy())

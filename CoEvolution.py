@@ -96,7 +96,7 @@ class CoEvolution:
             return
 
         if generation % period == 0 and generation > 0:
-            if generation / period % 2:
+            if (generation / period) % 2:
                 exploration_mode = False
             else:
                 exploration_mode = True

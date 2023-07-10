@@ -39,6 +39,7 @@ class SortingNetworkPopulation:
         self.test_result = []
         self.niches = []
         self.ELITE_PERCENTAGE = data.initial_unsolved_soring_network_elite_percentage
+        self.MUTATION_PERCENTAGE = MUTATION_PERCENTAGE
 
         for index in range(self.data.population_size):
             individual = SortingNetwork(self.data)
@@ -77,6 +78,8 @@ class SortingNetworkPopulation:
         elites = self.get_elite_networks()
 
         # -----------  Fix Sorting Network After Test -----------
+        if generation_index > 200:
+            self.MUTATION_PERCENTAGE = 0.5
         self.population = self.get_sorting_networks_for_mutation()
         self.mutation_population()
         self.population += elites
@@ -98,7 +101,7 @@ class SortingNetworkPopulation:
         self.y1.append(self.best_fitness)
         if generation_index == self.data.max_generations-1:
             self.ax.plot(np.array(self.x1), np.array(self.y1))
-            plt.show()
+            # plt.show()
         return
 
     def get_elite_networks(self) -> list:
@@ -129,7 +132,7 @@ class SortingNetworkPopulation:
         return sorting_networks_for_test
 
     def get_sorting_networks_for_mutation(self) -> list:
-        mutation_size = int(self.data.population_size * MUTATION_PERCENTAGE)
+        mutation_size = int(self.data.population_size * self.MUTATION_PERCENTAGE)
 
         # best_in_pop = False
         #
