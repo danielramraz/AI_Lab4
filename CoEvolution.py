@@ -105,7 +105,14 @@ class CoEvolution:
         #     pop2.set_elite_percentage(0.4)
         #     return
         
-        if generation % period == period -3:
+        if generation / self.data.max_generations < 0.5:
+            pop1.set_mutation_percentage(0.8)
+        else:
+            pop1.set_mutation_percentage(0.1)
+
+
+            
+        if generation % period == period -1:
             pop1.set_elite_percentage(0.2)
             pop2.set_elite_percentage(0.4)
             return

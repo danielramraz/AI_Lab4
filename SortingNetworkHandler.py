@@ -78,6 +78,15 @@ class SortingNetwork:
 
         self.score = depth
         return
+    
+    def calc_score2(self) -> None:
+        buckets = []
+        for i, comp in enumerate(self.gen):
+            buckets[comp.vaule[0]] += 1
+            buckets[comp.vaule[1]] += 1
+        print(f"the bucket sort of sorting network is: {buckets}")
+
+        return
 
     def find_numbers_in_gen(self) -> list:
         numbers_in_gen = []

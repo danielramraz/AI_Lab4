@@ -14,7 +14,7 @@ import random
 import math
 # ----------- Consts Parameters -----------
 ELITE_PERCENTAGE_ORIG = 0.30
-MUTATION_PERCENTAGE = 0.50
+MUTATION_PERCENTAGE = 0.10
 # MUTATION_RATE = 5
 # ----------- Consts Name  -----------
 NONE = 0
@@ -32,6 +32,7 @@ class SortingNetworkPopulation:
     best_fitness: float
 
     ELITE_PERCENTAGE: float
+    MUTATION_PERCENTAGE: float
     
     def __init__(self, data: Data):
         self.data = data
@@ -41,6 +42,7 @@ class SortingNetworkPopulation:
         self.test_result = []
         self.niches = []
         self.ELITE_PERCENTAGE = data.initial_parasites_elite_percentage
+        self.MUTATION_PERCENTAGE = MUTATION_PERCENTAGE
 
         for index in range(self.data.population_size):
             individual = SortingNetwork(self.data)
@@ -212,6 +214,10 @@ class SortingNetworkPopulation:
     
     def set_elite_percentage(self, perc: float) -> None:
         self.ELITE_PERCENTAGE = perc
+        return
+    
+    def set_mutation_percentage(self, perc: float) -> None:
+        self.MUTATION_PERCENTAGE = perc
         return
 
 
