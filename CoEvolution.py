@@ -105,7 +105,7 @@ class CoEvolution:
         #     pop2.set_elite_percentage(0.4)
         #     return
         
-        if generation % period == period -1:
+        if generation % period == period -3:
             pop1.set_elite_percentage(0.2)
             pop2.set_elite_percentage(0.4)
             return
@@ -128,3 +128,4 @@ class CoEvolution:
     def print_solution_as_network(self) -> None:
         SVG_SortingNetwork.SVG_print_sorting_network(self.sorting_networks.best_individual)
         return
+    

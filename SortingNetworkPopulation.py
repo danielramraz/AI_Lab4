@@ -14,7 +14,7 @@ import random
 import math
 # ----------- Consts Parameters -----------
 ELITE_PERCENTAGE_ORIG = 0.30
-MUTATION_PERCENTAGE = 0.30
+MUTATION_PERCENTAGE = 0.50
 # MUTATION_RATE = 5
 # ----------- Consts Name  -----------
 NONE = 0
