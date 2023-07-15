@@ -57,7 +57,7 @@ class SortingNetworkPopulation:
         self.y1 = []
         self.ax = plt.axes()
         self.ax.set(xlim=(0, data.max_generations),
-                    ylim=(0, 16),
+                    ylim=(0, data.sorting_list_size),
                     xlabel='Generation number',
                     ylabel='Best Fitness')
         return
@@ -188,7 +188,7 @@ class SortingNetworkPopulation:
 
             new_comparator = Comparator(values)
             # Inserting the new comparator in a random index in the sorting network
-            index = random.randint(SmartInit.num_comparators_init_vector_16, gen_size)
+            index = random.randint(0, gen_size)
             ind.gen.insert(index, new_comparator)
             num_new_comparators -= 1
 

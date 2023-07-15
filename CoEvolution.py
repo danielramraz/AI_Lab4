@@ -13,7 +13,7 @@ from datetime import timedelta
 import random
 import pstats
 # ----------- Consts ----------
-setting_vector = [16]
+setting_vector = [8]
 
 
 class CoEvolution:
@@ -106,9 +106,9 @@ class CoEvolution:
         #     return
         
         if generation / self.data.max_generations < 0.5:
-            pop1.set_mutation_percentage(0.8)
+            pop1.set_mutation_percentage(0.4)
         else:
-            pop1.set_mutation_percentage(0.1)
+            pop1.set_mutation_percentage(0.8)
 
 
             
