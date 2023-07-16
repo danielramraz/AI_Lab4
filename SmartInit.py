@@ -31,7 +31,7 @@ ideal_num_comparators_vector_8 = 19
 
 def smart_vector_8():
     smart_init_vector_8 = []
-    for phase in init_vector_16:
+    for phase in init_vector_8:
         for item in phase:
             comparator = Comparator(item)
             smart_init_vector_8.append(comparator)

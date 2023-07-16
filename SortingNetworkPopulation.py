@@ -156,9 +156,12 @@ class SortingNetworkPopulation:
 
     def fix_population_by_testing(self) -> None:
         for i, ind in enumerate(self.population):
+            
+            # gen_copy = ind.gen.copy()
+            # bad_comparators_index = sorted(gen_copy, key=lambda i:gen_copy[i].score, reverse = True)
+            
+            
             min_score = min([comparator.score for j, comparator in enumerate(ind.gen)])
-            # bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
-            #                          if comparator.score == min_score and j >= SmartInit.num_comparators_init_vector_16]
 
             bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
                                      if comparator.score == min_score]
