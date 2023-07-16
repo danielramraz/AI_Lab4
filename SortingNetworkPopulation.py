@@ -17,10 +17,10 @@ ELITE_PERCENTAGE_ORIG = 0.30
 MUTATION_PERCENTAGE = 0.10
 # MUTATION_RATE = 5
 # ----------- Consts Name  -----------
-NONE = 0
-SINGLE = 1
-TWO = 2
-UNIFORM = 3
+# NONE = 0
+# SINGLE = 1
+# TWO = 2
+# UNIFORM = 3
 
 
 class SortingNetworkPopulation:
@@ -82,7 +82,8 @@ class SortingNetworkPopulation:
 
         # -----------  Fix Sorting Network After Test -----------
         self.population = self.get_sorting_networks_for_mutation(elites, generation_index)
-        self.fix_population_by_testing()
+        if generation_index == 10 : 
+            self.fix_population_by_testing(3)
         self.population += elites
 
         # ----------- Generate New Individuals -----------
@@ -154,22 +155,36 @@ class SortingNetworkPopulation:
 
         return sorting_networks_for_mutation
 
-    def fix_population_by_testing(self) -> None:
+    def fix_population_by_testing(self, comp_num: int) -> None:
         for i, ind in enumerate(self.population):
             
-            # gen_copy = ind.gen.copy()
+            ind_gen_copy = ind.gen.copy()
             # bad_comparators_index = sorted(gen_copy, key=lambda i:gen_copy[i].score, reverse = True)
-            
-            
-            min_score = min([comparator.score for j, comparator in enumerate(ind.gen)])
+            gen_copy = []
+            for j, comparator in enumerate(ind_gen_copy):
+                gen_copy.append([j, comparator.score])
 
-            bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
-                                     if comparator.score == min_score]
+            comparators_index = sorted(gen_copy, key=lambda i:gen_copy[i][1], reverse = True)[:comp_num]         
+            bad_comparators_index = []
+            for comp in comparators_index:
+                bad_comparators_index.append(comp[0])
 
-            if len(bad_comparators_index) > 3:
-                bad_comparators_index = random.sample(bad_comparators_index, k=3)
             bad_comparators_index.sort(reverse=True)
-            self.remove_bad_comparators(ind, bad_comparators_index)
+
+            # min_score = min([comparator.score for j, comparator in enumerate(ind.gen)])
+
+            # bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
+            #                          if comparator.score == min_score]
+
+            # if len(bad_comparators_index) > 3:
+            #     bad_comparators_index = random.sample(bad_comparators_index, k=3)
+
+            for index in bad_comparators_index:   
+                self.remove_bad_comparators(ind, index)
+
+            
+
+            # self.remove_bad_comparators(ind, bad_comparators_index)
             self.indirect_replacement(ind, len(bad_comparators_index))
 
         return
@@ -245,7 +260,6 @@ def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: D
     child_gen = []
     init_len_child_gen = len(child_gen)
     for i in range(init_len_child_gen, comparisons_num):
-        # if random.random() < 0.5 and i < len(parent1.gen) and parent1.gen[i]:
         if parent1.gen[i].score >= parent2.gen[i].score:
             child_gen.append(parent1.gen[i].copy())
         elif i < len(parent2.gen) and parent2.gen[i]:
