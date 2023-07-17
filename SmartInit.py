@@ -10,7 +10,7 @@ num_comparators_init_vector_16 = 32
 ideal_num_comparators_vector_16 = 61
 
 
-def smart_vector_16():
+def smart_vector_16()-> list:
     smart_init_vector_16 = []
     for phase in init_vector_16:
         for item in phase:
@@ -29,7 +29,7 @@ num_comparators_init_vector_8 = 12
 ideal_num_comparators_vector_8 = 19
 
 
-def smart_vector_8():
+def smart_vector_8()-> list:
     smart_init_vector_8 = []
     for phase in init_vector_8:
         for item in phase:
@@ -56,7 +56,7 @@ def hilles_suffix_solution()-> list:
 
     return soloution_suffix
 
-# Hilles full solution 
+# Hilles full solution without bitonic strings
 
 hills_full_solution_list = [
     [1,4], [5,12], [2,11], [3,13], [6,7], [9,15],

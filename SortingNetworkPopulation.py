@@ -82,7 +82,7 @@ class SortingNetworkPopulation:
 
         # -----------  Fix Sorting Network After Test -----------
         self.population = self.get_sorting_networks_for_mutation(elites, generation_index)
-        if generation_index == 10 : 
+        if generation_index > 10 : 
             self.fix_population_by_testing(3)
         self.population += elites
 
@@ -159,32 +159,18 @@ class SortingNetworkPopulation:
         for i, ind in enumerate(self.population):
             
             ind_gen_copy = ind.gen.copy()
-            # bad_comparators_index = sorted(gen_copy, key=lambda i:gen_copy[i].score, reverse = True)
             gen_copy = []
             for j, comparator in enumerate(ind_gen_copy):
                 gen_copy.append([j, comparator.score])
 
-            comparators_index = sorted(gen_copy, key=lambda i:gen_copy[i][1], reverse = True)[:comp_num]         
+            comparators_index = sorted(gen_copy, key=lambda i: i[1], reverse = False)[:comp_num]         
             bad_comparators_index = []
             for comp in comparators_index:
                 bad_comparators_index.append(comp[0])
 
             bad_comparators_index.sort(reverse=True)
 
-            # min_score = min([comparator.score for j, comparator in enumerate(ind.gen)])
-
-            # bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
-            #                          if comparator.score == min_score]
-
-            # if len(bad_comparators_index) > 3:
-            #     bad_comparators_index = random.sample(bad_comparators_index, k=3)
-
-            for index in bad_comparators_index:   
-                self.remove_bad_comparators(ind, index)
-
-            
-
-            # self.remove_bad_comparators(ind, bad_comparators_index)
+            self.remove_bad_comparators(ind, bad_comparators_index)
             self.indirect_replacement(ind, len(bad_comparators_index))
 
         return
