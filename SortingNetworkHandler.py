@@ -6,6 +6,7 @@ from Comparator import Comparator
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+
 # ----------- Consts Name  -----------
 MAX_ATTEMPTS = 5
 
@@ -35,7 +36,11 @@ class SortingNetwork:
 
     def create_gen(self, data: Data) -> list:
         numbers = [i for i in range(data.sorting_list_size)]
+        gen = []
         gen = SmartInit.smart_vector_16().copy()
+        # pr = random.random()
+        # if pr > 0.5:
+        #     gen = SmartInit.smart_vector_16().copy()
 
         # if SmartInit.hilles_singleton_flag:
         #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()
@@ -43,18 +48,18 @@ class SortingNetwork:
         #         gen.append(comp)
         #     SmartInit.hilles_singleton_flag = False
         #     return gen
-        
+
         # if SmartInit.hilles_singleton_flag:
         #     hilles_suffix = SmartInit.hilles_full_solution().copy()
         #     for comp in hilles_suffix:
         #         gen.append(comp)
         #     SmartInit.hilles_singleton_flag = False
-        #     return gen    
+        #     return gen
 
         while len(gen) < self.comparisons_number:
             values = random.sample(numbers, k=2)
             if values[0] > values[1]:
-                values[0],  values[1] = values[1],  values[0]
+                values[0], values[1] = values[1], values[0]
             values = tuple(values)
             comparator = Comparator(values)
             gen.append(comparator)
@@ -110,18 +115,19 @@ class SortingNetwork:
     def remove_comparator(self, comp_index: int) -> None:
         self.gen.remove(self.gen[comp_index])
         return
-    
+
     def console_print_sorting_network(self) -> None:
-        for i, comperator in enumerate(self.gen): 
+        for i, comperator in enumerate(self.gen):
             print(i, comperator.value, comperator.score)
         return
-    
+
     def save_sorting_network_to_file(self) -> None:
         out_file = open("BestSortingNetwork.txt", "w")
-        for i, comperator in enumerate(self.gen): 
+        out_file.truncate(0)  # clear the file
+        for i, comperator in enumerate(self.gen):
             out_file.write(str(comperator.value))
             out_file.write("\n")
-    
+
         out_file.close()
         return
 
@@ -134,7 +140,7 @@ class SortingNetwork:
         new_sorting_network = SortingNetwork(gen=new_gen, score_test=self.score_test)
         return new_sorting_network
 
-    
+
 def create_generate_bitonic_network(sorting_list_size: int) -> list:
     comparisons = generate_bitonic_network(sorting_list_size)
     new_comparisons = []
@@ -150,7 +156,7 @@ def generate_bitonic_network(sorting_list_size: int) -> list:
         return []
 
     # Generate comparisons for the first half of the network
-    comparisons = generate_bitonic_network(sorting_list_size//2)
+    comparisons = generate_bitonic_network(sorting_list_size // 2)
     # Mirror the comparisons for the second half of the network
     comparisons += [(i + sorting_list_size // 2, j + sorting_list_size // 2) for i, j in comparisons[::-1]]
 
