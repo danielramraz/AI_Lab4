@@ -11,6 +11,7 @@ class Data:
     max_generations: int
     smart_init_vector: list
     num_comparators_init_vector: int
+    ideal_num_comparators: int
     initial_soring_network_elite_percentage: float
     initial_parasites_elite_percentage: float
 
@@ -35,7 +36,7 @@ class Data:
 
     def _init_consts(self):
         self.population_size = 4000
-        self.max_generations = 200
+        self.max_generations = 10
         self.initial_unsolved_soring_network_elite_percentage = 0.01
         self.initial_parasites_elite_percentage = 0.01
         return
@@ -43,7 +44,9 @@ class Data:
     def init_smart_vector(self):
         if self.sorting_list_size == 16:
             self.num_comparators_init_vector = SmartInit.num_comparators_init_vector_16
+            self.ideal_num_comparators = SmartInit.ideal_num_comparators_vector_16
         elif self.sorting_list_size == 8:
             self.num_comparators_init_vector = SmartInit.num_comparators_init_vector_8
+            self.ideal_num_comparators = SmartInit.ideal_num_comparators_vector_8
 
         return
