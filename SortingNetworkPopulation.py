@@ -191,19 +191,19 @@ class SortingNetworkPopulation:
     def fix_population_by_testing(self) -> None:
         for i, ind in enumerate(self.population):
             comparators_scores = [comparator.score for j, comparator in enumerate(ind.gen)]
-            # min_score = min(comparators_scores)
-            #
-            # bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
-            #                          if comparator.score == min_score]
-            # if len(bad_comparators_index) > 3:
-            #     bad_comparators_index = random.sample(bad_comparators_index, k=3)
-            #
-            # if len(bad_comparators_index) < 3:
-            #     bad_comparators_index = sorted(range(len(comparators_scores)), key=lambda i: comparators_scores[i],
-            #                                    reverse=False)[:3]
+            min_score = min(comparators_scores)
 
-            bad_comparators_index = sorted(range(len(comparators_scores)), key=lambda i: comparators_scores[i],
-                                           reverse=False)[:3]
+            bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
+                                     if comparator.score == min_score]
+            if len(bad_comparators_index) > 3:
+                bad_comparators_index = random.sample(bad_comparators_index, k=3)
+
+            if len(bad_comparators_index) < 3:
+                bad_comparators_index = sorted(range(len(comparators_scores)), key=lambda i: comparators_scores[i],
+                                               reverse=False)[:3]
+
+            # bad_comparators_index = sorted(range(len(comparators_scores)), key=lambda i: comparators_scores[i],
+            #                                reverse=False)[:3]
             bad_comparators_index.sort(reverse=True)
             self.remove_bad_comparators(ind, bad_comparators_index)
             self.indirect_replacement(ind, len(bad_comparators_index))
