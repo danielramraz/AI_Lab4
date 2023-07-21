@@ -39,6 +39,7 @@ class SortingNetworkPopulation:
         self.population = []
         self.fitnesses = []
         self.fitnesses_test = []
+        self.avg_fitnesses_test = []
         self.tests_results = []
         self.elites = []
         self.niches = []
@@ -58,7 +59,8 @@ class SortingNetworkPopulation:
         self.y1 = []
         self.ax = plt.axes()
         self.ax.set(xlim=(0, data.max_generations),
-                    ylim=(0, 16),
+                    ylim=(0, 8),
+                    # ylim=(0, 16),
                     xlabel='Generation number',
                     ylabel='Best Fitness')
         return
@@ -66,15 +68,19 @@ class SortingNetworkPopulation:
     def set_fitnesses(self) -> None:
         self.fitnesses = []
         self.fitnesses_test = []
+        self.avg_fitnesses_test = []
 
         for individual in self.population:
             self.fitnesses_test.append(individual.score_test)
             self.fitnesses.append(individual.score)
+            self.avg_fitnesses_test.append(individual.avg_score_test)
         return
 
     def genetic_algorithm(self, generation_index: int) -> None:
 
         # ----------- Update Best Sorting Network After Test -----------
+        # for ind in self.tests_results:
+        #     ind.calc_avg_score_test()
         self.set_best_sorting_networks()
 
         # ----------- Elitism -----------
@@ -97,9 +103,12 @@ class SortingNetworkPopulation:
 
         # ----------- Update Population -----------
         self.population += offspring
-        for ind in self.population:
-            ind.calc_score()
 
+        # save time and remove this lines
+        # for ind in self.population:
+        #     ind.calc_score()
+
+        self.set_fitnesses()
         self.x1.append(generation_index)
         self.y1.append(self.best_fitness)
         # if generation_index == self.data.max_generations-1:
@@ -110,36 +119,52 @@ class SortingNetworkPopulation:
     def get_elite_networks(self) -> list:
         # Select the best individuals for evolution
         elite_size = int(self.data.population_size * ELITE_PERCENTAGE_ORIG)
-        elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses_test[i], reverse=True)[
-                        :elite_size]
+        # elite_indices = sorted(range(len(self.population)), key=lambda i: self.avg_fitnesses_test[i], reverse=True)[:elite_size]
+        elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses_test[i], reverse=True)[:elite_size]
         elites = [self.population[i].copy() for i in elite_indices]
 
         return elites
 
     def get_sorting_networks(self, generation_index: int) -> list:
-        if generation_index == 0:
-            # Select individuals for testing with valid depth
-            valid_size = int((self.data.population_size * self.ELITE_PERCENTAGE))
-            sorting_networks_valid_depth = [ind for ind in self.population if ind.score == 11]
-            if len(sorting_networks_valid_depth) > valid_size:
-                sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=valid_size)
-            if len(sorting_networks_valid_depth) == 0:
-                sorting_networks_valid_depth = random.sample(self.population, k=valid_size)
+        valid_size = int((self.data.population_size * self.ELITE_PERCENTAGE))
+        sorting_networks_for_test_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses[i], reverse=False)[:valid_size]
+        sorting_networks_for_test = [self.population[i] for i in sorting_networks_for_test_indices]
 
-            sorting_networks_for_test = sorting_networks_valid_depth
-
-        else:
-            elite_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
-            elites = self.elites[:elite_size]
-
-            # Select individuals for testing with valid depth
-            random_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
-            sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 11]
-            if len(sorting_networks_valid_depth) > random_size:
-                sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
-
-            sorting_networks_for_test = sorting_networks_valid_depth + elites
-            # sorting_networks_for_test = sorting_networks_valid_depth + elites + [self.best_individual]
+        # if generation_index == 0:
+        #     # Select individuals for testing with valid depth
+        #     valid_size = int((self.data.population_size * self.ELITE_PERCENTAGE))
+        #     sorting_networks_valid_depth = [ind for ind in self.population if ind.score == 11]
+        #     if len(sorting_networks_valid_depth) > valid_size:
+        #         sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=valid_size)
+        #
+        #     if len(sorting_networks_valid_depth) == 0:
+        #         sorting_networks_valid_depth = random.sample(self.population, k=valid_size)
+        #
+        #     sorting_networks_for_test = sorting_networks_valid_depth
+        #
+        # else:
+        #     elite_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
+        #     elites = self.elites[:elite_size]
+        #     # elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses_test[i], reverse=True)[:elite_size]
+        #     # elites = [self.population[i] for i in elite_indices]
+        #
+        #     random_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
+        #     # Select individuals for testing with valid depth
+        #     sorting_networks_valid_depth = [ind for ind in self.population if ind.score == 13]
+        #     if len(sorting_networks_valid_depth) > random_size:
+        #         sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
+        #
+        #     if len(sorting_networks_valid_depth) == 0:
+        #         sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 13]
+        #         if len(sorting_networks_valid_depth) > random_size:
+        #             sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
+        #
+        #     # sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 11]
+        #     # if len(sorting_networks_valid_depth) > random_size:
+        #     #     sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
+        #
+        #     sorting_networks_for_test = sorting_networks_valid_depth + elites
+        #     # sorting_networks_for_test = sorting_networks_valid_depth + elites + [self.best_individual]
 
         return sorting_networks_for_test
 
@@ -185,6 +210,7 @@ class SortingNetworkPopulation:
             bad_comparators_index.sort(reverse=True)
             self.remove_bad_comparators(ind, bad_comparators_index)
             self.indirect_replacement(ind, len(bad_comparators_index))
+            ind.calc_score()
 
         return
 
@@ -205,11 +231,11 @@ class SortingNetworkPopulation:
 
             new_comparator = Comparator(values)
             # Inserting the new comparator in a random index in the sorting network
-            index = random.randint(SmartInit.num_comparators_init_vector_16, gen_size)
+            # index = random.randint(SmartInit.num_comparators_init_vector_16, gen_size)
+            index = random.randint(0, gen_size)
             ind.gen.insert(index, new_comparator)
             num_new_comparators -= 1
 
-        ind.calc_score()
         return
 
     def set_best_sorting_networks(self) -> None:
@@ -223,6 +249,20 @@ class SortingNetworkPopulation:
 
         self.best_fitness = self.best_individual.score_test
         print("Sorting Network best_fitness:", self.best_fitness)
+        print("Depth:", self.best_individual.score)
+
+        # avg_score_test
+        # for individual in self.population:
+        #     if self.best_individual.avg_score_test < individual.avg_score_test:
+        #         self.best_individual = individual.copy()
+        #         print("!!! Best individual changed !!!")
+        #     elif self.best_individual.avg_score_test == individual.avg_score_test and self.best_individual.score > individual.score:
+        #         self.best_individual = individual.copy()
+        #         print("!!! Best individual changed + Depth !!!")
+        #
+        # self.best_fitness = self.best_individual.avg_score_test
+        # print("Sorting Network best_fitness:",  self.best_fitness)
+        # print("Depth:", self.best_individual.score)
 
         return
 

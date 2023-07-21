@@ -14,7 +14,8 @@ import random
 import pstats
 
 # ----------- Consts ----------
-setting_vector = [16]
+# setting_vector = [16]
+setting_vector = [8]
 
 
 class CoEvolution:
