@@ -62,11 +62,6 @@ class CoEvolution:
             local_gen_time = timedelta(seconds=gen_time_sec)
             print(f"The time for this gen is {local_gen_time}")
 
-            # if self.sorting_networks.best_fitness == 16:
-            #     end_count -= 1
-            #     if end_count == 0:
-            #         break
-
             # profile.disable()
             # ps = pstats.Stats(profile)
             # ps.sort_stats('cumtime')
@@ -95,11 +90,6 @@ class CoEvolution:
         if generation == 0:
             return
         
-        # if generation == 299 or generation == 149 or generation == 449 or generation == 29:
-        #     pop1.set_elite_percentage(0.2)
-        #     pop2.set_elite_percentage(0.4)
-        #     return
-        
         # if generation/ self.data.max_generations > 0.95:
         #     pop1.set_elite_percentage(0.2)
         #     pop2.set_elite_percentage(0.4)
@@ -109,8 +99,6 @@ class CoEvolution:
             pop1.set_mutation_percentage(0.4)
         else:
             pop1.set_mutation_percentage(0.8)
-
-
             
         if generation % period == period -1:
             pop1.set_elite_percentage(0.2)
