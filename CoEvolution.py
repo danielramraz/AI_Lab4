@@ -13,7 +13,7 @@ from datetime import timedelta
 import random
 import pstats
 # ----------- Consts ----------
-setting_vector = [16]
+setting_vector = [8]
 
 
 class CoEvolution:
@@ -62,11 +62,6 @@ class CoEvolution:
             local_gen_time = timedelta(seconds=gen_time_sec)
             print(f"The time for this gen is {local_gen_time}")
 
-            # if self.sorting_networks.best_fitness == 16:
-            #     end_count -= 1
-            #     if end_count == 0:
-            #         break
-
             # profile.disable()
             # ps = pstats.Stats(profile)
             # ps.sort_stats('cumtime')
@@ -90,19 +85,27 @@ class CoEvolution:
                                 pop1: SortingNetworkPopulation, 
                                 pop2: UnsolvedSoringPopulation) -> None:
         # const period of generations we switch from exploration to exploitation
-        period = 30                             
+        period = 30
 
-        if generation == 299 or generation == 149 or generation == 449 or generation == 29:
+        if generation == 0:
+            return
+        
+        # if generation/ self.data.max_generations > 0.95:
+        #     pop1.set_elite_percentage(0.2)
+        #     pop2.set_elite_percentage(0.4)
+        #     return
+        
+        if generation / self.data.max_generations < 0.5:
+            pop1.set_mutation_percentage(0.4)
+        else:
+            pop1.set_mutation_percentage(0.8)
+            
+        if generation % period == period -1:
             pop1.set_elite_percentage(0.2)
             pop2.set_elite_percentage(0.4)
             return
         
-        if generation/ self.data.max_generations > 0.95:
-            pop1.set_elite_percentage(0.2)
-            pop2.set_elite_percentage(0.4)
-            return
-
-        if generation % period == 0 and generation > 0:
+        if generation % period == 0:
             if generation/period % 2:
                 exploration_mode = False
             else:
@@ -120,3 +123,4 @@ class CoEvolution:
     def print_solution_as_network(self) -> None:
         SVG_SortingNetwork.SVG_print_sorting_network(self.sorting_networks.best_individual)
         return
+    

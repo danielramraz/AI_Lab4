@@ -18,7 +18,7 @@ class SortingNetwork:
     comparisons_number: int
 
     def __init__(self, data: Data = None, gen: list = None, score_test: float = None) -> None:
-        self.comparisons_number = SmartInit.ideal_num_comparators_vector_16
+        self.comparisons_number = SmartInit.ideal_num_comparators_vector_8
         if gen is not None:
             self.gen = gen
         else:
@@ -34,9 +34,10 @@ class SortingNetwork:
         return
 
     def create_gen(self, data: Data) -> list:
-        numbers = [i for i in range(data.sorting_list_size)]
+        numbers = range(data.sorting_list_size)
         gen = []
-        gen = SmartInit.smart_vector_16().copy()
+        # gen = SmartInit.smart_vector_8().copy()
+        # gen = SmartInit.smart_vector_16().copy()
 
         # if SmartInit.hilles_singleton_flag:
         #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()
@@ -77,6 +78,15 @@ class SortingNetwork:
             numbers.append(comp.value[1])
 
         self.score = depth
+        return
+    
+    def calc_score2(self) -> None:
+        buckets = []
+        for i, comp in enumerate(self.gen):
+            buckets[comp.vaule[0]] += 1
+            buckets[comp.vaule[1]] += 1
+        print(f"the bucket sort of sorting network is: {buckets}")
+
         return
 
     def find_numbers_in_gen(self) -> list:
