@@ -10,7 +10,7 @@ import random
 
 parasites_tests = []        # get best parasites
 random_tests = []           # 100 random tests
-engineered_tests = []       # some spacial cases
+# engineered_tests = []       # some spacial cases
 sorted_list = []            
 
 def set_local_testing(challengers: UnsolvedSoringPopulation) -> None:
@@ -18,13 +18,13 @@ def set_local_testing(challengers: UnsolvedSoringPopulation) -> None:
     global sorted_list
     global parasites_tests
     global random_tests
-    global engineered_tests
+    # global engineered_tests
     global sorted_list
 
-    sorted_list = list(range(16))
+    sorted_list = list(range(8))
     parasites_tests = challengers.get_parasites_as_lists()
-    for i in range(10):
-        unsorted_random_list = list(range(16))
+    for i in range(100):
+        unsorted_random_list = list(range(8))
         random.shuffle(unsorted_random_list)
         random_tests.append(unsorted_random_list)
 
@@ -34,10 +34,10 @@ def set_local_testing(challengers: UnsolvedSoringPopulation) -> None:
                             [15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0],
                             [0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8]]
     
-    for index, test in enumerate(engineered_examples):
-        engineered_tests.append(test)
-        engineered_tests.append(test.copy())
-        engineered_tests[index*2].reverse()
+    # for index, test in enumerate(engineered_examples):
+    #     engineered_tests.append(test)
+    #     engineered_tests.append(test.copy())
+    #     engineered_tests[index*2].reverse()
    
     return
 
@@ -46,7 +46,7 @@ def sorting_network_final_test(sorting_network: SortingNetwork, challengers: Uns
     global sorted_list
     global parasites_tests
     global random_tests
-    global engineered_tests
+    # global engineered_tests
     global sorted_list
 
     set_local_testing(challengers)
@@ -74,23 +74,24 @@ def sorting_network_final_test(sorting_network: SortingNetwork, challengers: Uns
 
     print(f"---------- start engineered tests ----------")
     success_tests = 0
-    for case in engineered_tests:
-        success_tests += test_network_with_list(sorting_network, case)
-        # print(f"engineered case {case}")
-    print("Tests sorted correctly: ", success_tests)
-    print("Tests WAS NOT sorted correctly: ", len(engineered_tests) - success_tests)
-    print(f"finish with engineered tests !")
-    accuracy += success_tests
+    # for case in engineered_tests:
+    #     success_tests += test_network_with_list(sorting_network, case)
+    #     # print(f"engineered case {case}")
+    # print("Tests sorted correctly: ", success_tests)
+    # print("Tests WAS NOT sorted correctly: ", len(engineered_tests) - success_tests)
+    # print(f"finish with engineered tests !")
+    # accuracy += success_tests
 
     print(f"====================\nfinish with all tests !!!!!!!")
-    accuracy = (accuracy / (len(parasites_tests) + len(random_tests) + len(engineered_tests))) * 100
+    accuracy = (accuracy / (len(parasites_tests) + len(random_tests))) * 100
+    # accuracy = (accuracy / (len(parasites_tests) + len(random_tests) + len(engineered_tests))) * 100
     print(f"Tests sorted correctly with accuracy: {accuracy}%")
 
     return
 
 
 def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list) -> int:
-    # origin_test = unsolved_list.copy()
+    origin_test = unsolved_list.copy()
     for k, comperator in enumerate(sorting_network.gen):
         comper_n_swap(comperator, unsolved_list)
 
@@ -98,9 +99,9 @@ def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list)
         # print("test sorted correctly !")
         return 1
     
-    # print("the following test wasn't sorted correctly !")
-    # print(f"the test => {origin_test}")
-    # print(f"the result => {unsolved_list} ------ unsolved !")
+    print("the following test wasn't sorted correctly !")
+    print(f"the test => {origin_test}")
+    print(f"the result => {unsolved_list} ------ unsolved !")
     return 0
 
 

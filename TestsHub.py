@@ -1,5 +1,6 @@
 # ----------- Project Files -----------
 from Comparator import Comparator
+from Data import Data
 from Parasite import Parasite
 from SortingNetworkHandler import SortingNetwork
 import SortingNetworkHandler
@@ -48,8 +49,8 @@ def test_sol_with_list(sorting_network: SortingNetwork, parasite: Parasite) -> f
     after_sort_score = sum([1 for i in range(len(sorted_list)) if local_unsorted_list[i] == sorted_list[i]])
     sorting_network.score_test += after_sort_score
     parasite.score_test += (8 - after_sort_score)
-
     # return after_sort_score
+
     return
 
 

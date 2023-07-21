@@ -46,10 +46,9 @@ class SortingNetwork:
         return
 
     def create_gen(self, data: Data) -> list:
-        numbers = [i for i in range(data.sorting_list_size)]
+        numbers = range(data.sorting_list_size)
         gen = []
         # gen = SmartInit.smart_vector_16().copy()
-
 
         # if SmartInit.hilles_singleton_flag:
         #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()
@@ -90,6 +89,15 @@ class SortingNetwork:
             numbers.append(comp.value[1])
 
         self.score = depth
+        return
+    
+    def calc_score2(self) -> None:
+        buckets = []
+        for i, comp in enumerate(self.gen):
+            buckets[comp.vaule[0]] += 1
+            buckets[comp.vaule[1]] += 1
+        print(f"the bucket sort of sorting network is: {buckets}")
+
         return
 
     def calc_avg_score_test(self) -> None:
@@ -138,7 +146,7 @@ class SortingNetwork:
 
     def save_sorting_network_to_file(self) -> None:
         out_file = open("BestSortingNetwork.txt", "w")
-        out_file.truncate(0)  # clear the file
+        out_file.truncate(0)        # clear the file
         for i, comperator in enumerate(self.gen):
             out_file.write(str(comperator.value))
             out_file.write("\n")
@@ -154,6 +162,7 @@ class SortingNetwork:
 
         new_sorting_network = SortingNetwork(gen=new_gen, score_test=self.score_test, tests_counter=self.tests_counter)
         return new_sorting_network
+
 
 
 def create_generate_bitonic_network(sorting_list_size: int) -> list:
