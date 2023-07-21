@@ -43,7 +43,7 @@ class SortingNetwork:
     def create_gen(self, data: Data) -> list:
         numbers = range(data.sorting_list_size)
         gen = []
-        # gen = SmartInit.smart_vector_8().copy()
+        gen = SmartInit.smart_vector_8().copy()
         # gen = SmartInit.smart_vector_16().copy()
 
         # if SmartInit.hilles_singleton_flag:

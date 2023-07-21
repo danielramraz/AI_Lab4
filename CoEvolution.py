@@ -67,17 +67,21 @@ class CoEvolution:
             # ps.sort_stats('cumtime')
             # ps.print_stats(5)
 
-        # ----------- Print Time and Comput Information -----------
+        # ----------- Print Graphs , Time and Comput Information -----------
 
         total_time_sec = int(time.time() - sol_time)
         total_time = timedelta(seconds=total_time_sec)
+
+        self.sorting_networks.best_individual.console_print_sorting_network()
+
+        self.sorting_networks.plot_graph()
         print(f"The absolute time for this gen is {total_time} sec")
-        print(f"The ticks time for this gen is {int(time.perf_counter())}")
+        # print(f"The ticks time for this gen is {int(time.perf_counter())}")
 
         self.sorting_networks.set_best_sorting_networks()
         print("Depth: ", self.sorting_networks.best_individual.score)
-        self.sorting_networks.best_individual.console_print_sorting_network()
         self.sorting_networks.best_individual.save_sorting_network_to_file()
+        
         FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.data.sorting_list_size)
         return
 
@@ -101,8 +105,8 @@ class CoEvolution:
             pop1.set_mutation_percentage(0.8)
             
         if generation % period == period - 1:
-            pop1.set_elite_percentage(0.2)
-            pop2.set_elite_percentage(0.4)
+            pop1.set_elite_percentage(0.3)
+            pop2.set_elite_percentage(0.5)
             return
         
         if generation % period == 0:
@@ -112,11 +116,11 @@ class CoEvolution:
                 exploration_mode = True
             
             if exploration_mode:
-                pop1.set_elite_percentage(0.08)
-                pop2.set_elite_percentage(0.03)
+                pop1.set_elite_percentage(0.1)
+                pop2.set_elite_percentage(0.05)
             else:
-                pop1.set_elite_percentage(0.03)
-                pop2.set_elite_percentage(0.08)
+                pop1.set_elite_percentage(0.05)
+                pop2.set_elite_percentage(0.1)
 
         return
     

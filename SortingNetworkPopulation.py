@@ -52,15 +52,10 @@ class SortingNetworkPopulation:
         self.best_individual = self.population[0]
         self.best_fitness = 0
 
-        # ----------- Printing graphs for the report -----------
-        self.x1 = []
-        self.y1 = []
-        self.ax = plt.axes()
-        self.ax.set(xlim=(0, data.max_generations),
-                    ylim=(0, data.sorting_list_size),
-                    xlabel='Generation number',
-                    ylabel='Best Fitness')
+        self.init_graph_parameters(data)
         return
+    
+
 
     def set_fitnesses(self) -> None:
         self.fitnesses = []
@@ -82,7 +77,7 @@ class SortingNetworkPopulation:
 
         # -----------  Fix Sorting Network After Test -----------
         self.population = self.get_sorting_networks_for_mutation(elites, generation_index)
-        if generation_index > 10 : 
+        if generation_index < self.data.max_generations -1 : 
             self.fix_population_by_testing(3)
         self.population += elites
 
@@ -99,11 +94,8 @@ class SortingNetworkPopulation:
         for ind in self.population:
             ind.calc_score()
 
-        self.x1.append(generation_index)
-        self.y1.append(self.best_fitness)
-        if generation_index == self.data.max_generations-1:
-            self.ax.plot(np.array(self.x1), np.array(self.y1))
-            plt.show()
+        self.add_info_to_graph(generation_index, self.best_fitness)
+
         return
 
     def get_elite_networks(self) -> list:
@@ -223,7 +215,26 @@ class SortingNetworkPopulation:
     def set_mutation_percentage(self, perc: float) -> None:
         self.MUTATION_PERCENTAGE = perc
         return
-
+    
+    def init_graph_parameters(self, data: Data) -> None:
+        self.x1 = []
+        self.y1 = []
+        self.ax = plt.axes()
+        self.ax.set(xlim=(0, data.max_generations),
+                    ylim=(0, data.sorting_list_size),
+                    xlabel='Generation number',
+                    ylabel='Best Fitness')
+        return
+    
+    def add_info_to_graph(self, generation_index, best_fitness) -> None:
+        self.x1.append(generation_index)
+        self.y1.append(best_fitness)
+        return
+    
+    def plot_graph(self) -> None:
+        self.ax.plot(np.array(self.x1), np.array(self.y1))
+        plt.show()
+        return
 
 def average_fitness(fitness: list):
     if not fitness:
