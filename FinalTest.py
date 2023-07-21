@@ -1,109 +1,67 @@
 # ----------- Project Files -----------
+import cProfile
+import pstats
 import numpy as np
 from Comparator import Comparator
 from Parasite import Parasite
 from SortingNetworkHandler import SortingNetwork
 from UnsolvedSoringPopulation import UnsolvedSoringPopulation
+import Data
 # ----------- Python Package -----------
 import random
+        
+master_test = []
 
-
-parasites_tests = []        # get best parasites
-random_tests = []           # 100 random tests
-# engineered_tests = []       # some spacial cases
-sorted_list = []            
-
-def set_local_testing(challengers: UnsolvedSoringPopulation) -> None:
-
-    global sorted_list
-    global parasites_tests
-    global random_tests
-    # global engineered_tests
-    global sorted_list
-
-    sorted_list = list(range(8))
-    parasites_tests = challengers.get_parasites_as_lists()
-    for i in range(100):
-        unsorted_random_list = list(range(8))
-        random.shuffle(unsorted_random_list)
-        random_tests.append(unsorted_random_list)
-
-    engineered_examples = [[0,2,4,6,8,10,12,14,15,13,11,9,7,5,3,1],
-                            [0,3,6,9,12,15,14,13,11,10,8,7,5,4,2,1],
-                            [0,5,10,15,14,13,12,11,9,8,7,6,4,3,2,1],
-                            [15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0],
-                            [0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8]]
+def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem: int) -> None:
+    global master_test
     
-    # for index, test in enumerate(engineered_examples):
-    #     engineered_tests.append(test)
-    #     engineered_tests.append(test.copy())
-    #     engineered_tests[index*2].reverse()
-   
-    return
+    # profile = cProfile.Profile()
+    # profile.enable()
 
-
-def sorting_network_final_test(sorting_network: SortingNetwork, challengers: UnsolvedSoringPopulation) -> None:
-    global sorted_list
-    global parasites_tests
-    global random_tests
-    # global engineered_tests
-    global sorted_list
-
-    set_local_testing(challengers)
     accuracy = 0
 
-    print(f"---------- start parasites tests ----------")
-    success_tests = 0
-    for parasite in parasites_tests:
-        success_tests += test_network_with_list(sorting_network, parasite)
-        # print(f"engineered case {parasite}")
-    print("Tests sorted correctly: ", success_tests)
-    print("Tests WAS NOT sorted correctly: ", len(parasites_tests) - success_tests)
-    print(f"finish with parasites tests !")
-    accuracy += success_tests
+    set_master_test(size_of_problem)
 
-    print(f"---------- start random tests ----------")
+    print(f"---------- start tests ----------")
     success_tests = 0
-    for test in random_tests:
+    for test in master_test:
         success_tests += test_network_with_list(sorting_network, test)
-        # print(f"engineered case {test}")
+    
     print("Tests sorted correctly: ", success_tests)
-    print("Tests WAS NOT sorted correctly: ", len(random_tests) - success_tests)
-    print(f"finish with random tests !")
-    accuracy += success_tests
-
-    print(f"---------- start engineered tests ----------")
-    success_tests = 0
-    # for case in engineered_tests:
-    #     success_tests += test_network_with_list(sorting_network, case)
-    #     # print(f"engineered case {case}")
-    # print("Tests sorted correctly: ", success_tests)
-    # print("Tests WAS NOT sorted correctly: ", len(engineered_tests) - success_tests)
-    # print(f"finish with engineered tests !")
-    # accuracy += success_tests
-
-    print(f"====================\nfinish with all tests !!!!!!!")
-    accuracy = (accuracy / (len(parasites_tests) + len(random_tests))) * 100
-    # accuracy = (accuracy / (len(parasites_tests) + len(random_tests) + len(engineered_tests))) * 100
-    print(f"Tests sorted correctly with accuracy: {accuracy}%")
+    print("Tests WAS NOT sorted correctly: ", len(master_test) - success_tests)
+    print(f"finish with tests !")
+    print(f"====================")
+    accuracy = (success_tests / (len(master_test))) * 100
+    print(f"Tests sorted correctly with accuracy: {round(accuracy, 3)}%")
+    
+    # profile.disable()
+    # ps = pstats.Stats(profile)
+    # ps.sort_stats('cumtime')
+    # ps.print_stats(5)
 
     return
 
+def set_master_test(num: int) -> None:
+    global master_test
+
+    create_master_test(num)
+    # print(f"master_test len -> {len(master_test)}")
+    # print(f"master_test -> {master_test}")
+    return
 
 def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list) -> int:
-    origin_test = unsolved_list.copy()
+    # origin_test = unsolved_list.copy()
     for k, comperator in enumerate(sorting_network.gen):
         comper_n_swap(comperator, unsolved_list)
 
-    if check_solved_list(unsolved_list):
+    if check_solved_bits_list(unsolved_list):
         # print("test sorted correctly !")
         return 1
     
-    print("the following test wasn't sorted correctly !")
-    print(f"the test => {origin_test}")
-    print(f"the result => {unsolved_list} ------ unsolved !")
+    # print("the following test wasn't sorted correctly !")
+    # print(f"the test => {origin_test}")
+    # print(f"the result => {unsolved_list} ------ unsolved !")
     return 0
-
 
 def comper_n_swap(comperator: Comparator, lst: list) -> None:
     x = comperator.value[0]
@@ -120,10 +78,22 @@ def comper_n_swap(comperator: Comparator, lst: list) -> None:
         comperator.score += 1
         return
 
+def check_solved_bits_list(bits_list: list) -> bool:
+    n = len(bits_list)
+    for i in range(1, n):
+        if bits_list[i] < bits_list[i - 1]:
+            return False
+    return True
+    
+def create_master_test(num: int) -> None:
+    number_of_tests = 2 ** num
+    print(f"number_of_tests -> {number_of_tests}")
+    for test in range(number_of_tests):
+        master_test.append(int_to_bits(test, num))
+    return
 
-def check_solved_list(lst: list) -> bool:
-    if lst == sorted_list:
-        return True
-    else:
-        return False
-
+def int_to_bits(num, length):
+    binary_string = bin(num)[2:]  
+    binary_string = binary_string.zfill(length)  
+    bits_list = [int(bit) for bit in binary_string]  
+    return bits_list

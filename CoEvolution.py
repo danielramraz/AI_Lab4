@@ -78,7 +78,7 @@ class CoEvolution:
         print("Depth: ", self.sorting_networks.best_individual.score)
         self.sorting_networks.best_individual.console_print_sorting_network()
         self.sorting_networks.best_individual.save_sorting_network_to_file()
-        FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.challengers)
+        FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.data.sorting_list_size)
         return
 
     def change_elite_percentage(self, generation: int, 
@@ -100,7 +100,7 @@ class CoEvolution:
         else:
             pop1.set_mutation_percentage(0.8)
             
-        if generation % period == period -1:
+        if generation % period == period - 1:
             pop1.set_elite_percentage(0.2)
             pop2.set_elite_percentage(0.4)
             return

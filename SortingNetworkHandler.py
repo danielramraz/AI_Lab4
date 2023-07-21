@@ -17,13 +17,20 @@ class SortingNetwork:
     gen: list
     comparisons_number: int
 
-    def __init__(self, data: Data = None, gen: list = None, score_test: float = None) -> None:
-        self.comparisons_number = SmartInit.ideal_num_comparators_vector_8
+    def __init__(self, data: Data = None, gen: list = None, score_test: float = None, comparisons_number:int = None) -> None:
+      
+        if data:
+            self.comparisons_number = data.ideal_num_comparators
+        elif comparisons_number:
+            self.comparisons_number = comparisons_number
+
         if gen is not None:
             self.gen = gen
         else:
             self.gen = self.create_gen(data)
+        
         self.calc_score()
+
         if score_test is not None:
             self.score_test = score_test
         else:
@@ -143,7 +150,10 @@ class SortingNetwork:
             new_comperator = comperator.copy()
             new_gen.append(new_comperator)
 
-        new_sorting_network = SortingNetwork(gen=new_gen, score_test=self.score_test)
+        new_sorting_network = SortingNetwork(gen = new_gen, 
+                                             score_test = self.score_test, 
+                                             comparisons_number = self.comparisons_number)
+        
         return new_sorting_network
 
     
