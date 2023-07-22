@@ -77,7 +77,8 @@ class SortingNetworkPopulation:
 
         # -----------  Fix Sorting Network After Test -----------
         self.population = self.get_sorting_networks_for_mutation(elites, generation_index)
-        if generation_index < self.data.max_generations -1 : 
+        last_generation: bool = generation_index < self.data.max_generations -1
+        if not last_generation: 
             self.fix_population_by_testing(3)
         self.population += elites
 
@@ -113,7 +114,7 @@ class SortingNetworkPopulation:
 
         # Select individuals for testing with valid depth
         random_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
-        sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 13]
+        sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= self.data.sorting_list_size /2]
         if len(sorting_networks_valid_depth) > random_size:
             sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
 
@@ -231,7 +232,7 @@ class SortingNetworkPopulation:
         self.y1.append(best_fitness)
         return
     
-    def plot_graph(self) -> None:
+    def plot_score_graph(self) -> None:
         self.ax.plot(np.array(self.x1), np.array(self.y1))
         plt.show()
         return

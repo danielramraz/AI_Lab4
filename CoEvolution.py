@@ -13,7 +13,10 @@ from datetime import timedelta
 import random
 import pstats
 # ----------- Consts ----------
-setting_vector = [8]
+setting_vector = [
+    8,                     # size of input (8 or 16)
+    False                    # use smart init (True or False)
+    ]
 
 
 class CoEvolution:
@@ -31,7 +34,6 @@ class CoEvolution:
 
     def solve_sorting_network_problem(self) -> None:
         sol_time = time.time()
-        # end_count = 10
 
         for generation_index in range(self.data.max_generations):
             gen_time = time.time()
@@ -54,14 +56,19 @@ class CoEvolution:
             self.sorting_networks.genetic_algorithm(generation_index)
             self.challengers.genetic_algorithm()
 
-            self.change_elite_percentage(generation_index, 
-                                         self.sorting_networks, 
-                                         self.challengers)
+            self.change_elite_and_mutation_percentage(generation_index, 
+                                                      self.sorting_networks, 
+                                                      self.challengers)
 
             gen_time_sec = int(time.time() - gen_time)
             local_gen_time = timedelta(seconds=gen_time_sec)
             print(f"The time for this gen is {local_gen_time}")
 
+            if self.sorting_networks.best_individual.score_test == self.data.sorting_list_size:
+                if FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, 
+                                                        self.data.sorting_list_size):
+                    break
+                
             # profile.disable()
             # ps = pstats.Stats(profile)
             # ps.sort_stats('cumtime')
@@ -70,36 +77,37 @@ class CoEvolution:
         # ----------- Print Graphs , Time and Comput Information -----------
 
         total_time_sec = int(time.time() - sol_time)
-        total_time = timedelta(seconds=total_time_sec)
+        total_time = timedelta(seconds = total_time_sec)
 
         self.sorting_networks.best_individual.console_print_sorting_network()
 
-        self.sorting_networks.plot_graph()
-        print(f"The absolute time for this gen is {total_time} sec")
-        # print(f"The ticks time for this gen is {int(time.perf_counter())}")
+        self.sorting_networks.plot_score_graph()
+        print(f"The absolute time for this algorithem is {total_time} ")
+        # print(f"The ticks time for this algorithem is {int(time.perf_counter())}")
 
         self.sorting_networks.set_best_sorting_networks()
         print("Depth: ", self.sorting_networks.best_individual.score)
         self.sorting_networks.best_individual.save_sorting_network_to_file()
         
-        FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.data.sorting_list_size)
+        finished = FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.data.sorting_list_size)
         return
 
-    def change_elite_percentage(self, generation: int, 
+    def change_elite_and_mutation_percentage(self, generation: int, 
                                 pop1: SortingNetworkPopulation, 
                                 pop2: UnsolvedSoringPopulation) -> None:
         # const period of generations we switch from exploration to exploitation
         period = 30
+        progress: float = generation / self.data.max_generations
 
         if generation == 0:
             return
         
-        # if generation/ self.data.max_generations > 0.95:
+        # if progress > 0.95:
         #     pop1.set_elite_percentage(0.2)
         #     pop2.set_elite_percentage(0.4)
         #     return
         
-        if generation / self.data.max_generations < 0.5:
+        if progress < 0.5:
             pop1.set_mutation_percentage(0.4)
         else:
             pop1.set_mutation_percentage(0.8)
