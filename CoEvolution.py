@@ -21,7 +21,6 @@ setting_vector = [
     ]
 
 
-
 class CoEvolution:
     data: Data
     sorting_networks: SortingNetworkPopulation
@@ -68,7 +67,6 @@ class CoEvolution:
             local_gen_time = timedelta(seconds=gen_time_sec)
             print(f"The time for this gen is {local_gen_time}")
 
-
             if self.sorting_networks.best_individual.score_test == self.data.sorting_list_size:
                 if FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, 
                                                         self.data.sorting_list_size):
@@ -97,110 +95,45 @@ class CoEvolution:
         finished = FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.data.sorting_list_size)
         return
 
+    def change_elite_and_mutation_percentage(self, generation: int,
+                                             pop1: SortingNetworkPopulation,
+                                             pop2: UnsolvedSoringPopulation) -> None:
+        # const period of generations we switch from exploration to exploitation
+        period = 30
+        progress: float = generation / self.data.max_generations
 
-    # def change_elite_percentage(self, generation: int,
-    #                             pop1: SortingNetworkPopulation,
-    #                             pop2: UnsolvedSoringPopulation) -> None:
-    #     # const period of generations we switch from exploration to exploitation
-    #     period = 30
-    #
-    #     if generation == 0:
-    #         return
-    #     # if generation == 299 or generation == 149 or generation == 449 or generation == 29:
-    #     #     pop1.set_elite_percentage(0.2)
-    #     #     pop2.set_elite_percentage(0.4)
-    #     #     return
-    #
-    #     # if generation/ self.data.max_generations > 0.95:
-    #     #     pop1.set_elite_percentage(0.2)
-    #     #     pop2.set_elite_percentage(0.4)
-    #     #     return
-    #
-    #
-    #     if generation % period == period - 1:
-    #         pop1.set_elite_percentage(0.4)
-    #         pop2.set_elite_percentage(0.5)
-    #         return
-    #
-    #     if generation / self.data.max_generations < 0.5:
-    #         pop1.set_mutation_percentage(0.4)
-    #     else:
-    #         pop1.set_mutation_percentage(0.8)
-    #
-    #     if generation % period == period -1:
-    #         pop1.set_elite_percentage(0.2)
-    #         pop2.set_elite_percentage(0.4)
-    #         return
-    #
-    #     if generation % period == 0:
-    #         if generation/period % 2:
-    #             exploration_mode = False
-    #         else:
-    #             exploration_mode = True
-    #
-    #         if exploration_mode:
-    #             pop1.set_elite_percentage(0.1)
-    #             pop2.set_elite_percentage(0.05)
-    #         else:
-    #             pop1.set_elite_percentage(0.05)
-    #             pop2.set_elite_percentage(0.1)
-    #
-    #     # if generation % 50 == 0:
-    #     #     pop1.set_elite_percentage(0.4)
-    #     #     pop2.set_elite_percentage(0.5)
-    #     #     return
-    #     #
-    #     # if generation % period == 0:
-    #     #     exploration_mode = False
-    #     # else:
-    #     #     exploration_mode = True
-    #     #
-    #     # if exploration_mode:
-    #     #     pop1.set_elite_percentage(0.1)
-    #     #     pop2.set_elite_percentage(0.05)
-    #     # else:
-    #     #     pop1.set_elite_percentage(0.05)
-    #     #     pop2.set_elite_percentage(0.1)
-    #         pop1.set_elite_percentage(0.08)
-    #         pop2.set_elite_percentage(0.03)
-    #     else:
-    #         pop1.set_elite_percentage(0.03)
-    #         pop2.set_elite_percentage(0.08)
-    #
-    #     return
+        if generation == 0:
+            return
 
-        # if generation == 0:
-        #     return
-        #
-        # # if generation/ self.data.max_generations > 0.95:
-        # #     pop1.set_elite_percentage(0.2)
-        # #     pop2.set_elite_percentage(0.4)
-        # #     return
-        #
-        # if generation / self.data.max_generations < 0.5:
-        #     pop1.set_mutation_percentage(0.4)
-        # else:
-        #     pop1.set_mutation_percentage(0.8)
-        #
-        # if generation % period == period - 1:
+        # if progress > 0.95:
         #     pop1.set_elite_percentage(0.2)
         #     pop2.set_elite_percentage(0.4)
         #     return
-        #
-        # if generation % period == 0:
-        #     if generation/period % 2:
-        #         exploration_mode = False
-        #     else:
-        #         exploration_mode = True
-        #
-        #     if exploration_mode:
-        #         pop1.set_elite_percentage(0.08)
-        #         pop2.set_elite_percentage(0.03)
-        #     else:
-        #         pop1.set_elite_percentage(0.03)
-        #         pop2.set_elite_percentage(0.08)
-        #
-        # return
+
+        if progress < 0.5:
+            pop1.set_mutation_percentage(0.4)
+        else:
+            pop1.set_mutation_percentage(0.8)
+
+        if generation % period == period - 1:
+            pop1.set_elite_percentage(0.3)
+            pop2.set_elite_percentage(0.5)
+            return
+
+        if generation % period == 0:
+            if generation / period % 2:
+                exploration_mode = False
+            else:
+                exploration_mode = True
+
+            if exploration_mode:
+                pop1.set_elite_percentage(0.1)
+                pop2.set_elite_percentage(0.05)
+            else:
+                pop1.set_elite_percentage(0.05)
+                pop2.set_elite_percentage(0.1)
+
+        return
 
     def print_solution_as_network(self) -> None:
         SVG_SortingNetwork.SVG_print_sorting_network(self.sorting_networks.best_individual)

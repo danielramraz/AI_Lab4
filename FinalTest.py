@@ -1,7 +1,3 @@
-# ----------- Project Files -----------
-import cProfile
-import pstats
-import numpy as np
 from Comparator import Comparator
 from Parasite import Parasite
 from SortingNetworkHandler import SortingNetwork
@@ -9,12 +5,13 @@ from UnsolvedSoringPopulation import UnsolvedSoringPopulation
 import Data
 # ----------- Python Package -----------
 import random
-        
+
 master_test = []
+
 
 def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem: int) -> bool:
     global master_test
-    
+
     # profile = cProfile.Profile()
     # profile.enable()
 
@@ -22,31 +19,10 @@ def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem:
 
     set_master_test(size_of_problem)
 
-    # print(f"---------- start tests ----------")
-    # success_tests = 0
-    # for test in master_test:
-    #     success_tests += test_network_with_list(sorting_network, test)
-    #
-        # print(f"engineered case {test}")
-    # print("Tests sorted correctly: ", success_tests)
-    # print("Tests WAS NOT sorted correctly: ", len(random_tests) - success_tests)
-    # print(f"finish with random tests !")
-    accuracy += success_tests
-
-    print(f"---------- start engineered tests ----------")
+    print(f"---------- start tests ----------")
     success_tests = 0
-    # for case in engineered_tests:
-    #     success_tests += test_network_with_list(sorting_network, case)
-    #     # print(f"engineered case {case}")
-    # print("Tests sorted correctly: ", success_tests)
-    # print("Tests WAS NOT sorted correctly: ", len(engineered_tests) - success_tests)
-    # print(f"finish with engineered tests !")
-    # accuracy += success_tests
-
-    print(f"====================\nfinish with all tests !!!!!!!")
-    accuracy = (accuracy / (len(parasites_tests) + len(random_tests))) * 100
-    # accuracy = (accuracy / (len(parasites_tests) + len(random_tests) + len(engineered_tests))) * 100
-    print(f"Tests sorted correctly with accuracy: {accuracy}%")
+    for test in master_test:
+        success_tests += test_network_with_list(sorting_network, test)
 
     print("Tests sorted correctly: ", success_tests)
     print("Tests WAS NOT sorted correctly: ", len(master_test) - success_tests)
@@ -81,7 +57,7 @@ def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list)
     if check_solved_bits_list(unsolved_list):
         # print("test sorted correctly !")
         return 1
-    
+
     # print("the following test wasn't sorted correctly !")
     # print(f"the test => {origin_test}")
     # print(f"the result => {unsolved_list} ------ unsolved !")
@@ -95,7 +71,7 @@ def comper_n_swap(comperator: Comparator, lst: list) -> None:
     if lst[x] <= lst[y]:
         comperator.score += 0
         return
-    
+
     if lst[x] > lst[y]:
         temp = lst[x]
         lst[x] = lst[y]
@@ -121,7 +97,7 @@ def create_master_test(num: int) -> None:
 
 
 def int_to_bits(num, length):
-    binary_string = bin(num)[2:]  
-    binary_string = binary_string.zfill(length)  
-    bits_list = [int(bit) for bit in binary_string]  
+    binary_string = bin(num)[2:]
+    binary_string = binary_string.zfill(length)
+    bits_list = [int(bit) for bit in binary_string]
     return bits_list

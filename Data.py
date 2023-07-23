@@ -38,7 +38,7 @@ class Data:
 
     def _init_consts(self):
         self.population_size = 4000
-        self.max_generations = 200
+        self.max_generations = 1000
         self.initial_unsolved_soring_network_elite_percentage = 0.3
         self.initial_parasites_elite_percentage = 0.5
 
