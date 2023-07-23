@@ -17,30 +17,27 @@ class SortingNetwork:
     score_share: float
     gen: list
     comparisons_number: int
-    tests_counter: int
-    avg_score_test: float
 
-    def __init__(self, data: Data = None, gen: list = None, score_test: float = None, tests_counter: float = None) -> None:
-       #  self.comparisons_number = SmartInit.ideal_num_comparators_vector_16
-        self.comparisons_number = SmartInit.ideal_num_comparators_vector_8
+
+    def __init__(self, data: Data = None, gen: list = None, score_test: float = None,comparisons_number:int = None) -> None:
+        if data:
+            self.comparisons_number = data.ideal_num_comparators
+        elif comparisons_number:
+            self.comparisons_number = comparisons_number
+
         if gen is not None:
             self.gen = gen
         else:
             self.gen = self.create_gen(data)
+        
+        self.calc_score()
 
         if score_test is not None:
             self.score_test = score_test
         else:
             self.score_test = 0
 
-        if tests_counter is not None:
-            self.tests_counter = tests_counter
-        else:
-            self.tests_counter = 0
-
-        self.avg_score_test = 0
         self.calc_score()
-        # self.calc_avg_score_test()
         self.score_share = 0
 
         return
@@ -100,12 +97,6 @@ class SortingNetwork:
 
         return
 
-    def calc_avg_score_test(self) -> None:
-        if self.tests_counter > 0:
-            self.avg_score_test = self.score_test / self.tests_counter
-
-        return
-
     def find_numbers_in_gen(self) -> list:
         numbers_in_gen = []
         for i, comper in enumerate(self.gen):
@@ -160,9 +151,11 @@ class SortingNetwork:
             new_comperator = comperator.copy()
             new_gen.append(new_comperator)
 
-        new_sorting_network = SortingNetwork(gen=new_gen, score_test=self.score_test, tests_counter=self.tests_counter)
-        return new_sorting_network
+        new_sorting_network = SortingNetwork(gen = new_gen, 
+                                             score_test = self.score_test, 
+                                             comparisons_number = self.comparisons_number)
 
+        return new_sorting_network
 
 
 def create_generate_bitonic_network(sorting_list_size: int) -> list:

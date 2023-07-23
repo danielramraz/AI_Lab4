@@ -22,7 +22,6 @@ class Parasite:
         return
 
     def fitness(self, gen: list) -> float:
-
         score = 0
         for i in range(len(gen)):
             for j in range(i + 1, len(gen)):

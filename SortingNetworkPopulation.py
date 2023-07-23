@@ -15,7 +15,8 @@ import math
 
 # ----------- Consts Parameters -----------
 ELITE_PERCENTAGE_ORIG = 0.30
-MUTATION_PERCENTAGE = 0.50
+MUTATION_PERCENTAGE = 0.30
+
 # ----------- Consts Name  -----------
 
 
@@ -291,7 +292,6 @@ def average_fitness(fitness: list):
 
 def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: Data) -> SortingNetwork:
     comparisons_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
-    # child_gen = SmartInit.smart_vector_16().copy()
     child_gen = []
     init_len_child_gen = len(child_gen)
     for i in range(init_len_child_gen, comparisons_num):

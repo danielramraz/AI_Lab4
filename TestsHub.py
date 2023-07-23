@@ -36,7 +36,8 @@ def run_tests(sorting_networks: list, parasites: list) -> tuple:
 def test_sol_with_list(sorting_network: SortingNetwork, parasite: Parasite) -> float:
 
     local_unsorted_list = parasite.unsorted_list
-    sorted_list = list(range(8))
+    list_len = len(local_unsorted_list)
+    sorted_list = list(range(list_len))
 
     for k, comperator in enumerate(sorting_network.gen):
         comper_n_swap(comperator, local_unsorted_list)
@@ -46,11 +47,9 @@ def test_sol_with_list(sorting_network: SortingNetwork, parasite: Parasite) -> f
     # sorting_network.score_test += (parasite.score - after_sort_score)
     # parasite.score_test -= sorting_network.score_test
 
-    after_sort_score = sum([1 for i in range(len(sorted_list)) if local_unsorted_list[i] == sorted_list[i]])
+    after_sort_score = sum([1 for i in range(list_len) if local_unsorted_list[i] == sorted_list[i]])
     sorting_network.score_test += after_sort_score
-    parasite.score_test += (8 - after_sort_score)
-    # return after_sort_score
-
+    parasite.score_test += (list_len - after_sort_score)
     return
 
 
