@@ -1,7 +1,3 @@
-# ----------- Project Files -----------
-import cProfile
-import pstats
-import numpy as np
 from Comparator import Comparator
 from Parasite import Parasite
 from SortingNetworkHandler import SortingNetwork
@@ -9,12 +5,13 @@ from UnsolvedSoringPopulation import UnsolvedSoringPopulation
 import Data
 # ----------- Python Package -----------
 import random
-        
+
 master_test = []
+
 
 def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem: int) -> bool:
     global master_test
-    
+
     # profile = cProfile.Profile()
     # profile.enable()
 
@@ -26,14 +23,14 @@ def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem:
     success_tests = 0
     for test in master_test:
         success_tests += test_network_with_list(sorting_network, test)
-    
+
     print("Tests sorted correctly: ", success_tests)
     print("Tests WAS NOT sorted correctly: ", len(master_test) - success_tests)
     print(f"finish with tests !")
     print(f"====================")
     accuracy = (success_tests / (len(master_test))) * 100
     print(f"Tests sorted correctly with accuracy: {round(accuracy, 3)}%")
-    
+
     # profile.disable()
     # ps = pstats.Stats(profile)
     # ps.sort_stats('cumtime')
@@ -41,6 +38,7 @@ def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem:
     if accuracy == 100:
         return True
     return False
+
 
 def set_master_test(num: int) -> None:
     global master_test
@@ -50,6 +48,7 @@ def set_master_test(num: int) -> None:
     # print(f"master_test -> {master_test}")
     return
 
+
 def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list) -> int:
     # origin_test = unsolved_list.copy()
     for k, comperator in enumerate(sorting_network.gen):
@@ -58,11 +57,12 @@ def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list)
     if check_solved_bits_list(unsolved_list):
         # print("test sorted correctly !")
         return 1
-    
+
     # print("the following test wasn't sorted correctly !")
     # print(f"the test => {origin_test}")
     # print(f"the result => {unsolved_list} ------ unsolved !")
     return 0
+
 
 def comper_n_swap(comperator: Comparator, lst: list) -> None:
     x = comperator.value[0]
@@ -71,7 +71,7 @@ def comper_n_swap(comperator: Comparator, lst: list) -> None:
     if lst[x] <= lst[y]:
         comperator.score += 0
         return
-    
+
     if lst[x] > lst[y]:
         temp = lst[x]
         lst[x] = lst[y]
@@ -79,13 +79,15 @@ def comper_n_swap(comperator: Comparator, lst: list) -> None:
         comperator.score += 1
         return
 
+
 def check_solved_bits_list(bits_list: list) -> bool:
     n = len(bits_list)
     for i in range(1, n):
         if bits_list[i] < bits_list[i - 1]:
             return False
     return True
-    
+
+
 def create_master_test(num: int) -> None:
     number_of_tests = 2 ** num
     print(f"number_of_tests -> {number_of_tests}")
@@ -93,8 +95,9 @@ def create_master_test(num: int) -> None:
         master_test.append(int_to_bits(test, num))
     return
 
+
 def int_to_bits(num, length):
-    binary_string = bin(num)[2:]  
-    binary_string = binary_string.zfill(length)  
-    bits_list = [int(bit) for bit in binary_string]  
+    binary_string = bin(num)[2:]
+    binary_string = binary_string.zfill(length)
+    bits_list = [int(bit) for bit in binary_string]
     return bits_list

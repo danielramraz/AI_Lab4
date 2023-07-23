@@ -1,9 +1,8 @@
 # ----------- Project Files -----------
 import SmartInit
-
-
 inputs_text_sorting_list_size = "enter the size of the vectors: 8 or 16 \n"
 inputs_text_smart_init = "do ypu want to use smart init? 0 = False , 1 = True \n"
+
 
 class Data:
     sorting_list_size: int
@@ -39,9 +38,10 @@ class Data:
 
     def _init_consts(self):
         self.population_size = 4000
-        self.max_generations = 400
-        self.initial_unsolved_soring_network_elite_percentage = 0.01
-        self.initial_parasites_elite_percentage = 0.01
+        self.max_generations = 1000
+        self.initial_unsolved_soring_network_elite_percentage = 0.3
+        self.initial_parasites_elite_percentage = 0.5
+
         return
     
     # the extra value we get from known articles in the fild
