@@ -64,19 +64,15 @@ class SortingNetworkPopulation:
     def set_fitnesses(self) -> None:
         self.fitnesses = []
         self.fitnesses_test = []
-        self.avg_fitnesses_test = []
 
         for individual in self.population:
             self.fitnesses_test.append(individual.score_test)
             self.fitnesses.append(individual.score)
-            self.avg_fitnesses_test.append(individual.avg_score_test)
         return
 
     def genetic_algorithm(self, generation_index: int) -> None:
 
         # ----------- Update Best Sorting Network After Test -----------
-        # for ind in self.tests_results:
-        #     ind.calc_avg_score_test()
         self.set_best_sorting_networks()
 
         # ----------- Elitism -----------
@@ -115,7 +111,6 @@ class SortingNetworkPopulation:
     def get_elite_networks(self) -> list:
         # Select the best individuals for evolution
         elite_size = int(self.data.population_size * ELITE_PERCENTAGE_ORIG)
-        # elite_indices = sorted(range(len(self.population)), key=lambda i: self.avg_fitnesses_test[i], reverse=True)[:elite_size]
         elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses_test[i], reverse=True)[:elite_size]
         elites = [self.population[i].copy() for i in elite_indices]
 
