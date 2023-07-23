@@ -8,7 +8,7 @@ import random
 import matplotlib.pyplot as plt
 
 # ----------- Consts Name  -----------
-MAX_ATTEMPTS = 5
+# MAX_ATTEMPTS = 5
 
 
 class SortingNetwork:
@@ -45,7 +45,11 @@ class SortingNetwork:
     def create_gen(self, data: Data) -> list:
         numbers = range(data.sorting_list_size)
         gen = []
-        # gen = SmartInit.smart_vector_16().copy()
+        if data.use_smart_init:
+            if data.sorting_list_size == 8:
+                gen = SmartInit.smart_vector_8().copy()
+            elif data.sorting_list_size == 16:
+                gen = SmartInit.smart_vector_16().copy()
 
         # if SmartInit.hilles_singleton_flag:
         #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()

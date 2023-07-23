@@ -51,15 +51,10 @@ class SortingNetworkPopulation:
         self.best_individual = self.population[0]
         self.best_fitness = 0
 
-        # ----------- Printing graphs for the report -----------
-        self.x1 = []
-        self.y1 = []
-        self.ax = plt.axes()
-        self.ax.set(xlim=(0, data.max_generations),
-                    ylim=(0, data.sorting_list_size),
-                    xlabel='Generation number',
-                    ylabel='Best Fitness')
+        self.init_graph_parameters(data)
         return
+    
+
 
     def set_fitnesses(self) -> None:
         self.fitnesses = []
@@ -81,9 +76,16 @@ class SortingNetworkPopulation:
 
         # -----------  Fix Sorting Network After Test -----------
         # self.population = self.get_sorting_networks_for_mutation(elites, generation_index)
-        self.population = self.tests_results
-        self.fix_population_by_testing()
+        # self.population = self.tests_results
+        # self.fix_population_by_testing()
+        # self.population += self.elites
+
+        self.population = self.get_sorting_networks_for_mutation(elites, generation_index)
+        last_generation: bool = generation_index < self.data.max_generations -1
+        if not last_generation: 
+            self.fix_population_by_testing(3)
         self.population += self.elites
+
 
         # ----------- Generate New Individuals -----------
         offspring = []
@@ -95,17 +97,13 @@ class SortingNetworkPopulation:
 
         # ----------- Update Population -----------
         self.population += offspring
-
         # save time and remove this lines
         # for ind in self.population:
         #     ind.calc_score()
 
         self.set_fitnesses()
-        self.x1.append(generation_index)
-        self.y1.append(self.best_fitness)
-        # if generation_index == self.data.max_generations-1:
-        #     self.ax.plot(np.array(self.x1), np.array(self.y1))
-        #     plt.show()
+        self.add_info_to_graph(generation_index, self.best_fitness)
+
         return
 
     def get_elite_networks(self) -> list:
@@ -136,8 +134,6 @@ class SortingNetworkPopulation:
         # else:
         #     elite_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
         #     elites = self.elites[:elite_size]
-        #     # elite_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses_test[i], reverse=True)[:elite_size]
-        #     # elites = [self.population[i] for i in elite_indices]
         #
         #     random_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
         #     # Select individuals for testing with valid depth
@@ -156,6 +152,15 @@ class SortingNetworkPopulation:
         #
         #     sorting_networks_for_test = sorting_networks_valid_depth + elites
         #     # sorting_networks_for_test = sorting_networks_valid_depth + elites + [self.best_individual]
+        #
+        # Select individuals for testing with valid depth
+        # random_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
+        # sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= self.data.sorting_list_size /2]
+        # if len(sorting_networks_valid_depth) > random_size:
+        #     sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
+        #
+        # sorting_networks_for_test = sorting_networks_valid_depth + elites + [self.best_individual]
+        # # print("Size sorting_networks for test:", len(sorting_networks_for_test))
 
         return sorting_networks_for_test
 
@@ -244,19 +249,6 @@ class SortingNetworkPopulation:
         print("Sorting Network best_fitness:", self.best_fitness)
         print("Depth:", self.best_individual.score)
 
-        # avg_score_test
-        # for individual in self.population:
-        #     if self.best_individual.avg_score_test < individual.avg_score_test:
-        #         self.best_individual = individual.copy()
-        #         print("!!! Best individual changed !!!")
-        #     elif self.best_individual.avg_score_test == individual.avg_score_test and self.best_individual.score > individual.score:
-        #         self.best_individual = individual.copy()
-        #         print("!!! Best individual changed + Depth !!!")
-        #
-        # self.best_fitness = self.best_individual.avg_score_test
-        # print("Sorting Network best_fitness:",  self.best_fitness)
-        # print("Depth:", self.best_individual.score)
-
         return
 
     def genetic_diversification_special(self):
@@ -268,6 +260,26 @@ class SortingNetworkPopulation:
     
     def set_mutation_percentage(self, perc: float) -> None:
         self.MUTATION_PERCENTAGE = perc
+        return
+    
+    def init_graph_parameters(self, data: Data) -> None:
+        self.x1 = []
+        self.y1 = []
+        self.ax = plt.axes()
+        self.ax.set(xlim=(0, data.max_generations),
+                    ylim=(0, data.sorting_list_size),
+                    xlabel='Generation number',
+                    ylabel='Best Fitness')
+        return
+    
+    def add_info_to_graph(self, generation_index, best_fitness) -> None:
+        self.x1.append(generation_index)
+        self.y1.append(best_fitness)
+        return
+    
+    def plot_score_graph(self) -> None:
+        self.ax.plot(np.array(self.x1), np.array(self.y1))
+        plt.show()
         return
 
 

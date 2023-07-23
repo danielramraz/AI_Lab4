@@ -12,7 +12,7 @@ import random
         
 master_test = []
 
-def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem: int) -> None:
+def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem: int) -> bool:
     global master_test
     
     # profile = cProfile.Profile()
@@ -59,8 +59,9 @@ def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem:
     # ps = pstats.Stats(profile)
     # ps.sort_stats('cumtime')
     # ps.print_stats(5)
-
-    return
+    if accuracy == 100:
+        return True
+    return False
 
 
 def set_master_test(num: int) -> None:
