@@ -65,7 +65,7 @@ class SortingNetworkPopulation:
     def genetic_algorithm(self, generation_index: int) -> None:
 
         # ----------- Update Best Sorting Network After Test -----------
-        self.set_best_sorting_networks()
+        self.set_best_sorting_network()
 
         # ----------- Elitism -----------
         self.set_fitnesses()
@@ -81,7 +81,7 @@ class SortingNetworkPopulation:
         self.population = self.tests_results
         last_generation: bool = generation_index == self.data.max_generations -1
         if not last_generation:
-            self.fix_population_by_testing(3)
+            self.fix_population_by_testing(2)
         self.population += self.elites
 
         # ----------- Generate New Individuals -----------
@@ -99,7 +99,7 @@ class SortingNetworkPopulation:
         #     ind.calc_score()
 
         self.set_fitnesses()
-        self.add_info_to_graph(generation_index, self.best_fitness)
+        self.add_info_to_graph(generation_index, self.best_fitness, self.get_average_score())
 
         return
 
@@ -188,6 +188,7 @@ class SortingNetworkPopulation:
 
     def fix_population_by_testing(self, comp_num: int) -> None:
         for i, ind in enumerate(self.population):
+            # comp_num = random.randint(1, int(self.data.sorting_list_size /2))
             comparators_scores = [comparator.score for j, comparator in enumerate(ind.gen)]
             # min_score = min(comparators_scores)
             #
@@ -232,7 +233,7 @@ class SortingNetworkPopulation:
 
         return
 
-    def set_best_sorting_networks(self) -> None:
+    def set_best_sorting_network(self) -> None:
         for individual in self.population:
             if self.best_individual.score_test < individual.score_test:
                 self.best_individual = individual.copy()
@@ -258,26 +259,42 @@ class SortingNetworkPopulation:
         self.MUTATION_PERCENTAGE = perc
         return
     
+    def get_average_score(self) -> float:
+        avg_score = 0
+        score_test_count = 0
+        for ind in self.population:
+            if ind.score_test != 0:
+                avg_score += ind.score_test
+                score_test_count += 1
+        if score_test_count == 0:
+            return 0
+        return avg_score / score_test_count
+
     def init_graph_parameters(self, data: Data) -> None:
         self.x1 = []
         self.y1 = []
+        self.z1 = []
         self.ax = plt.axes()
-        self.ax.set(xlim=(0, data.max_generations),
-                    ylim=(0, data.sorting_list_size),
+        self.ax.set(#xlim=(0, data.max_generations),
+                    #ylim=(0, data.sorting_list_size),
                     xlabel='Generation number',
                     ylabel='Best Fitness')
         return
     
-    def add_info_to_graph(self, generation_index, best_fitness) -> None:
+    def add_info_to_graph(self, generation_index, best_fitness, avg_fitness) -> None:
         self.x1.append(generation_index)
         self.y1.append(best_fitness)
+        self.z1.append(avg_fitness)
         return
     
     def plot_score_graph(self) -> None:
-        self.ax.plot(np.array(self.x1), np.array(self.y1))
+        self.ax.plot(np.array(self.x1), np.array(self.y1), label = "best score")
+        self.ax.plot(np.array(self.x1), np.array(self.z1), label = "average score")
+        plt.legend()
         plt.show()
         return
 
+#   ----------------- not class functions -----------------
 
 def average_fitness(fitness: list):
     if not fitness:
@@ -289,9 +306,7 @@ def average_fitness(fitness: list):
         average = 0
         variance = 0
     sd = variance ** 0.5
-
     return average, variance, sd
-
 
 def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: Data) -> SortingNetwork:
     comparisons_num = int((len(parent1.gen) + len(parent2.gen)) / 2)

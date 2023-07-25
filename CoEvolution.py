@@ -14,7 +14,6 @@ import random
 import pstats
 
 # ----------- Consts ----------
-setting_vector = [8]
 setting_vector = [
     8,                     # size of input (8 or 16)
     False                    # use smart init (True or False)
@@ -59,9 +58,9 @@ class CoEvolution:
             self.challengers.genetic_algorithm()
 
 
-            # self.change_elite_percentage(generation_index,
-            #                              self.sorting_networks,
-            #                              self.challengers)
+            self.change_elite_and_mutation_percentage(generation_index,
+                                                      self.sorting_networks,
+                                                      self.challengers)
 
             gen_time_sec = int(time.time() - gen_time)
             local_gen_time = timedelta(seconds=gen_time_sec)
@@ -88,8 +87,8 @@ class CoEvolution:
         print(f"The absolute time for this algorithem is {total_time} ")
         # print(f"The ticks time for this algorithem is {int(time.perf_counter())}")
 
-        self.sorting_networks.set_best_sorting_networks()
-        print("Depth: ", self.sorting_networks.best_individual.score)
+        self.sorting_networks.set_best_sorting_network()
+        # print("Depth: ", self.sorting_networks.best_individual.score)
         self.sorting_networks.best_individual.save_sorting_network_to_file()
         
         finished = FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.data.sorting_list_size)
@@ -110,14 +109,14 @@ class CoEvolution:
         #     pop2.set_elite_percentage(0.4)
         #     return
 
-        if progress < 0.5:
-            pop1.set_mutation_percentage(0.4)
-        else:
-            pop1.set_mutation_percentage(0.8)
+        # if progress < 0.5:
+        #     pop1.set_mutation_percentage(0.4)
+        # else:
+        #     pop1.set_mutation_percentage(0.8)
 
         if generation % period == period - 1:
-            pop1.set_elite_percentage(0.3)
-            pop2.set_elite_percentage(0.5)
+            pop1.set_elite_percentage(0.4)
+            pop2.set_elite_percentage(0.4)
             return
 
         if generation % period == 0:

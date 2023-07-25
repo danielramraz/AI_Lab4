@@ -12,15 +12,12 @@ master_test = []
 def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem: int) -> bool:
     global master_test
 
-    # profile = cProfile.Profile()
-    # profile.enable()
-
     accuracy = 0
-
+    success_tests = 0
     set_master_test(size_of_problem)
 
     print(f"---------- start tests ----------")
-    success_tests = 0
+    
     for test in master_test:
         success_tests += test_network_with_list(sorting_network, test)
 
@@ -31,10 +28,6 @@ def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem:
     accuracy = (success_tests / (len(master_test))) * 100
     print(f"Tests sorted correctly with accuracy: {round(accuracy, 3)}%")
 
-    # profile.disable()
-    # ps = pstats.Stats(profile)
-    # ps.sort_stats('cumtime')
-    # ps.print_stats(5)
     if accuracy == 100:
         return True
     return False
@@ -42,7 +35,7 @@ def sorting_network_final_test(sorting_network: SortingNetwork, size_of_problem:
 
 def set_master_test(num: int) -> None:
     global master_test
-
+    master_test = []
     create_master_test(num)
     # print(f"master_test len -> {len(master_test)}")
     # print(f"master_test -> {master_test}")

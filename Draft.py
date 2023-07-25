@@ -1,7 +1,7 @@
 def genetic_algorithm(self, generation_index: int) -> None:
     # ----------- Update Best Sorting Network After Test -----------
     old_best_individual = self.best_individual
-    self.set_best_sorting_networks()
+    self.set_best_sorting_network()
 
     # ----------- Elitism -----------
     self.set_fitnesses()
