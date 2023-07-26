@@ -16,8 +16,8 @@ import pstats
 # ----------- Consts ----------
 setting_vector = [8]
 setting_vector = [
-    8,                     # size of input (8 or 16)
-    False                    # use smart init (True or False)
+    16,                     # size of input (8 or 16)
+    True                    # use smart init (True or False)
     ]
 
 
@@ -84,7 +84,7 @@ class CoEvolution:
 
         self.sorting_networks.best_individual.console_print_sorting_network()
 
-        self.sorting_networks.plot_score_graph()
+        # self.sorting_networks.plot_score_graph()
         print(f"The absolute time for this algorithem is {total_time} ")
         # print(f"The ticks time for this algorithem is {int(time.perf_counter())}")
 

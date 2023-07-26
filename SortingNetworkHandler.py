@@ -18,7 +18,6 @@ class SortingNetwork:
     gen: list
     comparisons_number: int
 
-
     def __init__(self, data: Data = None, gen: list = None, score_test: float = None,comparisons_number:int = None) -> None:
         if data:
             self.comparisons_number = data.ideal_num_comparators
