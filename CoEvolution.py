@@ -15,8 +15,8 @@ import pstats
 
 # ----------- Consts ----------
 setting_vector = [
-    8,                     # size of input (8 or 16)
-    False                    # use smart init (True or False)
+    16,                     # size of input (8 or 16)
+    True                    # use smart init (True or False)
     ]
 
 
@@ -126,11 +126,11 @@ class CoEvolution:
                 exploration_mode = True
 
             if exploration_mode:
-                pop1.set_elite_percentage(0.1)
-                pop2.set_elite_percentage(0.05)
-            else:
-                pop1.set_elite_percentage(0.05)
+                pop1.set_elite_percentage(0.2)
                 pop2.set_elite_percentage(0.1)
+            else:
+                pop1.set_elite_percentage(0.1)
+                pop2.set_elite_percentage(0.2)
 
         return
 
