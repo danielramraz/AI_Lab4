@@ -81,26 +81,12 @@ class SortingNetworkPopulation:
         # self.population = self.tests_results
         last_generation: bool = generation_index == self.data.max_generations -1
         if not last_generation:
-<<<<<<< Updated upstream
-            self.fix_population_by_testing(3)
-        self.population += self.elites
-=======
-            # TRY
             if generation_index % 20 == 0:
                 self.fix_population_by_testing(4)
             else:
                 self.fix_population_by_testing(3)
-        #     # if generation_index < 1000:
-        #     #     self.fix_population_by_testing(2)
-        #     # elif generation_index < 2000:
-        #     #     self.fix_population_by_testing(3)
-        #     # elif generation_index < 3000:
-        #     #     self.fix_population_by_testing(2)
-        #     # elif generation_index < 4000:
-        #     #     self.fix_population_by_testing(3)
 
         # self.population += self.elites
->>>>>>> Stashed changes
 
         # ----------- Generate New Individuals -----------
         offspring = []
@@ -208,13 +194,9 @@ class SortingNetworkPopulation:
         return sorting_networks_for_mutation
 
     def fix_population_by_testing(self, comp_num: int) -> None:
-<<<<<<< Updated upstream
-        for i, ind in enumerate(self.population):
-=======
         #for i, ind in enumerate(self.population):
         for i, ind in enumerate(self.tests_results):
             # comp_num = random.randint(1, int(self.data.sorting_list_size /2))
->>>>>>> Stashed changes
             comparators_scores = [comparator.score for j, comparator in enumerate(ind.gen)]
             # min_score = min(comparators_scores)
             #
@@ -322,61 +304,15 @@ def average_fitness(fitness: list):
 
 
 def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: Data) -> SortingNetwork:
-    # comparisons_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
-    # comparisons_num = min(len(parent1.gen), len(parent2.gen))
-    # child_gen = []
-    # init_len_child_gen = len(child_gen)
-    # for i in range(init_len_child_gen, comparisons_num):
-    #     if parent1.gen[i].score >= parent2.gen[i].score:
-    #         child_gen.append(parent1.gen[i].copy())
-    #     elif i < len(parent2.gen) and parent2.gen[i]:
-    #         child_gen.append(parent2.gen[i].copy())
-    #
-    # child = SortingNetwork(data=data, gen=child_gen, comparisons_number=comparisons_num)
-
+    comparisons_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
     child_gen = []
-    comparisons_num = 0
-    if data.sorting_list_size == 16:
-        child_gen = SmartInit.smart_vector_16().copy()
-        comparisons_num = SmartInit.num_comparators_init_vector_16
-
-    depth = 5
-    numbers_depth = []
-    i = comparisons_num
-    while i < parent1.comparisons_number and i < parent2.comparisons_number:
+    init_len_child_gen = len(child_gen)
+    for i in range(init_len_child_gen, comparisons_num):
         if parent1.gen[i].score >= parent2.gen[i].score:
             child_gen.append(parent1.gen[i].copy())
         elif i < len(parent2.gen) and parent2.gen[i]:
             child_gen.append(parent2.gen[i].copy())
 
-        comparisons_num += 1
-
-        if child_gen[i].value[0] in numbers_depth or child_gen[i].value[1] in numbers_depth:
-            depth += 1
-            if depth == 11:
-                break
-            numbers_depth = []
-        numbers_depth.append(child_gen[i].value[0])
-        numbers_depth.append(child_gen[i].value[1])
-        i += 1
-
-    numbers = range(data.sorting_list_size)
-    while depth < 11:
-        values = random.sample(numbers, k=2)
-        if values[0] > values[1]:
-            values[0], values[1] = values[1], values[0]
-        values = tuple(values)
-        comparator = Comparator(values)
-        child_gen.append(comparator)
-        comparisons_num += 1
-
-        if comparator.value[0] in numbers_depth or comparator.value[1] in numbers_depth:
-            depth += 1
-            if depth == 11:
-                break
-            numbers_depth = []
-        numbers_depth.append(comparator.value[0])
-        numbers_depth.append(comparator.value[1])
-
     child = SortingNetwork(data=data, gen=child_gen, comparisons_number=comparisons_num)
+
     return child
