@@ -37,10 +37,17 @@ class Data:
         return
 
     def _init_consts(self):
+<<<<<<< Updated upstream
         self.population_size = 4000
         self.max_generations = 200
         self.initial_unsolved_soring_network_elite_percentage = 0.4
         self.initial_parasites_elite_percentage = 0.6
+=======
+        self.population_size = 500
+        self.max_generations = 10000
+        self.initial_unsolved_soring_network_elite_percentage = 0.01
+        self.initial_parasites_elite_percentage = 0.01
+>>>>>>> Stashed changes
 
         return
     

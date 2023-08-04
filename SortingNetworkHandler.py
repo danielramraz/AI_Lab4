@@ -19,10 +19,17 @@ class SortingNetwork:
     comparisons_number: int
 
     def __init__(self, data: Data = None, gen: list = None, score_test: float = None,comparisons_number:int = None) -> None:
-        if data:
-            self.comparisons_number = data.ideal_num_comparators
-        elif comparisons_number:
+        # if data:
+        #     # self.comparisons_number = data.ideal_num_comparators
+        #     self.comparisons_number = 0
+        # elif comparisons_number:
+        #     self.comparisons_number = comparisons_number
+
+        if comparisons_number:
             self.comparisons_number = comparisons_number
+        else:
+            # self.comparisons_number = data.ideal_num_comparators
+            self.comparisons_number = 0
 
         if gen is not None:
             self.gen = gen
@@ -36,7 +43,6 @@ class SortingNetwork:
         else:
             self.score_test = 0
 
-        self.calc_score()
         self.score_share = 0
 
         return
@@ -49,6 +55,7 @@ class SortingNetwork:
                 gen = SmartInit.smart_vector_8().copy()
             elif data.sorting_list_size == 16:
                 gen = SmartInit.smart_vector_16().copy()
+                self.comparisons_number =  SmartInit.num_comparators_init_vector_16
 
         # if SmartInit.hilles_singleton_flag:
         #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()
@@ -64,13 +71,32 @@ class SortingNetwork:
         #     SmartInit.hilles_singleton_flag = False
         #     return gen
 
-        while len(gen) < self.comparisons_number:
+        # while len(gen) < self.comparisons_number:
+        #     values = random.sample(numbers, k=2)
+        #     if values[0] > values[1]:
+        #         values[0], values[1] = values[1], values[0]
+        #     values = tuple(values)
+        #     comparator = Comparator(values)
+        #     gen.append(comparator)
+
+        depth = 5
+        numbers_depth = []
+        while True:
             values = random.sample(numbers, k=2)
             if values[0] > values[1]:
                 values[0], values[1] = values[1], values[0]
             values = tuple(values)
             comparator = Comparator(values)
             gen.append(comparator)
+            self.comparisons_number += 1
+
+            if comparator.value[0] in numbers_depth or comparator.value[1] in numbers_depth:
+                depth += 1
+                if depth == 11:
+                    break
+                numbers_depth = []
+            numbers_depth.append(comparator.value[0])
+            numbers_depth.append(comparator.value[1])
 
         return gen
 
