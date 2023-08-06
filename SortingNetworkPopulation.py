@@ -77,11 +77,14 @@ class SortingNetworkPopulation:
         # self.fix_population_by_testing()
         # self.population += self.elites
 
-        # self.population = self.get_sorting_networks_for_mutation(elites, generation_index)
+        # self.population = self.get_sorting_networks_for_mutation(self.elites, generation_index)
         self.population = self.tests_results
         last_generation: bool = generation_index == self.data.max_generations -1
         if not last_generation:
-            self.fix_population_by_testing(2)
+            if generation_index % 20 == 0:
+                self.fix_population_by_testing(4)
+            else:
+                self.fix_population_by_testing(3)
         self.population += self.elites
 
         # ----------- Generate New Individuals -----------
@@ -226,8 +229,8 @@ class SortingNetworkPopulation:
 
             new_comparator = Comparator(values)
             # Inserting the new comparator in a random index in the sorting network
-            # index = random.randint(SmartInit.num_comparators_init_vector_16, gen_size)
-            index = random.randint(0, gen_size)
+            index = random.randint(SmartInit.num_comparators_init_vector_16, gen_size)
+            # index = random.randint(0, gen_size)
             ind.gen.insert(index, new_comparator)
             num_new_comparators -= 1
 
