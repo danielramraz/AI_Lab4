@@ -83,8 +83,7 @@ class CoEvolution:
 
         self.sorting_networks.best_individual.console_print_sorting_network()
 
-        # !!!! RETURN
-        # self.sorting_networks.plot_score_graph()
+        self.sorting_networks.plot_score_graph()
         print(f"The absolute time for this algorithem is {total_time} ")
         # print(f"The ticks time for this algorithem is {int(time.perf_counter())}")
 
@@ -95,25 +94,13 @@ class CoEvolution:
         finished = FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.data.sorting_list_size)
         return
 
-    def change_elite_and_mutation_percentage(self, generation: int,
-                                             pop1: SortingNetworkPopulation,
-                                             pop2: UnsolvedSoringPopulation) -> None:
+    def change_elite_and_mutation_percentage(self, generation: int,pop1: SortingNetworkPopulation,pop2: UnsolvedSoringPopulation) -> None:
         # const period of generations we switch from exploration to exploitation
         period = 30
         progress: float = generation / self.data.max_generations
 
         if generation == 0:
             return
-
-        # if progress > 0.95:
-        #     pop1.set_elite_percentage(0.2)
-        #     pop2.set_elite_percentage(0.4)
-        #     return
-
-        # if progress < 0.5:
-        #     pop1.set_mutation_percentage(0.4)
-        # else:
-        #     pop1.set_mutation_percentage(0.8)
 
         if generation % period == period - 1:
             pop1.set_elite_percentage(0.4)

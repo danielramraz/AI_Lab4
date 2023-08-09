@@ -63,7 +63,6 @@ class SortingNetworkPopulation:
         return
 
     def genetic_algorithm(self, generation_index: int) -> None:
-
         # ----------- Update Best Sorting Network After Test -----------
         self.set_best_sorting_network()
 
@@ -72,12 +71,6 @@ class SortingNetworkPopulation:
         self.elites = self.get_elite_networks()
 
         # -----------  Fix Sorting Network After Test -----------
-        # self.population = self.get_sorting_networks_for_mutation(elites, generation_index)
-        # self.population = self.tests_results
-        # self.fix_population_by_testing()
-        # self.population += self.elites
-
-        # self.population = self.get_sorting_networks_for_mutation(self.elites, generation_index)
         self.population = self.tests_results
         last_generation: bool = generation_index == self.data.max_generations -1
         if not last_generation:
@@ -97,10 +90,6 @@ class SortingNetworkPopulation:
 
         # ----------- Update Population -----------
         self.population += offspring
-        # save time and remove this lines
-        # for ind in self.population:
-        #     ind.calc_score()
-
         self.set_fitnesses()
         self.add_info_to_graph(generation_index, self.best_fitness, self.get_average_score())
 
@@ -191,19 +180,7 @@ class SortingNetworkPopulation:
 
     def fix_population_by_testing(self, comp_num: int) -> None:
         for i, ind in enumerate(self.population):
-            # comp_num = random.randint(1, int(self.data.sorting_list_size /2))
             comparators_scores = [comparator.score for j, comparator in enumerate(ind.gen)]
-            # min_score = min(comparators_scores)
-            #
-            # bad_comparators_index = [j for j, comparator in enumerate(ind.gen)
-            #                          if comparator.score == min_score]
-            # if len(bad_comparators_index) > 3:
-            #     bad_comparators_index = random.sample(bad_comparators_index, k=3)
-            #
-            # if len(bad_comparators_index) < 3:
-            #     bad_comparators_index = sorted(range(len(comparators_scores)), key=lambda i: comparators_scores[i],
-            #                                    reverse=False)[:3]
-
             bad_comparators_index = sorted(range(len(comparators_scores)), key=lambda i: comparators_scores[i], reverse=False)[:comp_num]
             bad_comparators_index.sort(reverse=True)
             self.remove_bad_comparators(ind, bad_comparators_index)
@@ -215,11 +192,9 @@ class SortingNetworkPopulation:
     def remove_bad_comparators(self, ind: SortingNetwork, bad_comparators_index: list) -> None:
         for i, comp_index in enumerate(bad_comparators_index):
             ind.remove_comparator(comp_index)
-
         return
 
     def indirect_replacement(self, ind: SortingNetwork, num_new_comparators: int) -> None:
-
         numbers = range(self.data.sorting_list_size)
         while num_new_comparators > 0:
             gen_size = len(ind.gen)
@@ -229,8 +204,10 @@ class SortingNetworkPopulation:
 
             new_comparator = Comparator(values)
             # Inserting the new comparator in a random index in the sorting network
-            index = random.randint(SmartInit.num_comparators_init_vector_16, gen_size)
-            # index = random.randint(0, gen_size)
+            if self.data.sorting_list_size == 8:
+                index = random.randint(0, gen_size)
+            elif self.data.sorting_list_size == 16:
+                index = random.randint(SmartInit.num_comparators_init_vector_16, gen_size)
             ind.gen.insert(index, new_comparator)
             num_new_comparators -= 1
 
@@ -310,6 +287,7 @@ def average_fitness(fitness: list):
         variance = 0
     sd = variance ** 0.5
     return average, variance, sd
+
 
 def crossover_operator(parent1: SortingNetwork, parent2: SortingNetwork, data: Data) -> SortingNetwork:
     comparisons_num = int((len(parent1.gen) + len(parent2.gen)) / 2)
