@@ -77,9 +77,7 @@ class CoEvolution:
         finished = FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.data.sorting_list_size)
         return
 
-    def change_elite_and_mutation_percentage(self, generation: int,
-                                             pop1: SortingNetworkPopulation,
-                                             pop2: UnsolvedSoringPopulation) -> None:
+    def change_elite_and_mutation_percentage(self, generation: int,pop1: SortingNetworkPopulation,pop2: UnsolvedSoringPopulation) -> None:
         # const period of generations we switch from exploration to exploitation
         period = 30
         progress: float = generation / self.data.max_generations
