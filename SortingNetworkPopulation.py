@@ -1,17 +1,12 @@
 # ----------- File For Genetic Algorithm -----------
 import Data
-import Niche
-import SmartInit
 from Comparator import Comparator
 from SortingNetworkHandler import SortingNetwork
-import SortingNetworkHandler
-import Clustering
+import SmartInit
 # ----------- Python Package -----------
-import time
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-import math
 
 # ----------- Consts Parameters -----------
 ELITE_PERCENTAGE_ORIG = 0.30
@@ -37,7 +32,6 @@ class SortingNetworkPopulation:
         self.avg_fitnesses_test = []
         self.tests_results = []
         self.elites = []
-        self.niches = []
 
         self.ELITE_PERCENTAGE = data.initial_unsolved_soring_network_elite_percentage
         self.MUTATION_PERCENTAGE = MUTATION_PERCENTAGE
@@ -90,6 +84,7 @@ class SortingNetworkPopulation:
 
         # ----------- Update Population -----------
         self.population += offspring
+
         self.set_fitnesses()
         self.add_info_to_graph(generation_index, self.best_fitness, self.get_average_score())
 
@@ -108,74 +103,11 @@ class SortingNetworkPopulation:
         sorting_networks_for_test_indices = sorted(range(len(self.population)), key=lambda i: self.fitnesses[i], reverse=False)[:valid_size]
         sorting_networks_for_test = [self.population[i] for i in sorting_networks_for_test_indices]
 
-        # if generation_index == 0:
-        #     # Select individuals for testing with valid depth
-        #     valid_size = int((self.data.population_size * self.ELITE_PERCENTAGE))
-        #     sorting_networks_valid_depth = [ind for ind in self.population if ind.score == 11]
-        #     if len(sorting_networks_valid_depth) > valid_size:
-        #         sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=valid_size)
-        #
-        #     if len(sorting_networks_valid_depth) == 0:
-        #         sorting_networks_valid_depth = random.sample(self.population, k=valid_size)
-        #
-        #     sorting_networks_for_test = sorting_networks_valid_depth
-        #
-        # else:
-        #     elite_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
-        #     elites = self.elites[:elite_size]
-        #
-        #     random_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
-        #     # Select individuals for testing with valid depth
-        #     sorting_networks_valid_depth = [ind for ind in self.population if ind.score == 13]
-        #     if len(sorting_networks_valid_depth) > random_size:
-        #         sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
-        #
-        #     if len(sorting_networks_valid_depth) == 0:
-        #         sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 13]
-        #         if len(sorting_networks_valid_depth) > random_size:
-        #             sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
-        #
-        #     # sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= 11]
-        #     # if len(sorting_networks_valid_depth) > random_size:
-        #     #     sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
-        #
-        #     sorting_networks_for_test = sorting_networks_valid_depth + elites
-        #     # sorting_networks_for_test = sorting_networks_valid_depth + elites + [self.best_individual]
-        #
-        # Select individuals for testing with valid depth
-        # random_size = int((self.data.population_size * self.ELITE_PERCENTAGE) / 2)
-        # sorting_networks_valid_depth = [ind for ind in self.population if ind.score >= self.data.sorting_list_size /2]
-        # if len(sorting_networks_valid_depth) > random_size:
-        #     sorting_networks_valid_depth = random.sample(sorting_networks_valid_depth, k=random_size)
-        #
-        # sorting_networks_for_test = sorting_networks_valid_depth + elites + [self.best_individual]
-        # # print("Size sorting_networks for test:", len(sorting_networks_for_test))
-
         return sorting_networks_for_test
 
     def get_sorting_networks_for_mutation(self, elites: list, generation_index: int) -> list:
         mutation_size = int(self.data.population_size * self.MUTATION_PERCENTAGE)
-        # elites_score_test = [elites[i].score_test for i in range(len(elites))]
-        # sorting_networks_for_mutation = [ind for ind in self.population if ind.score_test > 0]
-        # if len(sorting_networks_for_mutation) > mutation_size:
-        #     sorting_networks_for_mutation = random.sample(sorting_networks_for_mutation, k=mutation_size)
-
-        # if generation_index <= 175:
-        #     population = []
-        #     for i in range(len(self.population)):
-        #         if self.population[i].score_test not in elites_score_test:
-        #             population.append(self.population[i])
-        # else:
-        #     population = self.population
-        #
-        # if len(population) > mutation_size:
-        #     sorting_networks_for_mutation = random.sample(population, k=mutation_size)
-        # else:
-        #     sorting_networks_for_mutation = population
-
         sorting_networks_for_mutation = random.sample(self.population, k=mutation_size)
-        # print("Size sorting_networks for mutation:", len(sorting_networks_for_mutation))
-
         return sorting_networks_for_mutation
 
     def fix_population_by_testing(self, comp_num: int) -> None:
@@ -255,9 +187,7 @@ class SortingNetworkPopulation:
         self.y1 = []
         self.z1 = []
         self.ax = plt.axes()
-        self.ax.set(#xlim=(0, data.max_generations),
-                    #ylim=(0, data.sorting_list_size),
-                    xlabel='Generation number',
+        self.ax.set(xlabel='Generation number',
                     ylabel='Best Fitness')
         return
     

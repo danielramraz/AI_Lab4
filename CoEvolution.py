@@ -8,16 +8,7 @@ import FinalTest
 import SVG_SortingNetwork
 # ----------- Python Package -----------
 import time
-import cProfile
 from datetime import timedelta
-import random
-import pstats
-
-# ----------- Consts ----------
-setting_vector = [
-    16,                     # size of input (8 or 16)
-    True                    # use smart init (True or False)
-    ]
 
 
 class CoEvolution:
@@ -27,7 +18,7 @@ class CoEvolution:
     solution: SortingNetworkHandler
 
     def __init__(self) -> None:
-        self.data = Data(setting_vector)
+        self.data = Data()
         self.challengers = UnsolvedSoringPopulation(self.data)
         self.sorting_networks = SortingNetworkPopulation(self.data)
 
@@ -38,8 +29,6 @@ class CoEvolution:
 
         for generation_index in range(self.data.max_generations):
             gen_time = time.time()
-            # profile = cProfile.Profile()
-            # profile.enable()
 
             print(f"================================= generation_index ========= {generation_index}")
 
@@ -71,11 +60,6 @@ class CoEvolution:
                                                         self.data.sorting_list_size):
                     break
 
-            # profile.disable()
-            # ps = pstats.Stats(profile)
-            # ps.sort_stats('cumtime')
-            # ps.print_stats(5)
-
         # ----------- Print Graphs , Time and Comput Information -----------
 
         total_time_sec = int(time.time() - sol_time)
@@ -88,8 +72,7 @@ class CoEvolution:
         # print(f"The ticks time for this algorithem is {int(time.perf_counter())}")
 
         self.sorting_networks.set_best_sorting_network()
-        # print("Depth: ", self.sorting_networks.best_individual.score)
-        self.sorting_networks.best_individual.save_sorting_network_to_file()
+        self.sorting_networks.best_individual.save_sorting_network_to_file(self.data.sorting_list_size)
         
         finished = FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.data.sorting_list_size)
         return

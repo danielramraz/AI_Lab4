@@ -3,12 +3,7 @@ import Data
 import SmartInit
 from Comparator import Comparator
 # ----------- Python Package -----------
-import numpy as np
 import random
-import matplotlib.pyplot as plt
-
-# ----------- Consts Name  -----------
-# MAX_ATTEMPTS = 5
 
 
 class SortingNetwork:
@@ -50,21 +45,17 @@ class SortingNetwork:
                 gen = SmartInit.smart_vector_8().copy()
             elif data.sorting_list_size == 16:
                 gen = SmartInit.smart_vector_16().copy()
+#---------------------------------------------------------------------
 
         # if SmartInit.hilles_singleton_flag:
-        #     hilles_suffix = SmartInit.hilles_suffix_solution().copy()
-        #     for comp in hilles_suffix:
+        #     gen.clear()
+        #     our_full_solution = SmartInit.our_full_solution().copy()
+        #     for comp in our_full_solution:
         #         gen.append(comp)
         #     SmartInit.hilles_singleton_flag = False
         #     return gen
 
-        # if SmartInit.hilles_singleton_flag:
-        #     hilles_suffix = SmartInit.hilles_full_solution().copy()
-        #     for comp in hilles_suffix:
-        #         gen.append(comp)
-        #     SmartInit.hilles_singleton_flag = False
-        #     return gen
-
+#---------------------------------------------------------------------
         while len(gen) < self.comparisons_number:
             values = random.sample(numbers, k=2)
             if values[0] > values[1]:
@@ -76,10 +67,6 @@ class SortingNetwork:
         return gen
 
     def calc_score(self) -> None:
-        # numbers_in_gen = np.array(self.find_numbers_in_gen())
-        # freq = np.bincount(numbers_in_gen)
-        # self.score = np.max(freq)
-
         numbers = []
         depth = 1
         for comp in self.gen:
@@ -139,9 +126,9 @@ class SortingNetwork:
             print(i, comperator.value, comperator.score)
         return
 
-    def save_sorting_network_to_file(self) -> None:
-        out_file = open("BestSortingNetwork.txt", "w")
-        out_file.truncate(0)        # clear the file
+    def save_sorting_network_to_file(self, problem_size: int) -> None:
+        out_file = open(f"BestSortingNetwork_{problem_size}.txt", "w")
+        out_file.truncate(0)                                            # clear the file
         for i, comperator in enumerate(self.gen):
             out_file.write(str(comperator.value))
             out_file.write("\n")

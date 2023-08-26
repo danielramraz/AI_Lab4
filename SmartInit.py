@@ -78,3 +78,17 @@ def hilles_full_solution()-> list:
         full_soloution.append(comparator)
 
     return full_soloution
+
+
+our_full_solution_list = [
+
+
+]
+
+def our_full_solution()-> list:
+    full_soloution = []
+    for comp in our_full_solution_list:
+        comparator = Comparator(comp)
+        full_soloution.append(comparator)
+
+    return full_soloution

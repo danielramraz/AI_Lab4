@@ -2,9 +2,7 @@ from Comparator import Comparator
 from Parasite import Parasite
 from SortingNetworkHandler import SortingNetwork
 from UnsolvedSoringPopulation import UnsolvedSoringPopulation
-import Data
 # ----------- Python Package -----------
-import random
 
 master_test = []
 
@@ -43,12 +41,10 @@ def set_master_test(num: int) -> None:
 
 
 def test_network_with_list(sorting_network: SortingNetwork, unsolved_list: list) -> int:
-    # origin_test = unsolved_list.copy()
     for k, comperator in enumerate(sorting_network.gen):
         comper_n_swap(comperator, unsolved_list)
 
     if check_solved_bits_list(unsolved_list):
-        # print("test sorted correctly !")
         return 1
 
     # print("the following test wasn't sorted correctly !")

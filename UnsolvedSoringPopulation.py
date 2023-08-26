@@ -3,13 +3,8 @@ from Data import Data
 import Parasite
 # ----------- Python Package -----------
 import random
-import numpy as np
-
 # ----------- Consts ----------
 MUTATION_INDIVIDUALS = 20
-
-
-# ELITE_PERCENTAGE = 0.30
 
 
 class UnsolvedSoringPopulation:
@@ -72,7 +67,6 @@ class UnsolvedSoringPopulation:
                                reverse=False)[0]
 
         best_fitness = best_parasite.score
-        # print_scores_grah(scores)
         return best_parasite.unsorted_list, best_fitness
 
     def print_population(self) -> None:
