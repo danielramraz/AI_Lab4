@@ -2,6 +2,7 @@
 import Data
 from Comparator import Comparator
 from SortingNetworkHandler import SortingNetwork
+import SmartInit
 # ----------- Python Package -----------
 import numpy as np
 import matplotlib.pyplot as plt
