@@ -1,47 +1,53 @@
 # ----------- Project Files -----------
 import SmartInit
-inputs_text_sorting_list_size = "enter the size of the vectors: 8 or 16 \n"
-inputs_text_smart_init = "do ypu want to use smart init? 0 = False , 1 = True \n"
+# ----------- Consts ----------
+inputs_text_sorting_list_size = "enter the size of the problem vector you want to solve: 8 or 16 \n"
+
+user_input = True
+                    # size of input (8 or 16) | use smart init (True or False) | size of pop | generation number 
+setting_vector_8 = [8, False, 2000, 500]
+setting_vector_16 = [16, True, 500, 10000]
 
 
 class Data:
     sorting_list_size: int
     population_size: int
     max_generations: int
-    # smart_init_vector: list
     num_comparators_init_vector: int
     ideal_num_comparators: int
     initial_soring_network_elite_percentage: float
     initial_parasites_elite_percentage: float
     use_smart_init: bool
+    setting_vector: list
 
-    def __init__(self, setting_vector = None):
-        if setting_vector:
-            self.init_with_settings(setting_vector)
-        else:
+    def __init__(self):
+        if user_input:
             self.init_with_user_input()
+        else:
+            self.setting_vector = setting_vector_8
 
+        self.init_with_settings()
         self._init_consts()
         self._init_smart_consts()
         return
 
     def init_with_user_input(self):
-        self.sorting_list_size = int(input(inputs_text_sorting_list_size))
-        self.use_smart_init = bool(input(inputs_text_smart_init))
-        
+        if int(input(inputs_text_sorting_list_size)) == 8:
+            self.setting_vector = setting_vector_8
+        else:
+            self.setting_vector = setting_vector_16
         return
 
-    def init_with_settings(self, setting_vector):
-        self.sorting_list_size = setting_vector[0]
-        self.use_smart_init = setting_vector[1]
+    def init_with_settings(self):
+        self.sorting_list_size = self.setting_vector[0]
+        self.use_smart_init = self.setting_vector[1]
+        self.population_size = self.setting_vector[2]
+        self.max_generations = self.setting_vector[3]
         return
 
     def _init_consts(self):
-        self.population_size = 4000
-        self.max_generations = 1000
         self.initial_unsolved_soring_network_elite_percentage = 0.01
         self.initial_parasites_elite_percentage = 0.01
-
         return
     
     # the extra value we get from known articles in the fild
