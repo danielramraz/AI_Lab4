@@ -7,7 +7,7 @@ init_vector_16 = [
     [[0, 8], [1, 9], [2, 10], [3, 11], [4, 12], [5, 13], [6, 14], [7, 15]]
 ]
 num_comparators_init_vector_16 = 32
-ideal_num_comparators_vector_16 = 61
+ideal_num_comparators_vector_16 = 60
 
 
 def smart_vector_16()-> list:
@@ -90,6 +90,7 @@ our_full_solution_list = [
     [6, 8], [7, 10], [7, 9], [10, 12], [5, 8], [11, 13], [2, 4], [3, 6],
     [11, 12], [3, 4], [7, 8], [9, 10], [5, 6]
 ]
+
 
 def our_full_solution()-> list:
     full_soloution = []

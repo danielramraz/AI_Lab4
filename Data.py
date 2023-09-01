@@ -5,8 +5,9 @@ inputs_text_sorting_list_size = "enter the size of the problem vector you want t
 
 user_input = True
                     # size of input (8 or 16) | use smart init (True or False) | size of pop | generation number 
-setting_vector_8 = [8, False, 2000, 500]
-setting_vector_16 = [16, True, 500, 10000]
+# setting_vector_8 = [8, False, 2000, 500]
+setting_vector_8 = [8, False, 2000, 10000]
+setting_vector_16 = [16, True, 500, 30000]
 
 
 class Data:
@@ -46,8 +47,12 @@ class Data:
         return
 
     def _init_consts(self):
-        self.initial_unsolved_soring_network_elite_percentage = 0.01
-        self.initial_parasites_elite_percentage = 0.01
+        if self.sorting_list_size == 16:
+            self.initial_unsolved_soring_network_elite_percentage = 0.1
+            self.initial_parasites_elite_percentage = 0.1
+        elif self.sorting_list_size == 8:
+            self.initial_unsolved_soring_network_elite_percentage = 0.01
+            self.initial_parasites_elite_percentage = 0.01
         return
     
     # the extra value we get from known articles in the fild
