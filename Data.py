@@ -4,8 +4,7 @@ import SmartInit
 inputs_text_sorting_list_size = "enter the size of the problem vector you want to solve: 8 or 16 \n"
 
 user_input = True
-                    # size of input (8 or 16) | use smart init (True or False) | size of pop | generation number 
-# setting_vector_8 = [8, False, 2000, 500]
+                    # size of input (8 or 16) | use smart init (True or False) | size of pop | generation number
 setting_vector_8 = [8, False, 2000, 10000]
 setting_vector_16 = [16, True, 500, 30000]
 

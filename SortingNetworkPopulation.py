@@ -147,20 +147,12 @@ class SortingNetworkPopulation:
 
     def set_best_sorting_network(self) -> None:
         for individual in self.population:
-            # if self.best_individual.score_test < individual.score_test:
-            #     self.best_individual = individual.copy()
-            #     print("!!! Best individual changed !!!")
-            # elif self.best_individual.score_test == individual.score_test and self.best_individual.score > individual.score:
-            #     self.best_individual = individual.copy()
-
-            if individual.score_test == 16 and self.best_individual.score > individual.score >= 10:
+            if self.best_individual.score_test < individual.score_test:
                 self.best_individual = individual.copy()
-            elif self.best_individual.score_test < individual.score_test:
+                print("!!! Best individual changed !!!")
+            elif self.best_individual.score_test == individual.score_test and self.best_individual.score > individual.score:
                 self.best_individual = individual.copy()
-
-            # TRY ADDING THIS
-            # elif self.best_individual.score_test == individual.score_test and self.best_individual.score > individual.score:
-            #  self.best_individual = individual.copy()
+                print("!!! Best individual changed + Depth !!!")
 
         self.best_fitness = self.best_individual.score_test
         print("Sorting Network best_fitness:", self.best_fitness)
