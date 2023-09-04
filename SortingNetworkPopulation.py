@@ -206,6 +206,7 @@ class SortingNetworkPopulation:
 
 #   ----------------- not class functions -----------------
 
+
 def average_fitness(fitness: list):
     if not fitness:
         return 0
