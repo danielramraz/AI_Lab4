@@ -47,13 +47,13 @@ class SortingNetwork:
                 gen = SmartInit.smart_vector_16().copy()
 #---------------------------------------------------------------------
 
-        # if SmartInit.hilles_singleton_flag:
-        #     gen.clear()
-        #     our_full_solution = SmartInit.our_full_solution().copy()
-        #     for comp in our_full_solution:
-        #         gen.append(comp)
-        #     SmartInit.hilles_singleton_flag = False
-        #     return gen
+        if SmartInit.hilles_singleton_flag:
+            gen.clear()
+            our_full_solution = SmartInit.our_full_solution().copy()
+            for comp in our_full_solution:
+                gen.append(comp)
+            SmartInit.hilles_singleton_flag = False
+            return gen
 
 #---------------------------------------------------------------------
         while len(gen) < self.comparisons_number:
