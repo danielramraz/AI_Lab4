@@ -46,7 +46,7 @@ class SortingNetwork:
             elif data.sorting_list_size == 16:
                 gen = SmartInit.smart_vector_16().copy()
 #---------------------------------------------------------------------
-
+        # --------------- printing specific solution ---------------
         # if SmartInit.hilles_singleton_flag:
         #     gen.clear()
         #     our_full_solution = SmartInit.our_full_solution().copy()
@@ -54,7 +54,6 @@ class SortingNetwork:
         #         gen.append(comp)
         #     SmartInit.hilles_singleton_flag = False
         #     return gen
-
 #---------------------------------------------------------------------
         while len(gen) < self.comparisons_number:
             values = random.sample(numbers, k=2)
