@@ -3,10 +3,10 @@ import SmartInit
 # ----------- Consts ----------
 inputs_text_sorting_list_size = "enter the size of the problem vector you want to solve: 8 or 16 \n"
 
-user_input = True
+user_input = False
                     # size of input (8 or 16) | use smart init (True or False) | size of pop | generation number
 setting_vector_8 = [8, False, 2000, 10000]
-setting_vector_16 = [16, True, 500, 30000]
+setting_vector_16 = [16, True, 500, 40000]
 
 
 class Data:
@@ -24,7 +24,7 @@ class Data:
         if user_input:
             self.init_with_user_input()
         else:
-            self.setting_vector = setting_vector_8
+            self.setting_vector = setting_vector_16
 
         self.init_with_settings()
         self._init_consts()

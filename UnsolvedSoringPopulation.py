@@ -103,3 +103,20 @@ class UnsolvedSoringPopulation:
     def set_elite_percentage(self, perc: float) -> None:
         self.ELITE_PERCENTAGE = perc
         return
+
+    def clear_duplicates(self) -> None:
+        seen = set()
+        unique_objects = []
+
+        for i, parasite in enumerate(self.population):
+            key = tuple(parasite.unsorted_list)
+            
+            # If the key is not seen before, add the object to the result list
+            if key not in seen:
+                seen.add(key)
+                unique_objects.append(parasite)
+
+        # Update the objects list with unique objects while preserving order
+        self.population = unique_objects
+        return
+    

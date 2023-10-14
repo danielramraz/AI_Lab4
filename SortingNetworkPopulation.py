@@ -204,6 +204,23 @@ class SortingNetworkPopulation:
         plt.show()
         return
 
+    def clear_duplicates(self) -> None:
+        seen = set()
+        unique_objects = []
+        
+        for i, network in enumerate(self.population):
+            key = tuple(network.gen)
+            
+            # If the key is not seen before, add the object to the result list
+            if key not in seen:
+                seen.add(key)
+                unique_objects.append(network)
+
+        # Update the objects list with unique objects while preserving order
+        self.population = unique_objects
+        return
+    
+
 #   ----------------- not class functions -----------------
 
 

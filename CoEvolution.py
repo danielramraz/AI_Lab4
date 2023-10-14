@@ -47,7 +47,7 @@ class CoEvolution:
             self.challengers.genetic_algorithm()
 
 
-            self.change_elite_and_mutation_percentage(generation_index,
+            self.periodic_changes(generation_index,
                                                       self.sorting_networks,
                                                       self.challengers)
 
@@ -77,9 +77,11 @@ class CoEvolution:
         finished = FinalTest.sorting_network_final_test(self.sorting_networks.best_individual, self.data.sorting_list_size)
         return
 
-    def change_elite_and_mutation_percentage(self, generation: int,pop1: SortingNetworkPopulation,pop2: UnsolvedSoringPopulation) -> None:
+    def periodic_changes(self, generation: int,
+                         pop1: SortingNetworkPopulation,
+                         pop2: UnsolvedSoringPopulation) -> None:
         # const period of generations we switch from exploration to exploitation
-        period = 30
+        period = 50
         progress: float = generation / self.data.max_generations
 
         if generation == 0:
@@ -91,6 +93,15 @@ class CoEvolution:
             return
 
         if generation % period == 0:
+            print(f"The SortingNetworkPopulation len is {len(pop1.population)} ")
+            print(f"The UnsolvedSoringPopulation len is {len(pop2.population)} ")
+
+            pop1.clear_duplicates()
+            pop2.clear_duplicates()
+
+            print(f"The SortingNetworkPopulation len is {len(pop1.population)} ")
+            print(f"The UnsolvedSoringPopulation len is {len(pop2.population)} ")
+
             if generation / period % 2:
                 exploration_mode = False
             else:
